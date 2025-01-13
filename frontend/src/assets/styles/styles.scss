@@ -1,0 +1,37 @@
+@import "variables";
+
+@import "ngx-toastr/toastr";
+
+@import "bootstrap/scss/bootstrap";
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+:root {
+  --toast-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.toast-container .ngx-toastr {
+  box-shadow: 0 0.5rem 1rem rgba($black, 0.15) !important;
+  margin-bottom: 0.25rem !important;
+
+  &.toast-success {
+    background-color: #3567be;
+    font-size: 0.938rem;
+  }
+
+  &.toast-error {
+    background-color: #b24726;
+    font-size: 0.938rem;
+  }
+}

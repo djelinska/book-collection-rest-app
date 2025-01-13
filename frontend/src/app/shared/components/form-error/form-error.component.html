@@ -1,0 +1,7 @@
+@if ( control && control.errors && control.touched) {
+<div class="form-error mt-1">
+  @if (control.errors['required']) {
+  <div class="text-danger text-sm">To pole jest wymagane</div>
+  }
+</div>
+}
