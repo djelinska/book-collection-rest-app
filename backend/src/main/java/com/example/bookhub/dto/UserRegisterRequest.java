@@ -1,10 +1,9 @@
 package com.example.bookhub.dto;
 
-
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class UserRegisterRequest {
 
     private String username;
 

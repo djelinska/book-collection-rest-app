@@ -7,15 +7,17 @@ import {
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormErrorComponent } from '../../../shared/components/form-error/form-error.component';
 import { RegisterRequest } from '../../../core/services/auth/models/register-request';
 import { ToastrService } from 'ngx-toastr';
+import { passwordMatcherValidator } from '../../../shared/validators/password-matcher.validator';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, FormErrorComponent],
+  imports: [ReactiveFormsModule, RouterLink, FormErrorComponent, CommonModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
@@ -23,6 +25,10 @@ export class RegisterComponent {
   public form = this.fb.group({
     username: new FormControl<string>('', [Validators.required]),
     password: new FormControl<string>('', [Validators.required]),
+    confirmPassword: new FormControl<string>('', [
+      Validators.required,
+      passwordMatcherValidator('password'),
+    ]),
   });
 
   public constructor(

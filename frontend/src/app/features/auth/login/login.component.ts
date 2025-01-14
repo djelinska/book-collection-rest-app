@@ -7,6 +7,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormErrorComponent } from '../../../shared/components/form-error/form-error.component';
 import { LoginRequest } from '../../../core/services/auth/models/login-request';
@@ -15,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, FormErrorComponent],
+  imports: [ReactiveFormsModule, RouterLink, FormErrorComponent, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

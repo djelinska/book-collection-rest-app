@@ -11,19 +11,45 @@
             id="username"
             class="form-control"
             formControlName="username"
+            [ngClass]="{
+              'is-invalid':
+                form.get('username')?.touched && form.get('username')?.errors
+            }"
           />
           <app-form-error [control]="form.get('username')"></app-form-error>
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Hasło</label>
           <input
-            type="text"
+            type="password"
             name="password"
             id="password"
             class="form-control"
             formControlName="password"
+            [ngClass]="{
+              'is-invalid':
+                form.get('password')?.touched && form.get('password')?.errors
+            }"
           />
           <app-form-error [control]="form.get('password')"></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="confirmPassword" class="form-label">Powtórz hasło</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            id="confirmPassword"
+            class="form-control"
+            formControlName="confirmPassword"
+            [ngClass]="{
+              'is-invalid':
+                form.get('confirmPassword')?.touched &&
+                form.get('confirmPassword')?.errors
+            }"
+          />
+          <app-form-error
+            [control]="form.get('confirmPassword')"
+          ></app-form-error>
         </div>
         <button type="submit" class="btn btn-primary">Zarejestruj się</button>
       </form>

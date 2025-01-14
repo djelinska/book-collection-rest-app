@@ -1,1 +1,67 @@
-<p>navbar works!</p>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <span class="navbar-brand">BookHub</span>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav w-100 me-auto mb-2 mb-lg-0">
+        @if (isAuthenticated) {
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLink]="['/home']"
+            routerLinkActive="active"
+          >
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLink]="['/books']"
+            routerLinkActive="active"
+          >
+            Książki
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLink]="['/shelves']"
+            routerLinkActive="active"
+          >
+            Półki
+          </a>
+        </li>
+        <div class="nav-item dropdown ms-auto">
+          <button class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+            {{ (user$ | async)?.username }}
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item" [routerLink]="['/profile']">Profil</a>
+            </li>
+            <li>
+              <button class="dropdown-item" (click)="logout()">
+                Wyloguj się
+              </button>
+            </li>
+          </ul>
+        </div>
+        } @else {
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/']" routerLinkActive="active">
+            Strona główna
+          </a>
+        </li>
+        }
+      </ul>
+    </div>
+  </div>
+</nav>

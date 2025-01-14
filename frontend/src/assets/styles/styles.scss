@@ -4,11 +4,9 @@
 
 @import "bootstrap/scss/bootstrap";
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
-:root {
-  --toast-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-}
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
 html,
 body {
@@ -21,17 +19,35 @@ body {
   font-size: 0.875rem;
 }
 
+@mixin toast-with-icon($background-color, $icon-content) {
+  background-color: $background-color;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  padding-left: 40px;
+  position: relative;
+
+  &::before {
+    content: $icon-content;
+    font-family: "Bootstrap-icons";
+    color: white;
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+  }
+}
+
 .toast-container .ngx-toastr {
   box-shadow: 0 0.5rem 1rem rgba($black, 0.15) !important;
-  margin-bottom: 0.25rem !important;
+  margin-bottom: 0.25rem;
+  background: none;
 
   &.toast-success {
-    background-color: #3567be;
-    font-size: 0.938rem;
+    @include toast-with-icon(#3567be, "\F633");
   }
 
   &.toast-error {
-    background-color: #b24726;
-    font-size: 0.938rem;
+    @include toast-with-icon(#b24726, "\F623");
   }
 }
