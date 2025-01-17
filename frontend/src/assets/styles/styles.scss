@@ -51,3 +51,14 @@ body {
     @include toast-with-icon(#b24726, "\F623");
   }
 }
+
+.card {
+  .card-subtitle {
+    font-weight: 500;
+  }
+
+  .card-text span:first-child {
+    font-weight: 500;
+    margin-right: 0.5rem;
+  }
+}

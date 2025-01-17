@@ -1,5 +1,6 @@
 package com.example.bookhub.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<Object> handleInvalidCredentialsException(InvalidCredentialsException e) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
+        ErrorMessage errorMessage = new ErrorMessage(status, e.getMessage());
+        return new ResponseEntity<>(errorMessage, status);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException e) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorMessage errorMessage = new ErrorMessage(status, e.getMessage());
         return new ResponseEntity<>(errorMessage, status);
     }

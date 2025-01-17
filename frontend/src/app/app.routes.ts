@@ -1,5 +1,6 @@
 import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './features/auth/login/login.component';
+import { NotFoundComponent } from './features/not-found/not-found.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { Routes } from '@angular/router';
 import { WelcomeComponent } from './features/welcome/welcome.component';
@@ -27,5 +28,15 @@ export const routes: Routes = [
     path: 'home',
     canActivate: [authGuard],
     component: HomeComponent,
+  },
+  {
+    path: 'book',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./features/book/book.routes').then((r) => r.BOOK_ROUTES),
+  },
+  {
+    path: '**',
+    component: NotFoundComponent,
   },
 ];

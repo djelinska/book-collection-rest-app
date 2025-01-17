@@ -1,4 +1,4 @@
-package com.example.bookhub.config;
+package com.example.bookhub.utils;
 
 import com.example.bookhub.service.CustomUserDetailsService;
 import com.example.bookhub.service.JwtService;
