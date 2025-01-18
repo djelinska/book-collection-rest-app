@@ -5,6 +5,7 @@ import com.example.bookhub.dto.BookFormDto;
 import com.example.bookhub.dto.BookListDto;
 import com.example.bookhub.dto.ShelfDto;
 import com.example.bookhub.entity.Book;
+import com.example.bookhub.entity.User;
 import com.example.bookhub.enums.Genre;
 import com.example.bookhub.enums.Language;
 import com.example.bookhub.repository.BookRepository;
@@ -74,7 +75,7 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    public BookListDto convertToListDto(Book book) {
+    public BookListDto convertToListDto(Book book, User user) {
         BookListDto dto = new BookListDto();
         dto.setId(book.getId());
         dto.setTitle(book.getTitle());
@@ -85,11 +86,11 @@ public class BookService {
         dto.setNumberOfRatings(book.getNumberOfRatings());
         dto.setDescription(book.getDescription());
         dto.setImagePath(book.getImagePath());
-        dto.setShelves(convertShelvesForBook(book));
+        dto.setShelves(convertShelvesForBook(book, user));
         return dto;
     }
 
-    public BookDetailsDto convertToDetailsDto(Book book) {
+    public BookDetailsDto convertToDetailsDto(Book book, User user) {
         BookDetailsDto dto = new BookDetailsDto();
         dto.setId(book.getId());
         dto.setTitle(book.getTitle());
@@ -104,12 +105,13 @@ public class BookService {
         dto.setNumberOfRatings(book.getNumberOfRatings());
         dto.setDescription(book.getDescription());
         dto.setImagePath(book.getImagePath());
-        dto.setShelves(convertShelvesForBook(book));
+        dto.setShelves(convertShelvesForBook(book, user));
         return dto;
     }
 
-    private List<ShelfDto> convertShelvesForBook(Book book) {
+    private List<ShelfDto> convertShelvesForBook(Book book, User loggedInUser) {
         return book.getShelves().stream()
+                .filter(shelf -> shelf.getUser().equals(loggedInUser))
                 .map(shelf -> {
                     ShelfDto shelfDto  = new ShelfDto();
                     shelfDto.setId(shelf.getId());

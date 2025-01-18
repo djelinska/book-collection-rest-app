@@ -32,9 +32,9 @@ public class BookController {
     private final ReviewService reviewService;
 
     @GetMapping
-    public ResponseEntity<List<BookListDto>> getBooks() {
+    public ResponseEntity<List<BookListDto>> getBooks(@AuthenticationPrincipal User user) {
         List<Book> books = bookService.getAllBooks();
-        List<BookListDto> bookDtos = books.stream().map(bookService::convertToListDto).toList();
+        List<BookListDto> bookDtos = books.stream().map(book -> bookService.convertToListDto(book, user)).toList();
         return ResponseEntity.ok(bookDtos);
     }
 
@@ -46,13 +46,14 @@ public class BookController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "2") int size,
             @RequestParam(defaultValue = "title") String sortField,
-            @RequestParam(defaultValue = "asc") String sortDirection) {
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @AuthenticationPrincipal User user) {
 
         Sort sort = sortDirection.equalsIgnoreCase("asc") ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Book> booksPage = bookService.searchBooks(query, genre, language, pageable);
-        List<BookListDto> books = booksPage.map(bookService::convertToListDto).getContent();
+        List<BookListDto> books = booksPage.map(book -> bookService.convertToListDto(book, user)).getContent();
 
         PaginatedBooksDto response = new PaginatedBooksDto();
         response.setBooks(books);
@@ -63,9 +64,9 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookDetailsDto> getBookById(@PathVariable Long id) {
+    public ResponseEntity<BookDetailsDto> getBookById(@PathVariable Long id, @AuthenticationPrincipal User user) {
         Book book = bookService.getBookById(id);
-        BookDetailsDto bookDto = bookService.convertToDetailsDto(book);
+        BookDetailsDto bookDto = bookService.convertToDetailsDto(book, user);
         return ResponseEntity.ok(bookDto);
     }
 

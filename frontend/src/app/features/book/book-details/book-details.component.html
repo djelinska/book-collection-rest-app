@@ -31,16 +31,18 @@
           ></app-book-add-to-shelf>
         </div>
         <div class="card-footer">
+          @if (this.bookStats$ | async; as stats) {
           <div class="d-flex justify-content-between">
             <p class="mb-0">
               Liczba osób, które przeczytały:
-              <span>0</span>
+              <span>{{ stats.readCount }}</span>
             </p>
             <p class="mb-0">
               Liczba osób, które chcą przeczytać:
-              <span>0</span>
+              <span>{{ stats.wantToReadCount }}</span>
             </p>
           </div>
+          }
         </div>
       </div>
     </div>

@@ -11,14 +11,17 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import { BookAddToShelfComponent } from '../shared/book-add-to-shelf/book-add-to-shelf.component';
 import { BookDetailsDto } from '../../../core/services/book/models/book-details.dto';
 import { BookService } from '../../../core/services/book/book.service';
+import { BookStatsDto } from '../../../core/services/stats/models/book-stats.dto';
 import { CommonModule } from '@angular/common';
 import { FormErrorComponent } from '../../../shared/components/form-error/form-error.component';
 import { Genre } from '../../../shared/enums/genre';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Language } from '../../../shared/enums/language';
+import { Observable } from 'rxjs';
 import { ReviewDto } from '../../../core/services/review/models/review.dto';
 import { ReviewFormDto } from '../../../core/services/review/models/review-form.dto';
 import { ReviewService } from '../../../core/services/review/review.service';
+import { StatsService } from '../../../core/services/stats/stats.service';
 import { ToastrService } from 'ngx-toastr';
 import { UserDto } from '../../../shared/models/user.dto';
 
@@ -54,10 +57,13 @@ export class BookDetailsComponent implements OnInit {
   public bookReviews: ReviewDto[] = [];
   public currentUser!: UserDto | null;
 
+  public bookStats$!: Observable<BookStatsDto>;
+
   public constructor(
     private authService: AuthService,
     private bookService: BookService,
     private reviewService: ReviewService,
+    private statsService: StatsService,
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private fb: FormBuilder
@@ -67,6 +73,7 @@ export class BookDetailsComponent implements OnInit {
     this.currentUser = this.authService.getCurrentUser();
     this.loadBook();
     this.loadBookReviews();
+    this.bookStats$ = this.statsService.getBookStatistics(this.book.id);
   }
 
   public onAddToShelf(): void {
