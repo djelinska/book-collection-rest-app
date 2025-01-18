@@ -6,6 +6,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
+import { BookAddToShelfComponent } from '../shared/book-add-to-shelf/book-add-to-shelf.component';
 import { BookService } from '../../../core/services/book/book.service';
 import { CommonModule } from '@angular/common';
 import { Genre } from '../../../shared/enums/genre';
@@ -17,7 +18,13 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-book-list',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    RouterLink,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    BookAddToShelfComponent,
+  ],
   templateUrl: './book-list.component.html',
   styleUrl: './book-list.component.scss',
 })

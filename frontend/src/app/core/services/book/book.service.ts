@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { BookDto } from '../../../shared/models/book.dto';
+import { BookListDto } from './models/book-list.dto';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PaginatedBooksDto } from './models/paginated-books.dto';
@@ -36,8 +37,8 @@ export class BookService {
     });
   }
 
-  public getBooks(): Observable<BookDto[]> {
-    return this.http.get<BookDto[]>(this.apiUrl);
+  public getBooks(): Observable<BookListDto[]> {
+    return this.http.get<BookListDto[]>(this.apiUrl);
   }
 
   public getBookById(id: number): Observable<BookDto> {

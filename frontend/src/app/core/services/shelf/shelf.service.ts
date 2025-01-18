@@ -27,6 +27,23 @@ export class ShelfService {
     return this.http.get<BookDto[]>(`${this.apiUrl}/${id}/books`);
   }
 
+  public addBookToUserShelf(shelfId: number, bookId: number): Observable<void> {
+    return this.http.patch<void>(
+      `${this.apiUrl}/${shelfId}/add-book/${bookId}`,
+      {}
+    );
+  }
+
+  public removeBookFromUserShelf(
+    shelfId: number,
+    bookId: number
+  ): Observable<void> {
+    return this.http.patch<void>(
+      `${this.apiUrl}/${shelfId}/remove-book/${bookId}`,
+      {}
+    );
+  }
+
   public createUserShelf(shelf: ShelfFormDto): Observable<void> {
     return this.http.post<void>(this.apiUrl, shelf);
   }

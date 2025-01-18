@@ -1,0 +1,18 @@
+<div class="dropdown">
+  <button
+    type="button"
+    class="btn btn-primary dropdown-toggle"
+    data-bs-toggle="dropdown"
+  >
+    Dodaj do półki
+  </button>
+  <ul class="dropdown-menu">
+    @for (shelf of availableShelves; track shelf.id) {
+    <li>
+      <button class="dropdown-item" (click)="addBookToShelf(shelf.id, bookId)">
+        {{ shelf.name }}
+      </button>
+    </li>
+    }
+  </ul>
+</div>

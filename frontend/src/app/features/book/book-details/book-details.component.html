@@ -25,7 +25,10 @@
             <span>Opis:</span>
             <span>{{ book.description }}</span>
           </p>
-          <button class="btn btn-primary mt-4">Dodaj do półki</button>
+          <app-book-add-to-shelf
+            [bookId]="book.id"
+            (refresh)="onAddToShelf()"
+          ></app-book-add-to-shelf>
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-between">

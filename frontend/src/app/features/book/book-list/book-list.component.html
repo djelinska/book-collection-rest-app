@@ -39,7 +39,7 @@
   <div class="btn-group mb-4">
     <button
       type="button"
-      class="btn btn-success dropdown-toggle"
+      class="btn btn-primary dropdown-toggle"
       data-bs-toggle="dropdown"
     >
       Sortuj według
@@ -137,7 +137,10 @@
             >&rpar;
           </p>
           <div class="d-flex justify-content-between mb-2">
-            <button class="btn btn-primary">Dodaj do półki</button>
+            <app-book-add-to-shelf
+              [bookId]="book.id"
+              (refresh)="onFilter()"
+            ></app-book-add-to-shelf>
             <a
               [routerLink]="['/book', book.id, 'details']"
               class="btn btn-outline-primary"

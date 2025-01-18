@@ -7,6 +7,7 @@ import com.example.bookhub.entity.Book;
 import com.example.bookhub.entity.Shelf;
 import com.example.bookhub.entity.User;
 import com.example.bookhub.enums.ShelfType;
+import com.example.bookhub.service.BookService;
 import com.example.bookhub.service.ShelfService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import java.util.List;
 public class ShelfController {
 
     private final ShelfService shelfService;
+    private final BookService bookService;
 
     @GetMapping
     public ResponseEntity<List<ShelfListDto>> getUserShelves(@AuthenticationPrincipal User user) {
@@ -82,6 +84,32 @@ public class ShelfController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         shelfService.deleteShelf(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{shelfId}/add-book/{bookId}")
+    public ResponseEntity<Void> addBookToShelf(@PathVariable Long shelfId, @PathVariable Long bookId, @AuthenticationPrincipal User user) {
+        Shelf shelf = shelfService.getShelfById(shelfId);
+        Book book = bookService.getBookById(bookId);
+
+        if (!shelf.getUser().equals(user)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        shelfService.addBookToShelf(shelf, book);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{shelfId}/remove-book/{bookId}")
+    public ResponseEntity<Void> removeBookFromShelf(@PathVariable Long shelfId, @PathVariable Long bookId, @AuthenticationPrincipal User user) {
+        Shelf shelf = shelfService.getShelfById(shelfId);
+        Book book = bookService.getBookById(bookId);
+
+        if (!shelf.getUser().equals(user)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        shelfService.removeBookFromShelf(shelf, book);
         return ResponseEntity.ok().build();
     }
 }

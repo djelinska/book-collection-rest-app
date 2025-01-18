@@ -3,6 +3,7 @@ package com.example.bookhub.service;
 import com.example.bookhub.dto.ShelfDetailsDto;
 import com.example.bookhub.dto.ShelfFormDto;
 import com.example.bookhub.dto.ShelfListDto;
+import com.example.bookhub.entity.Book;
 import com.example.bookhub.entity.Shelf;
 import com.example.bookhub.entity.User;
 import com.example.bookhub.enums.ShelfType;
@@ -63,6 +64,20 @@ public class ShelfService {
 
     public void deleteShelf(Long id) {
         shelfRepository.deleteById(id);
+    }
+
+    public void addBookToShelf(Shelf shelf, Book book) {
+        if (!shelf.getBooks().contains(book)) {
+            shelf.getBooks().add(book);
+            shelfRepository.save(shelf);
+        }
+    }
+
+    public void removeBookFromShelf(Shelf shelf, Book book) {
+        if (shelf.getBooks().contains(book)) {
+            shelf.getBooks().remove(book);
+            shelfRepository.save(shelf);
+        }
     }
 
     public ShelfListDto convertToListDto(Shelf shelf) {
