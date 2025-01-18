@@ -4,6 +4,7 @@ import com.example.bookhub.entity.User;
 import com.example.bookhub.enums.Role;
 import com.example.bookhub.repository.UserRepository;
 import com.example.bookhub.service.FileService;
+import com.example.bookhub.service.ShelfService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,7 @@ public class AppConfig {
     }
 
     @Bean
-    public CommandLineRunner initData(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public CommandLineRunner initData(UserRepository userRepository, PasswordEncoder passwordEncoder, ShelfService shelfService) {
         return args -> {
             fileService.cleanUploadsFolder();
 
@@ -33,6 +34,7 @@ public class AppConfig {
                 admin.setPassword(passwordEncoder.encode("admin"));
                 admin.setRole(Role.ROLE_ADMIN);
                 userRepository.save(admin);
+                shelfService.initializeUserShelves(admin);
             }
 
             if (!userRepository.existsByUsername("user")) {
@@ -41,6 +43,7 @@ public class AppConfig {
                 user.setPassword(passwordEncoder.encode("1234"));
                 user.setRole(Role.ROLE_USER);
                 userRepository.save(user);
+                shelfService.initializeUserShelves(user);
             }
         };
     }

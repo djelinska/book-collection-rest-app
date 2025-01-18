@@ -27,7 +27,6 @@ export class BookDetailsComponent implements OnInit {
   public ngOnInit(): void {
     this.route.data.subscribe((resolver) => {
       this.book = resolver['book'] as BookDto;
-      console.log(this.book);
     });
   }
 

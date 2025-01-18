@@ -1,0 +1,44 @@
+<div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Moje półki</h2>
+    <a [routerLink]="['/shelf/add']" class="btn btn-primary">Dodaj półkę</a>
+  </div>
+  <div class="row">
+    @for (shelf of shelves; track shelf.id) {
+    <div class="col-md-6 col-lg-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">{{ shelf.name }}</h5>
+          <p class="card-text">
+            Liczba książek:
+            <span>{{ shelf.numberOfBooks }}</span>
+          </p>
+          <div class="d-flex justify-content-between">
+            <a
+              [routerLink]="['/shelf', shelf.id, 'details']"
+              class="btn btn-primary"
+            >
+              Przeglądaj
+            </a>
+            @if (shelf.type === defaultShelfType) {
+            <a
+              [routerLink]="['/shelf', shelf.id, 'edit']"
+              class="btn btn-outline-primary"
+            >
+              Edytuj
+            </a>
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              (click)="onDelete(shelf.id)"
+            >
+              Usuń
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

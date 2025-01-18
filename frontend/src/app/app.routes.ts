@@ -36,6 +36,12 @@ export const routes: Routes = [
       import('./features/book/book.routes').then((r) => r.BOOK_ROUTES),
   },
   {
+    path: 'shelf',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./features/shelf/shelf.routes').then((r) => r.SHELF_ROUTES),
+  },
+  {
     path: '**',
     component: NotFoundComponent,
   },
