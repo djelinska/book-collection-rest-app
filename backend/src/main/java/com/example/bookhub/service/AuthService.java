@@ -1,5 +1,6 @@
 package com.example.bookhub.service;
 
+import com.example.bookhub.dto.UserDto;
 import com.example.bookhub.dto.UserLoginRequest;
 import com.example.bookhub.dto.UserLoginResponse;
 import com.example.bookhub.dto.UserRegisterRequest;
@@ -62,6 +63,12 @@ public class AuthService {
 
         UserLoginResponse userLoginResponse = new UserLoginResponse();
         userLoginResponse.setToken(token);
+
+        UserDto userDto = new UserDto();
+        userDto.setUsername(user.getUsername());
+        userDto.setRole(user.getRole());
+
+        userLoginResponse.setUser(userDto);
 
         return userLoginResponse;
     }

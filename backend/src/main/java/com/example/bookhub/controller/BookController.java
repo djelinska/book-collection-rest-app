@@ -1,14 +1,14 @@
 package com.example.bookhub.controller;
 
-import com.example.bookhub.dto.BookDetailsDto;
-import com.example.bookhub.dto.BookFormDto;
-import com.example.bookhub.dto.BookListDto;
-import com.example.bookhub.dto.PaginatedBooksDto;
+import com.example.bookhub.dto.*;
 import com.example.bookhub.entity.Book;
+import com.example.bookhub.entity.Review;
+import com.example.bookhub.entity.User;
 import com.example.bookhub.enums.Genre;
 import com.example.bookhub.enums.Language;
 import com.example.bookhub.service.BookService;
 import com.example.bookhub.service.FileService;
+import com.example.bookhub.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +29,7 @@ public class BookController {
 
     private final BookService bookService;
     private final FileService fileService;
+    private final ReviewService reviewService;
 
     @GetMapping
     public ResponseEntity<List<BookListDto>> getBooks() {
@@ -65,6 +67,33 @@ public class BookController {
         Book book = bookService.getBookById(id);
         BookDetailsDto bookDto = bookService.convertToDetailsDto(book);
         return ResponseEntity.ok(bookDto);
+    }
+
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<List<ReviewDto>> getReviewsForBook(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        Book book = bookService.getBookById(id);
+        List<Review> reviews = book.getReviews();
+        List<ReviewDto> reviewDtos = reviews.stream()
+                .map(review -> {
+                    ReviewDto reviewDto = new ReviewDto();
+                    reviewDto.setId(review.getId());
+                    reviewDto.setRating(review.getRating());
+                    reviewDto.setContent(review.getContent());
+                    reviewDto.setCreatedAt(review.getCreatedAt());
+                    reviewDto.setUpdatedAt(review.getUpdatedAt());
+                    reviewDto.setAuthor(review.getUser().getUsername());
+                    return reviewDto;
+                })
+                .toList();
+        return ResponseEntity.ok(reviewDtos);
+    }
+
+    @PostMapping("/{id}/reviews")
+    public ResponseEntity<Void> addReview(@PathVariable Long id, @RequestBody ReviewFormDto reviewFormDto, @AuthenticationPrincipal User user) {
+        Book book = bookService.getBookById(id);
+        reviewService.addReview(book, reviewFormDto, user);
+        bookService.updateBookRatings(book);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping

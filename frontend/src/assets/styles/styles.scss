@@ -38,17 +38,23 @@ body {
   }
 }
 
-.toast-container .ngx-toastr {
-  box-shadow: 0 0.5rem 1rem rgba($black, 0.15) !important;
-  margin-bottom: 0.25rem;
-  background: none;
+.toast-container {
+  position: fixed !important;
+  top: 12px;
+  right: 12px;
 
-  &.toast-success {
-    @include toast-with-icon(#3567be, "\F633");
-  }
+  .ngx-toastr {
+    box-shadow: 0 0.5rem 1rem rgba($black, 0.15) !important;
+    margin-bottom: 0.25rem;
+    background: none;
 
-  &.toast-error {
-    @include toast-with-icon(#b24726, "\F623");
+    &.toast-success {
+      @include toast-with-icon(#3567be, "\F633");
+    }
+
+    &.toast-error {
+      @include toast-with-icon(#b24726, "\F623");
+    }
   }
 }
 

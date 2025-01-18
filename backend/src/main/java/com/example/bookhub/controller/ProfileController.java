@@ -19,7 +19,10 @@ public class ProfileController {
 
     @GetMapping
     public ResponseEntity<UserDto> getUserProfile(@AuthenticationPrincipal User userDetails) {
-        UserDto user = userService.getUserByUsername(userDetails.getUsername());
-        return ResponseEntity.ok(user);
+        User user = userService.getUserByUsername(userDetails.getUsername());
+        UserDto userDto = new UserDto();
+        userDto.setUsername(user.getUsername());
+        userDto.setRole(user.getRole());
+        return ResponseEntity.ok(userDto);
     }
 }

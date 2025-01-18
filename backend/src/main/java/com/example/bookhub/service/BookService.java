@@ -8,8 +8,10 @@ import com.example.bookhub.entity.Book;
 import com.example.bookhub.enums.Genre;
 import com.example.bookhub.enums.Language;
 import com.example.bookhub.repository.BookRepository;
+import com.example.bookhub.repository.ReviewRepository;
 import com.example.bookhub.utils.BookSpecifications;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ import java.util.List;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final ReviewRepository reviewRepository;
 
     public Page<Book> searchBooks(String query, Genre genre, Language language, Pageable pageable) {
         Specification<Book> spec = Specification
@@ -59,6 +62,16 @@ public class BookService {
 
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void updateBookRatings(Book book) {
+        Double averageRating = reviewRepository.calculateAverageRating(book.getId());
+        int totalRatings = reviewRepository.countReviewsByBookId(book.getId());
+
+        book.setNumberOfRatings(totalRatings);
+        book.setAverageRating(averageRating != null ? averageRating : 0.0);
+        bookRepository.save(book);
     }
 
     public BookListDto convertToListDto(Book book) {

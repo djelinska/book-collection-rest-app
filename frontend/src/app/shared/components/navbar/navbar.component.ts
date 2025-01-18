@@ -4,7 +4,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
-import { User } from '../../models/user';
+import { UserDto } from '../../models/user.dto';
 import { UserService } from '../../../core/services/user/user.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { UserService } from '../../../core/services/user/user.service';
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent implements OnInit {
-  public user$!: Observable<User>;
+  public user$!: Observable<UserDto>;
   public isAuthenticated: boolean = false;
 
   public constructor(

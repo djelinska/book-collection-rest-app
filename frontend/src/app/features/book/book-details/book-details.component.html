@@ -79,9 +79,9 @@
   <div class="mt-5">
     <h4>Recenzje</h4>
     <div class="p-4 mb-3 border rounded">
-      <span class="rating">{{ book.averageRating.toFixed(1) }}</span>
+      <span class="rating">{{ averageRating.toFixed(1) }}</span>
       <p class="mb-0 text-muted">
-        <span>{{ book.numberOfRatings }}</span> recenzji
+        <span>{{ numberOfRatings }}</span> recenzji
       </p>
     </div>
 
@@ -91,33 +91,38 @@
     >
       <div class="d-flex flex-column w-75">
         <div class="mb-2">
-          <span th:text="${review.user.username}">Użytkownik</span>
+          <i class="bi bi-person-circle text-secondary me-2"></i>
+          <span>{{ review.author }}</span>
         </div>
-        <div class="d-flex align-items-center mb-2">
-          <span
-            class="badge bg-secondary me-2"
-            th:text="'Ocena: ' + ${review.rating}"
-            >Ocena: 0</span
-          >
+        <div class="mb-2">
+          <span class="badge bg-secondary">{{
+            "Ocena: " + review.rating
+          }}</span>
         </div>
-        <p class="text-muted">{{ review.createdAt | date : "dd MMM yyyy" }}</p>
-        <p class="mb-0" th:text="${review.content}">Treść recenzji</p>
+        <p class="text-muted text-sm">
+          {{ review.createdAt | date : "mediumDate" }}
+        </p>
+        <p class="mb-0">{{ review.content }}</p>
       </div>
 
-      <div
-        th:if="${#authentication.name == review.user.username}"
-        class="d-flex flex-column align-items-center justify-content-center"
-      >
-        <form
-          th:action="@{/reviews/{id}/delete(id=${review.id})}"
-          method="post"
-          onsubmit="return confirm('Czy na pewno chcesz usunąć tę recenzję?');"
+      @if (review.author === currentUser?.username ) {
+      <div class="d-flex gap-2">
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary"
+          (click)="onReviewEdit(review)"
         >
-          <button type="submit" class="btn btn-outline-danger btn-sm">
-            Usuń
-          </button>
-        </form>
+          Edytuj
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-danger"
+          (click)="onReviewDelete(review.id)"
+        >
+          Usuń
+        </button>
       </div>
+      }
     </div>
     } @empty {
     <div class="alert alert-warning">
@@ -126,30 +131,42 @@
     }
 
     <div class="mt-4">
-      <h4>Dodaj recenzję</h4>
+      <h4>{{ isEditMode ? "Edytuj recenzję" : "Dodaj recenzję" }}</h4>
       <div class="row">
         <div class="col-md-6">
-          <form>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label for="rating" class="form-label">Ocena (1-5)</label>
               <input
                 type="number"
                 id="rating"
-                name="rating"
                 class="form-control"
+                formControlName="rating"
+                [ngClass]="{
+                  'is-invalid':
+                    form.get('rating')?.touched && form.get('rating')?.errors
+                }"
               />
+              <app-form-error [control]="form.get('rating')"></app-form-error>
             </div>
             <div class="mb-3">
               <label for="content" class="form-label">Treść recenzji</label>
               <textarea
                 id="content"
-                name="content"
                 class="form-control"
                 rows="4"
                 placeholder="Napisz swoją recenzję..."
+                formControlName="content"
+                [ngClass]="{
+                  'is-invalid':
+                    form.get('content')?.touched && form.get('content')?.errors
+                }"
               ></textarea>
+              <app-form-error [control]="form.get('content')"></app-form-error>
             </div>
-            <button type="submit" class="btn btn-primary">Dodaj</button>
+            <button type="submit" class="btn btn-primary">
+              {{ isEditMode ? "Zapisz" : "Dodaj" }}
+            </button>
           </form>
         </div>
       </div>

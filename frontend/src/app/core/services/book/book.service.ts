@@ -6,6 +6,8 @@ import { BookListDto } from './models/book-list.dto';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PaginatedBooksDto } from './models/paginated-books.dto';
+import { ReviewDto } from '../review/models/review.dto';
+import { ReviewFormDto } from '../review/models/review-form.dto';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -44,6 +46,14 @@ export class BookService {
 
   public getBookById(id: number): Observable<BookDetailsDto> {
     return this.http.get<BookDetailsDto>(`${this.apiUrl}/${id}`);
+  }
+
+  public getReviewsForBook(id: number): Observable<ReviewDto[]> {
+    return this.http.get<ReviewDto[]>(`${this.apiUrl}/${id}/reviews`);
+  }
+
+  public addReviewForBook(id: number, review: ReviewFormDto): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${id}/reviews`, review);
   }
 
   public createBook(book: BookFormDto): Observable<void> {

@@ -4,6 +4,14 @@
   <div class="text-danger text-sm">To pole jest wymagane</div>
   } @if (control.errors['mismatch']) {
   <div class="text-danger text-sm">Hasła nie pasują</div>
+  } @if (control.errors['min']) {
+  <div class="text-danger text-sm">
+    Minimalna wartość to {{ control.errors["min"].min }}
+  </div>
+  } @if (control.errors['max']) {
+  <div class="text-danger text-sm">
+    Maksymalna wartość to {{ control.errors["max"].max }}
+  </div>
   }
 </div>
 }

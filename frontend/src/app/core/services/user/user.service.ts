@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from '../../../shared/models/user';
+import { UserDto } from '../../../shared/models/user.dto';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class UserService {
 
   public constructor(private http: HttpClient) {}
 
-  public getUserProfile(): Observable<User> {
-    return this.http.get<User>(this.apiUrl);
+  public getUserProfile(): Observable<UserDto> {
+    return this.http.get<UserDto>(this.apiUrl);
   }
 }

@@ -2,10 +2,11 @@ import { BehaviorSubject, Observable, map } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JwtPayload } from '../../../shared/models/jwt-payload';
+import { JwtPayloadDto } from '../../../shared/models/jwt-payload.dto';
 import { LoginRequest } from './models/login-request';
 import { LoginResponse } from './models/login-response';
 import { RegisterRequest } from './models/register-request';
+import { UserDto } from '../../../shared/models/user.dto';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -14,6 +15,7 @@ import { environment } from '../../../../environments/environment';
 export class AuthService {
   private apiUrl = environment.apiUrl + '/auth';
   private readonly tokenKey = 'auth_token';
+  private readonly userKey = 'user';
 
   private isAuthenticatedSubject: BehaviorSubject<boolean> =
     new BehaviorSubject<boolean>(false);
@@ -34,7 +36,7 @@ export class AuthService {
 
   private isTokenValid(token: string): boolean {
     try {
-      const payload = JSON.parse(atob(token.split('.')[1])) as JwtPayload;
+      const payload = JSON.parse(atob(token.split('.')[1])) as JwtPayloadDto;
       const expirationDate = new Date(payload.exp * 1000);
 
       return expirationDate > new Date();
@@ -43,6 +45,12 @@ export class AuthService {
 
       return false;
     }
+  }
+
+  public getCurrentUser(): UserDto | null {
+    const userString = localStorage.getItem(this.userKey);
+
+    return userString ? (JSON.parse(userString) as UserDto) : null;
   }
 
   public isAuthenticated(): boolean {
@@ -64,6 +72,10 @@ export class AuthService {
         map((response: LoginResponse) => {
           if (response.token) {
             localStorage.setItem(this.tokenKey, response.token);
+            localStorage.setItem(
+              this.userKey,
+              JSON.stringify({ ...response.user })
+            );
             this.isAuthenticatedSubject.next(true);
           }
 
@@ -74,6 +86,7 @@ export class AuthService {
 
   public logout(): void {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
     this.isAuthenticatedSubject.next(false);
   }
 }
