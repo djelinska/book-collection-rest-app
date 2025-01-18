@@ -1,7 +1,7 @@
-import { BookDto } from '../../../../shared/models/book.dto';
+import { BookListDto } from './book-list.dto';
 
 export interface PaginatedBooksDto {
-  books: BookDto[];
+  books: BookListDto[];
   totalPages: number;
   totalElements: number;
   currentPage: number;

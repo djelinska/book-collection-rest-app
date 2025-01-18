@@ -4,8 +4,10 @@ import com.example.bookhub.enums.Genre;
 import com.example.bookhub.enums.Language;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class BookDto {
+public class BookDetailsDto {
 
     private Long id;
 
@@ -32,4 +34,6 @@ public class BookDto {
     private String description;
 
     private String imagePath;
+
+    private List<ShelfDto> shelves;
 }

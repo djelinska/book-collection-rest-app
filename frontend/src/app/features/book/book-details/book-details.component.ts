@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 import { BookAddToShelfComponent } from '../shared/book-add-to-shelf/book-add-to-shelf.component';
-import { BookDto } from '../../../shared/models/book.dto';
+import { BookDetailsDto } from '../../../core/services/book/models/book-details.dto';
 import { BookService } from '../../../core/services/book/book.service';
 import { DatePipe } from '@angular/common';
 import { Genre } from '../../../shared/enums/genre';
@@ -16,9 +16,10 @@ import { Language } from '../../../shared/enums/language';
   styleUrl: './book-details.component.scss',
 })
 export class BookDetailsComponent implements OnInit {
-  public book!: BookDto;
+  public book!: BookDetailsDto;
   public genreNames: Record<string, string> = Genre;
   public languageNames: Record<string, string> = Language;
+  public bookReviews: any[] = [];
 
   public constructor(
     private bookService: BookService,
@@ -39,7 +40,7 @@ export class BookDetailsComponent implements OnInit {
 
   private loadBook(): void {
     this.route.data.subscribe((resolver) => {
-      this.book = resolver['book'] as BookDto;
+      this.book = resolver['book'] as BookDetailsDto;
     });
   }
 }

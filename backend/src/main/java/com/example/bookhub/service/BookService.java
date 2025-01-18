@@ -1,6 +1,9 @@
 package com.example.bookhub.service;
 
-import com.example.bookhub.dto.BookDto;
+import com.example.bookhub.dto.BookDetailsDto;
+import com.example.bookhub.dto.BookFormDto;
+import com.example.bookhub.dto.BookListDto;
+import com.example.bookhub.dto.ShelfDto;
 import com.example.bookhub.entity.Book;
 import com.example.bookhub.enums.Genre;
 import com.example.bookhub.enums.Language;
@@ -39,18 +42,18 @@ public class BookService {
                 .orElseThrow(() -> new EntityNotFoundException("Book with id " + id + " not found"));
     }
 
-    public void addBook(BookDto bookDto) {
-        Book book = convertToEntity(bookDto, null);
+    public void addBook(BookFormDto bookFormDto) {
+        Book book = convertToEntity(bookFormDto, null);
         bookRepository.save(book);
     }
 
-    public void editBook(Long id, BookDto bookDto) {
+    public void editBook(Long id, BookFormDto bookFormDto) {
         Book existingBook = getBookById(id);
 
-        String imagePath = bookDto.getImagePath() == null ? existingBook.getImagePath() : bookDto.getImagePath();
-        bookDto.setImagePath(imagePath);
+        String imagePath = bookFormDto.getImagePath() == null ? existingBook.getImagePath() : bookFormDto.getImagePath();
+        bookFormDto.setImagePath(imagePath);
 
-        Book updatedBook = convertToEntity(bookDto, existingBook);
+        Book updatedBook = convertToEntity(bookFormDto, existingBook);
         bookRepository.save(updatedBook);
     }
 
@@ -58,38 +61,65 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public BookDto convertToDto(Book book) {
-        BookDto bookDto = new BookDto();
-        bookDto.setId(book.getId());
-        bookDto.setTitle(book.getTitle());
-        bookDto.setAuthor(book.getAuthor());
-        bookDto.setPublisher(book.getPublisher());
-        bookDto.setIsbn(book.getIsbn());
-        bookDto.setPublicationYear(book.getPublicationYear());
-        bookDto.setGenre(book.getGenre());
-        bookDto.setPageCount(book.getPageCount());
-        bookDto.setLanguage(book.getLanguage());
-        bookDto.setAverageRating(book.getAverageRating());
-        bookDto.setNumberOfRatings(book.getNumberOfRatings());
-        bookDto.setDescription(book.getDescription());
-        bookDto.setImagePath(book.getImagePath());
-        return bookDto;
+    public BookListDto convertToListDto(Book book) {
+        BookListDto dto = new BookListDto();
+        dto.setId(book.getId());
+        dto.setTitle(book.getTitle());
+        dto.setAuthor(book.getAuthor());
+        dto.setGenre(book.getGenre());
+        dto.setLanguage(book.getLanguage());
+        dto.setAverageRating(book.getAverageRating());
+        dto.setNumberOfRatings(book.getNumberOfRatings());
+        dto.setDescription(book.getDescription());
+        dto.setImagePath(book.getImagePath());
+        dto.setShelves(convertShelvesForBook(book));
+        return dto;
     }
 
-    public Book convertToEntity(BookDto bookDto, Book book) {
+    public BookDetailsDto convertToDetailsDto(Book book) {
+        BookDetailsDto dto = new BookDetailsDto();
+        dto.setId(book.getId());
+        dto.setTitle(book.getTitle());
+        dto.setAuthor(book.getAuthor());
+        dto.setPublisher(book.getPublisher());
+        dto.setIsbn(book.getIsbn());
+        dto.setPublicationYear(book.getPublicationYear());
+        dto.setGenre(book.getGenre());
+        dto.setPageCount(book.getPageCount());
+        dto.setLanguage(book.getLanguage());
+        dto.setAverageRating(book.getAverageRating());
+        dto.setNumberOfRatings(book.getNumberOfRatings());
+        dto.setDescription(book.getDescription());
+        dto.setImagePath(book.getImagePath());
+        dto.setShelves(convertShelvesForBook(book));
+        return dto;
+    }
+
+    private List<ShelfDto> convertShelvesForBook(Book book) {
+        return book.getShelves().stream()
+                .map(shelf -> {
+                    ShelfDto shelfDto  = new ShelfDto();
+                    shelfDto.setId(shelf.getId());
+                    shelfDto.setName(shelf.getName());
+                    return shelfDto;
+                })
+                .toList();
+    }
+
+    public Book convertToEntity(BookFormDto dto, Book book) {
         if (book == null) {
             book = new Book();
         }
-        book.setTitle(bookDto.getTitle());
-        book.setAuthor(bookDto.getAuthor());
-        book.setPublisher(bookDto.getPublisher());
-        book.setIsbn(bookDto.getIsbn());
-        book.setPublicationYear(bookDto.getPublicationYear());
-        book.setGenre(bookDto.getGenre());
-        book.setPageCount(bookDto.getPageCount());
-        book.setLanguage(bookDto.getLanguage());
-        book.setDescription(bookDto.getDescription());
-        book.setImagePath(bookDto.getImagePath());
+        book.setTitle(dto.getTitle());
+        book.setAuthor(dto.getAuthor());
+        book.setPublisher(dto.getPublisher());
+        book.setIsbn(dto.getIsbn());
+        book.setPublicationYear(dto.getPublicationYear());
+        book.setGenre(dto.getGenre());
+        book.setPageCount(dto.getPageCount());
+        book.setLanguage(dto.getLanguage());
+        book.setDescription(dto.getDescription());
+        book.setImagePath(dto.getImagePath());
         return book;
     }
 }

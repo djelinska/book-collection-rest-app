@@ -1,17 +1,19 @@
-export interface BookDto {
+import { Genre } from '../../../../shared/enums/genre';
+import { ShelfDto } from '../../../../shared/models/shelf.dto';
+
+export interface BookDetailsDto {
   readonly id: number;
   readonly title: string;
   readonly author: string;
   readonly publisher: string;
   readonly isbn: string;
   readonly publicationYear: number;
-  readonly genre: string;
+  readonly genre: Genre;
   readonly pageCount: number;
-  readonly language: string;
+  readonly language: Genre;
   readonly averageRating: number;
   readonly numberOfRatings: number;
   readonly description: string;
   readonly imagePath: string;
-  readonly shelves: any[];
-  readonly reviews: any[];
+  readonly shelves: ShelfDto[];
 }

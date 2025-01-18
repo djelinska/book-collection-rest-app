@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-import { BookDto } from '../../../shared/models/book.dto';
+import { BookDetailsDto } from './models/book-details.dto';
+import { BookFormDto } from './models/book-form.dto';
 import { BookListDto } from './models/book-list.dto';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -41,16 +42,16 @@ export class BookService {
     return this.http.get<BookListDto[]>(this.apiUrl);
   }
 
-  public getBookById(id: number): Observable<BookDto> {
-    return this.http.get<BookDto>(`${this.apiUrl}/${id}`);
+  public getBookById(id: number): Observable<BookDetailsDto> {
+    return this.http.get<BookDetailsDto>(`${this.apiUrl}/${id}`);
   }
 
-  public createBook(BookDto: any): Observable<void> {
-    return this.http.post<void>(this.apiUrl, BookDto);
+  public createBook(book: BookFormDto): Observable<void> {
+    return this.http.post<void>(this.apiUrl, book);
   }
 
-  public updateBook(id: number, BookDto: any): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}`, BookDto);
+  public updateBook(id: number, book: BookFormDto): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, book);
   }
 
   public deleteBook(id: number): Observable<void> {

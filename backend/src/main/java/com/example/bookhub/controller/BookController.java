@@ -1,6 +1,8 @@
 package com.example.bookhub.controller;
 
-import com.example.bookhub.dto.BookDto;
+import com.example.bookhub.dto.BookDetailsDto;
+import com.example.bookhub.dto.BookFormDto;
+import com.example.bookhub.dto.BookListDto;
 import com.example.bookhub.dto.PaginatedBooksDto;
 import com.example.bookhub.entity.Book;
 import com.example.bookhub.enums.Genre;
@@ -28,9 +30,9 @@ public class BookController {
     private final FileService fileService;
 
     @GetMapping
-    public ResponseEntity<List<BookDto>> getBooks() {
+    public ResponseEntity<List<BookListDto>> getBooks() {
         List<Book> books = bookService.getAllBooks();
-        List<BookDto> bookDtos = books.stream().map(bookService::convertToDto).toList();
+        List<BookListDto> bookDtos = books.stream().map(bookService::convertToListDto).toList();
         return ResponseEntity.ok(bookDtos);
     }
 
@@ -48,7 +50,7 @@ public class BookController {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Book> booksPage = bookService.searchBooks(query, genre, language, pageable);
-        List<BookDto> books = booksPage.map(bookService::convertToDto).getContent();
+        List<BookListDto> books = booksPage.map(bookService::convertToListDto).getContent();
 
         PaginatedBooksDto response = new PaginatedBooksDto();
         response.setBooks(books);
@@ -59,36 +61,36 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookDto> getBookById(@PathVariable Long id) {
+    public ResponseEntity<BookDetailsDto> getBookById(@PathVariable Long id) {
         Book book = bookService.getBookById(id);
-        BookDto bookDto = bookService.convertToDto(book);
+        BookDetailsDto bookDto = bookService.convertToDetailsDto(book);
         return ResponseEntity.ok(bookDto);
     }
 
     @PostMapping
-    public ResponseEntity<BookDto> createBook(@RequestPart("book") BookDto bookDto, @RequestPart("image") MultipartFile image) throws Exception {
+    public ResponseEntity<Void> createBook(@RequestPart("book") BookFormDto bookFormDto, @RequestPart("image") MultipartFile image) throws Exception {
         if(image != null && !image.isEmpty() && fileService.isImageFileValid(image)) {
-            String path = fileService.saveImage(image, bookDto.getTitle());
-            bookDto.setImagePath(path);
+            String path = fileService.saveImage(image, bookFormDto.getTitle());
+            bookFormDto.setImagePath(path);
         }
 
-        bookService.addBook(bookDto);
+        bookService.addBook(bookFormDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookDto> updateBook(@PathVariable Long id, @RequestPart("book") BookDto bookDto, @RequestPart("image") MultipartFile image) throws Exception {
+    public ResponseEntity<Void> updateBook(@PathVariable Long id, @RequestPart("book") BookFormDto bookFormDto, @RequestPart("image") MultipartFile image) throws Exception {
         if(image != null && !image.isEmpty() && fileService.isImageFileValid(image)) {
-            String path = fileService.saveImage(image, bookDto.getTitle());
-            bookDto.setImagePath(path);
+            String path = fileService.saveImage(image, bookFormDto.getTitle());
+            bookFormDto.setImagePath(path);
         }
 
-        bookService.editBook(id, bookDto);
+        bookService.editBook(id, bookFormDto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BookDto> deleteBook(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.ok().build();
     }

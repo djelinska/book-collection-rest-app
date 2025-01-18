@@ -10,7 +10,7 @@ describe('BookAddToShelfComponent', () => {
     await TestBed.configureTestingModule({
       imports: [BookAddToShelfComponent]
     })
-    .compileComponents();
+      .compileComponents();
     
     fixture = TestBed.createComponent(BookAddToShelfComponent);
     component = fixture.componentInstance;

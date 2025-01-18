@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class PaginatedBooksDto {
 
-    private List<BookDto> books;
+    private List<BookListDto> books;
 
     private int totalPages;
 

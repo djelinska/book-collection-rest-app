@@ -119,15 +119,15 @@
           <div class="card-subtitle mb-3 text-muted">
             {{ "Autor: " + book.author }}
           </div>
-          <p class="card-text">
+          <p class="card-text text-sm">
             <span>Gatunek:</span>
             <span>{{ genreNames[book.genre] }}</span>
           </p>
-          <p class="card-text">
+          <p class="card-text text-sm">
             <span>Język:</span>
             <span>{{ languageNames[book.language] }}</span>
           </p>
-          <p class="card-text">
+          <p class="card-text text-sm">
             <span>Ocena:</span>
             <span>{{ book.averageRating.toFixed(1) }}</span>
             &lpar;<span>{{
