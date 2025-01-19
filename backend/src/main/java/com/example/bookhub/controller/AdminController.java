@@ -1,12 +1,11 @@
 package com.example.bookhub.controller;
 
 import com.example.bookhub.dto.*;
+import com.example.bookhub.entity.Book;
 import com.example.bookhub.entity.User;
 import com.example.bookhub.enums.Role;
 import com.example.bookhub.exception.UserAlreadyExistsException;
-import com.example.bookhub.service.ReviewService;
-import com.example.bookhub.service.ShelfService;
-import com.example.bookhub.service.UserService;
+import com.example.bookhub.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -21,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -34,6 +34,8 @@ public class AdminController {
     private final HttpServletResponse httpServletResponse;
     private final ShelfService shelfService;
     private final ReviewService reviewService;
+    private final BookService bookService;
+    private final FileService fileService;
 
     private ResponseEntity<?> handleValidationErrors(BindingResult result) {
         if (result.hasErrors()) {
@@ -131,6 +133,71 @@ public class AdminController {
         shelfService.deleteUserShelves(existingUser);
         reviewService.deleteUserReviews(existingUser);
         userService.deleteUser(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/books")
+    public ResponseEntity<AdminPaginatedBooksDto> listBooks(
+            @RequestParam(required = false) String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Book> booksPage = bookService.searchBooks(query, pageable);
+
+        List<AdminBookDto> adminBookDtos = booksPage.map(bookService::convertToAdminDto).getContent();
+
+        AdminPaginatedBooksDto adminPaginatedBooksDto = new AdminPaginatedBooksDto();
+        adminPaginatedBooksDto.setBooks(adminBookDtos);
+        adminPaginatedBooksDto.setTotalPages(booksPage.getTotalPages());
+        adminPaginatedBooksDto.setTotalElements(booksPage.getTotalElements());
+        adminPaginatedBooksDto.setCurrentPage(booksPage.getNumber());
+
+        return ResponseEntity.ok(adminPaginatedBooksDto);
+    }
+
+    @GetMapping("/books/{id}")
+    public ResponseEntity<AdminBookDto> getBook(@PathVariable Long id) {
+        Book book = bookService.getBookById(id);
+        AdminBookDto adminBookDto = bookService.convertToAdminDto(book);
+        return ResponseEntity.ok(adminBookDto);
+    }
+
+    @PostMapping("/books")
+    public ResponseEntity<?> createBook(@Valid @RequestPart("book") AdminBookFormDto adminBookFormDto, BindingResult result, @RequestPart("image") MultipartFile image) throws Exception {
+        ResponseEntity<?> validationResponse = handleValidationErrors(result);
+        if (validationResponse != null) {
+            return validationResponse;
+        }
+
+        if(image != null && !image.isEmpty() && fileService.isImageFileValid(image)) {
+            String path = fileService.saveImage(image, adminBookFormDto.getTitle());
+            adminBookFormDto.setImagePath(path);
+        }
+
+        bookService.addBook(adminBookFormDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PutMapping("/books/{id}")
+    public ResponseEntity<?> updateBook(@PathVariable Long id, @Valid @RequestPart("book") AdminBookFormDto adminBookFormDto, BindingResult result, @RequestPart(value = "image", required = false) MultipartFile image) throws Exception {
+        ResponseEntity<?> validationResponse = handleValidationErrors(result);
+        if (validationResponse != null) {
+            return validationResponse;
+        }
+
+        if(image != null && !image.isEmpty() && fileService.isImageFileValid(image)) {
+            String path = fileService.saveImage(image, adminBookFormDto.getTitle());
+            adminBookFormDto.setImagePath(path);
+        }
+
+        bookService.editBook(id, adminBookFormDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/books/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+        bookService.deleteBook(id);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,9 +1,6 @@
 package com.example.bookhub.service;
 
-import com.example.bookhub.dto.BookDetailsDto;
-import com.example.bookhub.dto.BookFormDto;
-import com.example.bookhub.dto.BookListDto;
-import com.example.bookhub.dto.ShelfDto;
+import com.example.bookhub.dto.*;
 import com.example.bookhub.entity.Book;
 import com.example.bookhub.entity.User;
 import com.example.bookhub.enums.Genre;
@@ -37,6 +34,11 @@ public class BookService {
         return bookRepository.findAll(spec, pageable);
     }
 
+    public Page<Book> searchBooks(String query, Pageable pageable) {
+        Specification<Book> spec = BookSpecifications.hasQuery(query);
+        return bookRepository.findAll(spec, pageable);
+    }
+
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
@@ -46,18 +48,18 @@ public class BookService {
                 .orElseThrow(() -> new EntityNotFoundException("Book with id " + id + " not found"));
     }
 
-    public void addBook(BookFormDto bookFormDto) {
-        Book book = convertToEntity(bookFormDto, null);
+    public void addBook(AdminBookFormDto adminBookFormDto) {
+        Book book = convertToEntity(adminBookFormDto, null);
         bookRepository.save(book);
     }
 
-    public void editBook(Long id, BookFormDto bookFormDto) {
+    public void editBook(Long id, AdminBookFormDto adminBookFormDto) {
         Book existingBook = getBookById(id);
 
-        String imagePath = bookFormDto.getImagePath() == null ? existingBook.getImagePath() : bookFormDto.getImagePath();
-        bookFormDto.setImagePath(imagePath);
+        String imagePath = adminBookFormDto.getImagePath() == null ? existingBook.getImagePath() : adminBookFormDto.getImagePath();
+        adminBookFormDto.setImagePath(imagePath);
 
-        Book updatedBook = convertToEntity(bookFormDto, existingBook);
+        Book updatedBook = convertToEntity(adminBookFormDto, existingBook);
         bookRepository.save(updatedBook);
     }
 
@@ -73,6 +75,22 @@ public class BookService {
         book.setNumberOfRatings(totalRatings);
         book.setAverageRating(averageRating != null ? averageRating : 0.0);
         bookRepository.save(book);
+    }
+
+    public AdminBookDto convertToAdminDto(Book book) {
+        AdminBookDto dto = new AdminBookDto();
+        dto.setId(book.getId());
+        dto.setTitle(book.getTitle());
+        dto.setAuthor(book.getAuthor());
+        dto.setPublisher(book.getPublisher());
+        dto.setIsbn(book.getIsbn());
+        dto.setPublicationYear(book.getPublicationYear());
+        dto.setGenre(book.getGenre());
+        dto.setPageCount(book.getPageCount());
+        dto.setLanguage(book.getLanguage());
+        dto.setDescription(book.getDescription());
+        dto.setImagePath(book.getImagePath());
+        return dto;
     }
 
     public BookListDto convertToListDto(Book book, User user) {
@@ -121,7 +139,7 @@ public class BookService {
                 .toList();
     }
 
-    public Book convertToEntity(BookFormDto dto, Book book) {
+    public Book convertToEntity(AdminBookFormDto dto, Book book) {
         if (book == null) {
             book = new Book();
         }

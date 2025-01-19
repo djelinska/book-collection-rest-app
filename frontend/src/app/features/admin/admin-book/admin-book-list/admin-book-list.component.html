@@ -1,0 +1,84 @@
+<div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Książki</h2>
+    <a routerLink="/admin/book/add" class="btn btn-primary">Dodaj książkę</a>
+  </div>
+
+  @if (paginatedBooks) {
+  <form (ngSubmit)="onSubmit()" class="mb-4">
+    <div class="row g-2">
+      <div class="col-md-4">
+        <input
+          type="text"
+          name="query"
+          class="form-control"
+          [(ngModel)]="query"
+          placeholder="Wyszukaj książki"
+        />
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Szukaj</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th class="col-1">ISBN</th>
+          <th class="col-1">Okładka</th>
+          <th class="col-1">Tytuł</th>
+          <th class="col-1">Autor</th>
+          <th class="col-1">Wydawnictwo</th>
+          <th class="col-1">Data publikacji</th>
+          <th class="col-1">Gatunek</th>
+          <th class="col-1">Język</th>
+          <th class="col-1">Akcje</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (book of paginatedBooks.books; track book.id) {
+        <tr>
+          <td>{{ book.isbn }}</td>
+          <td>
+            <img
+              [src]="getImagePath(book.imagePath)"
+              [alt]="book.title"
+              class="img-fluid img-thumbnail"
+            />
+          </td>
+          <td>{{ book.title }}</td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.publisher }}</td>
+          <td>{{ book.publicationYear }}</td>
+          <td>{{ genreNames[book.genre] }}</td>
+          <td>{{ languageNames[book.language] }}</td>
+          <td class="text-nowrap">
+            <a
+              [routerLink]="['/admin/book', book.id, 'edit']"
+              class="btn btn-sm btn-outline-primary me-2"
+            >
+              Edytuj
+            </a>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-danger"
+              (click)="onDelete(book.id)"
+            >
+              Usuń
+            </button>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="9">
+            <div class="alert alert-warning">Brak książek do wyświetlenia.</div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+</div>

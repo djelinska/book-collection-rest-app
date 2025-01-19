@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { BookDetailsDto } from './models/book-details.dto';
-import { BookFormDto } from './models/book-form.dto';
 import { BookListDto } from './models/book-list.dto';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -54,18 +53,6 @@ export class BookService {
 
   public addReviewForBook(id: number, review: ReviewFormDto): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/${id}/reviews`, review);
-  }
-
-  public createBook(book: BookFormDto): Observable<void> {
-    return this.http.post<void>(this.apiUrl, book);
-  }
-
-  public updateBook(id: number, book: BookFormDto): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}`, book);
-  }
-
-  public deleteBook(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
   public getImagePath(imagePath: string): string {

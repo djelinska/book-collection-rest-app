@@ -12,6 +12,14 @@
   <div class="text-danger text-sm">
     Maksymalna wartość to {{ control.errors["max"].max }}
   </div>
+  } @if (control.errors['minlength']) {
+  <div class="text-danger text-sm">
+    Minimalna ilość znaków to {{ control.errors["minlength"].requiredLength }}
+  </div>
+  } @if (control.errors['maxlength']) {
+  <div class="text-danger text-sm">
+    Maksymalna ilość znaków to {{ control.errors["maxlength"].requiredLength }}
+  </div>
   }
 </div>
 }

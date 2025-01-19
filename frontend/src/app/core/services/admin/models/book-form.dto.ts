@@ -2,7 +2,6 @@ import { Genre } from '../../../../shared/enums/genre';
 import { Language } from '../../../../shared/enums/language';
 
 export interface BookFormDto {
-  readonly id: number;
   readonly title: string;
   readonly author: string;
   readonly publisher: string;
@@ -12,5 +11,5 @@ export interface BookFormDto {
   readonly pageCount: number;
   readonly language: Language;
   readonly description: string;
-  readonly imagePath: string;
+  readonly imagePath?: string;
 }

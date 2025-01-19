@@ -28,7 +28,6 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
-    private final FileService fileService;
     private final ReviewService reviewService;
 
     @GetMapping
@@ -95,33 +94,5 @@ public class BookController {
         reviewService.addReview(book, reviewFormDto, user);
         bookService.updateBookRatings(book);
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @PostMapping
-    public ResponseEntity<Void> createBook(@RequestPart("book") BookFormDto bookFormDto, @RequestPart("image") MultipartFile image) throws Exception {
-        if(image != null && !image.isEmpty() && fileService.isImageFileValid(image)) {
-            String path = fileService.saveImage(image, bookFormDto.getTitle());
-            bookFormDto.setImagePath(path);
-        }
-
-        bookService.addBook(bookFormDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateBook(@PathVariable Long id, @RequestPart("book") BookFormDto bookFormDto, @RequestPart("image") MultipartFile image) throws Exception {
-        if(image != null && !image.isEmpty() && fileService.isImageFileValid(image)) {
-            String path = fileService.saveImage(image, bookFormDto.getTitle());
-            bookFormDto.setImagePath(path);
-        }
-
-        bookService.editBook(id, bookFormDto);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
-        bookService.deleteBook(id);
-        return ResponseEntity.ok().build();
     }
 }
