@@ -51,7 +51,7 @@ export class AdminBookListComponent implements OnInit {
   }
 
   private loadBooks(): void {
-    this.adminService.getBooks(this.query).subscribe({
+    this.adminService.searchBooks(this.query).subscribe({
       next: (response) => {
         this.paginatedBooks = response;
       },

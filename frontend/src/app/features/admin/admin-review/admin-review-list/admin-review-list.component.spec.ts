@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdminBookFormComponent } from './admin-book-form.component';
+import { AdminReviewListComponent } from './admin-review-list.component';
 
-describe('AdminBookFormComponent', () => {
-  let component: AdminBookFormComponent;
-  let fixture: ComponentFixture<AdminBookFormComponent>;
+describe('AdminReviewListComponent', () => {
+  let component: AdminReviewListComponent;
+  let fixture: ComponentFixture<AdminReviewListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminBookFormComponent]
+      imports: [AdminReviewListComponent]
     })
       .compileComponents();
     
-    fixture = TestBed.createComponent(AdminBookFormComponent);
+    fixture = TestBed.createComponent(AdminReviewListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

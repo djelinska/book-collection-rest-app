@@ -1,8 +1,10 @@
 package com.example.bookhub.controller;
 
 import com.example.bookhub.dto.ReviewFormDto;
+import com.example.bookhub.entity.Book;
 import com.example.bookhub.entity.Review;
 import com.example.bookhub.entity.User;
+import com.example.bookhub.service.BookService;
 import com.example.bookhub.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final BookService bookService;
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateReview(@PathVariable Long id, @RequestBody ReviewFormDto reviewFormDto, @AuthenticationPrincipal User user) {
@@ -24,6 +27,8 @@ public class ReviewController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         reviewService.editReview(id, reviewFormDto);
+        Book book = review.getBook();
+        bookService.updateBookRatings(book);
         return ResponseEntity.ok().build();
     }
 
@@ -34,6 +39,8 @@ public class ReviewController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         reviewService.deleteReview(id);
+        Book book = review.getBook();
+        bookService.updateBookRatings(book);
         return ResponseEntity.ok().build();
     }
 }

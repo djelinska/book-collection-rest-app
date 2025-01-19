@@ -49,7 +49,7 @@ export class AdminUserListComponent implements OnInit {
   }
 
   private loadUsers(): void {
-    this.adminService.getUsers(this.query).subscribe({
+    this.adminService.searchUsers(this.query).subscribe({
       next: (response) => {
         this.paginatedUsers = response;
       },

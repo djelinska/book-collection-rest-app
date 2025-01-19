@@ -11,6 +11,14 @@ export const ADMIN_ROUTES: Routes = [
     loadChildren: () =>
       import('./admin-book/admin-book.routes').then((r) => r.ADMIN_BOOK_ROUTES),
   },
+
+  {
+    path: 'review',
+    loadChildren: () =>
+      import('./admin-review/admin-review.routes').then(
+        (r) => r.ADMIN_REVIEW_ROUTES
+      ),
+  },
   {
     path: '',
     redirectTo: 'admin',

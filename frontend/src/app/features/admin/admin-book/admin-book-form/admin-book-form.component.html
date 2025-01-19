@@ -1,218 +1,193 @@
 <div class="container mt-5">
   <h2>{{ isEditMode ? "Edytuj książkę" : "Dodaj książkę" }}</h2>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <!-- <div class="mb-3">
-      <label for="image" class="form-label">Okładka</label>
-      <input
-        type="file"
-        class="form-control"
-        id="image"
-        (change)="onImageChange($event)"
-      />
-      <app-form-error [control]="form.get('image')"></app-form-error>
-
-      <div *ngIf="selectedImage" class="mb-3" id="selectedImageContainer">
-        <img
-          [src]="selectedImage"
-          class="img-thumbnail"
-          style="max-height: 200px"
-          alt="book cover"
-        />
-      </div>
-
-      <div *ngIf="existingImage" class="mb-3" id="existingImageContainer">
-        <img
-          [src]="existingImage"
-          class="img-thumbnail"
-          style="max-height: 200px"
-          alt="current book cover"
-        />
-      </div>
-    </div> -->
-
-    @if (isEditMode && existingImagePath) {
-    <div class="mb-3">
-      <p class="mb-2">Aktualna okładka</p>
-      <img
-        [src]="getImagePath(existingImagePath)"
-        [alt]="existingImagePath"
-        class="img-thumbnail"
-      />
-    </div>
-    }
-
-    <div class="mb-3">
-      <label for="image" class="form-label">{{
-        isEditMode ? "Nowa okładka" : "Okładka"
-      }}</label>
-      <input
-        type="file"
-        class="form-control"
-        id="image"
-        formControlName="image"
-        [ngClass]="{
-          'is-invalid': form.get('image')?.touched && form.get('image')?.errors
-        }"
-        (change)="onImageChange($event)"
-      />
-      <app-form-error [control]="form.get('image')"></app-form-error>
-    </div>
-
-    @if (selectedImagePreview) {
-    <div class="mb-3">
-      <p>Podgląd wybranej okładki:</p>
-      <img
-        [src]="selectedImagePreview"
-        class="img-thumbnail"
-        style="max-height: 200px"
-        alt="Wybrana okładka"
-      />
-    </div>
-    }
-
-    <div class="mb-3">
-      <label for="title" class="form-label">Tytuł</label>
-      <input
-        type="text"
-        id="title"
-        class="form-control"
-        formControlName="title"
-        [ngClass]="{
-          'is-invalid': form.get('title')?.touched && form.get('title')?.errors
-        }"
-      />
-      <app-form-error [control]="form.get('title')"></app-form-error>
-    </div>
-
-    <div class="mb-3">
-      <label for="author" class="form-label">Autor</label>
-      <input
-        type="text"
-        id="author"
-        class="form-control"
-        formControlName="author"
-        [ngClass]="{
-          'is-invalid':
-            form.get('author')?.touched && form.get('author')?.errors
-        }"
-      />
-      <app-form-error [control]="form.get('author')"></app-form-error>
-    </div>
-
-    <div class="mb-3">
-      <label for="publisher" class="form-label">Wydawnictwo</label>
-      <input
-        type="text"
-        id="publisher"
-        class="form-control"
-        formControlName="publisher"
-        [ngClass]="{
-          'is-invalid':
-            form.get('publisher')?.touched && form.get('publisher')?.errors
-        }"
-      />
-      <app-form-error [control]="form.get('publisher')"></app-form-error>
-    </div>
-
-    <div class="mb-3">
-      <label for="isbn" class="form-label">ISBN</label>
-      <input
-        type="text"
-        id="isbn"
-        class="form-control"
-        formControlName="isbn"
-        [ngClass]="{
-          'is-invalid': form.get('isbn')?.touched && form.get('isbn')?.errors
-        }"
-      />
-      <app-form-error [control]="form.get('isbn')"></app-form-error>
-    </div>
-
-    <div class="mb-3">
-      <label for="publicationYear" class="form-label">Rok publikacji</label>
-      <input
-        type="number"
-        id="publicationYear"
-        class="form-control"
-        formControlName="publicationYear"
-        [ngClass]="{
-          'is-invalid':
-            form.get('publicationYear')?.touched &&
-            form.get('publicationYear')?.errors
-        }"
-      />
-      <app-form-error [control]="form.get('publicationYear')"></app-form-error>
-    </div>
-
-    <div class="mb-3">
-      <label for="genre" class="form-label">Gatunek</label>
-      <select
-        id="genre"
-        class="form-select"
-        formControlName="genre"
-        [ngClass]="{
-          'is-invalid': form.get('genre')?.touched && form.get('genre')?.errors
-        }"
-      >
-        @for (genre of genres; track $index) {
-        <option [ngValue]="genre" [label]="genreNames[genre]"></option>
+  <div class="row">
+    <div class="col-md-6">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        @if (isEditMode && existingImagePath) {
+        <div class="mb-3">
+          <p class="mb-2">Aktualna okładka</p>
+          <img
+            [src]="getImagePath(existingImagePath)"
+            [alt]="existingImagePath"
+            class="img-thumbnail"
+          />
+        </div>
         }
-      </select>
-      <app-form-error [control]="form.get('genre')"></app-form-error>
-    </div>
-
-    <div class="mb-3">
-      <label for="pageCount" class="form-label">Liczba stron</label>
-      <input
-        type="number"
-        id="pageCount"
-        class="form-control"
-        formControlName="pageCount"
-        [ngClass]="{
-          'is-invalid':
-            form.get('pageCount')?.touched && form.get('pageCount')?.errors
-        }"
-      />
-      <app-form-error [control]="form.get('pageCount')"></app-form-error>
-    </div>
-
-    <div class="mb-3">
-      <label for="language" class="form-label">Język</label>
-      <select
-        id="language"
-        class="form-select"
-        formControlName="language"
-        [ngClass]="{
-          'is-invalid':
-            form.get('language')?.touched && form.get('language')?.errors
-        }"
-      >
-        @for (language of languages; track $index) {
-        <option [ngValue]="language" [label]="languageNames[language]"></option>
+        <div class="mb-3">
+          <label for="image" class="form-label">{{
+            isEditMode ? "Nowa okładka" : "Okładka"
+          }}</label>
+          <input
+            type="file"
+            class="form-control"
+            id="image"
+            formControlName="image"
+            [ngClass]="{
+              'is-invalid':
+                form.get('image')?.touched && form.get('image')?.errors
+            }"
+            (change)="onImageChange($event)"
+          />
+          <app-form-error [control]="form.get('image')"></app-form-error>
+        </div>
+        @if (selectedImagePreview) {
+        <div class="mb-3">
+          <p>Podgląd wybranej okładki:</p>
+          <img
+            [src]="selectedImagePreview"
+            class="img-thumbnail"
+            style="max-height: 200px"
+            alt="Wybrana okładka"
+          />
+        </div>
         }
-      </select>
-      <app-form-error [control]="form.get('language')"></app-form-error>
+        <div class="mb-3">
+          <label for="title" class="form-label">Tytuł</label>
+          <input
+            type="text"
+            id="title"
+            class="form-control"
+            formControlName="title"
+            [ngClass]="{
+              'is-invalid':
+                form.get('title')?.touched && form.get('title')?.errors
+            }"
+          />
+          <app-form-error [control]="form.get('title')"></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="author" class="form-label">Autor</label>
+          <input
+            type="text"
+            id="author"
+            class="form-control"
+            formControlName="author"
+            [ngClass]="{
+              'is-invalid':
+                form.get('author')?.touched && form.get('author')?.errors
+            }"
+          />
+          <app-form-error [control]="form.get('author')"></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="publisher" class="form-label">Wydawnictwo</label>
+          <input
+            type="text"
+            id="publisher"
+            class="form-control"
+            formControlName="publisher"
+            [ngClass]="{
+              'is-invalid':
+                form.get('publisher')?.touched && form.get('publisher')?.errors
+            }"
+          />
+          <app-form-error [control]="form.get('publisher')"></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="isbn" class="form-label">ISBN</label>
+          <input
+            type="text"
+            id="isbn"
+            class="form-control"
+            formControlName="isbn"
+            [ngClass]="{
+              'is-invalid':
+                form.get('isbn')?.touched && form.get('isbn')?.errors
+            }"
+          />
+          <app-form-error [control]="form.get('isbn')"></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="publicationYear" class="form-label">Rok publikacji</label>
+          <input
+            type="number"
+            id="publicationYear"
+            class="form-control"
+            formControlName="publicationYear"
+            [ngClass]="{
+              'is-invalid':
+                form.get('publicationYear')?.touched &&
+                form.get('publicationYear')?.errors
+            }"
+          />
+          <app-form-error
+            [control]="form.get('publicationYear')"
+          ></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="genre" class="form-label">Gatunek</label>
+          <select
+            id="genre"
+            class="form-select"
+            formControlName="genre"
+            [ngClass]="{
+              'is-invalid':
+                form.get('genre')?.touched && form.get('genre')?.errors
+            }"
+          >
+            @for (genre of genres; track $index) {
+            <option [ngValue]="genre" [label]="genreNames[genre]"></option>
+            }
+          </select>
+          <app-form-error [control]="form.get('genre')"></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="pageCount" class="form-label">Liczba stron</label>
+          <input
+            type="number"
+            id="pageCount"
+            class="form-control"
+            formControlName="pageCount"
+            [ngClass]="{
+              'is-invalid':
+                form.get('pageCount')?.touched && form.get('pageCount')?.errors
+            }"
+          />
+          <app-form-error [control]="form.get('pageCount')"></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="language" class="form-label">Język</label>
+          <select
+            id="language"
+            class="form-select"
+            formControlName="language"
+            [ngClass]="{
+              'is-invalid':
+                form.get('language')?.touched && form.get('language')?.errors
+            }"
+          >
+            @for (language of languages; track $index) {
+            <option
+              [ngValue]="language"
+              [label]="languageNames[language]"
+            ></option>
+            }
+          </select>
+          <app-form-error [control]="form.get('language')"></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Opis</label>
+          <textarea
+            id="description"
+            class="form-control"
+            rows="4"
+            formControlName="description"
+            [ngClass]="{
+              'is-invalid':
+                form.get('description')?.touched &&
+                form.get('description')?.errors
+            }"
+          ></textarea>
+          <app-form-error [control]="form.get('description')"></app-form-error>
+        </div>
+        <button type="submit" class="btn btn-primary me-2">
+          {{ isEditMode ? "Zapisz" : "Dodaj" }}
+        </button>
+        <a routerLink="/admin/book/list" class="btn btn-outline-primary"
+          >Anuluj</a
+        >
+      </form>
     </div>
-
-    <div class="mb-3">
-      <label for="description" class="form-label">Opis</label>
-      <textarea
-        id="description"
-        class="form-control"
-        rows="4"
-        formControlName="description"
-        [ngClass]="{
-          'is-invalid':
-            form.get('description')?.touched && form.get('description')?.errors
-        }"
-      ></textarea>
-      <app-form-error [control]="form.get('description')"></app-form-error>
-    </div>
-
-    <button type="submit" class="btn btn-primary me-2">
-      {{ isEditMode ? "Zapisz" : "Dodaj" }}
-    </button>
-    <a routerLink="/admin/book/list" class="btn btn-outline-primary">Anuluj</a>
-  </form>
+  </div>
 </div>

@@ -1,5 +1,8 @@
 package com.example.bookhub.service;
 
+import com.example.bookhub.dto.AdminBookDto;
+import com.example.bookhub.dto.AdminReviewDto;
+import com.example.bookhub.dto.AdminReviewFormDto;
 import com.example.bookhub.dto.ReviewFormDto;
 import com.example.bookhub.entity.Book;
 import com.example.bookhub.entity.Review;
@@ -8,6 +11,8 @@ import com.example.bookhub.repository.ReviewRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +22,13 @@ import java.util.List;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
+
+    public Page<Review> searchReviews(String query, Pageable pageable) {
+        if ((query == null || query.trim().isEmpty())) {
+            return reviewRepository.findAll(pageable);
+        }
+        return reviewRepository.findByContentContainingIgnoreCase(query, pageable);
+    }
 
     public List<Review> getAllReviews() {
         return reviewRepository.findAll();
@@ -35,10 +47,27 @@ public class ReviewService {
         reviewRepository.save(review);
     }
 
+    public void addReviewByAdmin(AdminReviewFormDto adminReviewFormDto, Book book, User user) {
+        Review review = convertToAdminEntity(adminReviewFormDto, null);
+        review.setBook(book);
+        review.setUser(user);
+        reviewRepository.save(review);
+    }
+
     public void editReview(Long id, ReviewFormDto reviewFormDto) {
         Review existingReview = getReviewById(id);
 
         Review updatedReview = convertToEntity(reviewFormDto, existingReview);
+        reviewRepository.save(updatedReview);
+    }
+
+    public void editReviewByAdmin(Long id, AdminReviewFormDto adminReviewFormDto, Book book, User user) {
+        Review existingReview = getReviewById(id);
+
+        Review updatedReview = convertToAdminEntity(adminReviewFormDto, existingReview);
+        updatedReview.setBook(book);
+        updatedReview.setUser(user);
+
         reviewRepository.save(updatedReview);
     }
 
@@ -51,12 +80,38 @@ public class ReviewService {
         reviewRepository.deleteAll(reviews);
     }
 
+    public AdminReviewDto convertToAdminDto(Review review) {
+        AdminReviewDto dto = new AdminReviewDto();
+        dto.setId(review.getId());
+        dto.setRating(review.getRating());
+        dto.setContent(review.getContent());
+
+        AdminReviewDto.BookDto bookDto = new AdminReviewDto.BookDto(review.getBook().getId(), review.getBook().getTitle());
+        dto.setBook(bookDto);
+
+        AdminReviewDto.UserDto userDto = new AdminReviewDto.UserDto(review.getUser().getId(), review.getUser().getUsername());
+        dto.setAuthor(userDto);
+
+        dto.setCreatedAt(review.getCreatedAt());
+        dto.setUpdatedAt(review.getUpdatedAt());
+        return dto;
+    }
+
     public Review convertToEntity(ReviewFormDto reviewFormDto, Review review) {
         if (review == null) {
             review = new Review();
         }
         review.setRating(reviewFormDto.getRating());
         review.setContent(reviewFormDto.getContent());
+        return review;
+    }
+
+    public Review convertToAdminEntity(AdminReviewFormDto adminReviewFormDto, Review review) {
+        if (review == null) {
+            review = new Review();
+        }
+        review.setRating(adminReviewFormDto.getRating());
+        review.setContent(adminReviewFormDto.getContent());
         return review;
     }
 }

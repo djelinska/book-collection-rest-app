@@ -2,7 +2,7 @@ import { BookDto } from './book.dto';
 
 export interface PaginatedBooksDto {
   readonly books: BookDto[];
-  totalPages: number;
-  totalElements: number;
-  currentPage: number;
+  readonly totalPages: number;
+  readonly totalElements: number;
+  readonly currentPage: number;
 }

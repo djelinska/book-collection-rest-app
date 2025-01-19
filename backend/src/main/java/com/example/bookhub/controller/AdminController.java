@@ -2,6 +2,7 @@ package com.example.bookhub.controller;
 
 import com.example.bookhub.dto.*;
 import com.example.bookhub.entity.Book;
+import com.example.bookhub.entity.Review;
 import com.example.bookhub.entity.User;
 import com.example.bookhub.enums.Role;
 import com.example.bookhub.exception.UserAlreadyExistsException;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -53,22 +55,30 @@ public class AdminController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<User> usersPage = userService.searchUsers(query, pageable);
+        List<AdminUserDto> adminUserDtos;
+        int totalPages = 0;
+        long totalElements = 0;
 
-        List<AdminUserDto> adminUserDtos = usersPage.map(user -> {
-            AdminUserDto dto = new AdminUserDto();
-            dto.setId(user.getId());
-            dto.setUsername(user.getUsername());
-            dto.setRole(user.getRole());
-            return dto;
-        }).getContent();
+        if (size == -1) {
+            List<User> users = userService.searchUsers(query);
+            adminUserDtos = users.stream()
+                    .map(userService::convertToAdminDto)
+                    .collect(Collectors.toList());
+            totalPages = 1;
+            totalElements = users.size();
+        } else {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<User> usersPage = userService.searchUsers(query, pageable);
+            adminUserDtos = usersPage.map(userService::convertToAdminDto).getContent();
+            totalPages = usersPage.getTotalPages();
+            totalElements = usersPage.getTotalElements();
+        }
 
         AdminPaginatedUsersDto adminPaginatedUsersDto = new AdminPaginatedUsersDto();
         adminPaginatedUsersDto.setUsers(adminUserDtos);
-        adminPaginatedUsersDto.setTotalPages(usersPage.getTotalPages());
-        adminPaginatedUsersDto.setTotalElements(usersPage.getTotalElements());
-        adminPaginatedUsersDto.setCurrentPage(usersPage.getNumber());
+        adminPaginatedUsersDto.setTotalPages(totalPages);
+        adminPaginatedUsersDto.setTotalElements(totalElements);
+        adminPaginatedUsersDto.setCurrentPage(page);
 
         return ResponseEntity.ok(adminPaginatedUsersDto);
     }
@@ -142,16 +152,30 @@ public class AdminController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Book> booksPage = bookService.searchBooks(query, pageable);
+        List<AdminBookDto> adminBookDtos;
+        int totalPages = 0;
+        long totalElements = 0;
 
-        List<AdminBookDto> adminBookDtos = booksPage.map(bookService::convertToAdminDto).getContent();
+        if (size == -1) {
+            List<Book> books = bookService.searchBooks(query);
+            adminBookDtos = books.stream()
+                    .map(bookService::convertToAdminDto)
+                    .collect(Collectors.toList());
+            totalPages = 1;
+            totalElements = books.size();
+        } else {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Book> booksPage = bookService.searchBooks(query, pageable);
+            adminBookDtos = booksPage.map(bookService::convertToAdminDto).getContent();
+            totalPages = booksPage.getTotalPages();
+            totalElements = booksPage.getTotalElements();
+        }
 
         AdminPaginatedBooksDto adminPaginatedBooksDto = new AdminPaginatedBooksDto();
         adminPaginatedBooksDto.setBooks(adminBookDtos);
-        adminPaginatedBooksDto.setTotalPages(booksPage.getTotalPages());
-        adminPaginatedBooksDto.setTotalElements(booksPage.getTotalElements());
-        adminPaginatedBooksDto.setCurrentPage(booksPage.getNumber());
+        adminPaginatedBooksDto.setTotalPages(totalPages);
+        adminPaginatedBooksDto.setTotalElements(totalElements);
+        adminPaginatedBooksDto.setCurrentPage(page);
 
         return ResponseEntity.ok(adminPaginatedBooksDto);
     }
@@ -198,6 +222,76 @@ public class AdminController {
     @DeleteMapping("/books/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/reviews")
+    public ResponseEntity<AdminPaginatedReviewsDto> listReviews(
+            @RequestParam(required = false) String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Review> reviewsPage = reviewService.searchReviews(query, pageable);
+
+        List<AdminReviewDto> adminReviewDtos = reviewsPage.map(reviewService::convertToAdminDto).getContent();
+
+        AdminPaginatedReviewsDto adminPaginatedReviewsDto = new AdminPaginatedReviewsDto();
+        adminPaginatedReviewsDto.setReviews(adminReviewDtos);
+        adminPaginatedReviewsDto.setTotalPages(reviewsPage.getTotalPages());
+        adminPaginatedReviewsDto.setTotalElements(reviewsPage.getTotalElements());
+        adminPaginatedReviewsDto.setCurrentPage(reviewsPage.getNumber());
+
+        return ResponseEntity.ok(adminPaginatedReviewsDto);
+    }
+
+    @GetMapping("/reviews/{id}")
+    public ResponseEntity<AdminReviewDto> getReview(@PathVariable Long id) {
+        Review review = reviewService.getReviewById(id);
+        AdminReviewDto adminReviewDto = reviewService.convertToAdminDto(review);
+        return ResponseEntity.ok(adminReviewDto);
+    }
+
+    @PostMapping("/reviews")
+    public ResponseEntity<?> createReview(@Valid @RequestBody AdminReviewFormDto adminReviewFormDto, BindingResult result) {
+        ResponseEntity<?> validationResponse = handleValidationErrors(result);
+        if (validationResponse != null) {
+            return validationResponse;
+        }
+
+        User user = userService.getUserById(adminReviewFormDto.getUserId());
+        Book book = bookService.getBookById(adminReviewFormDto.getBookId());
+
+        reviewService.addReviewByAdmin(adminReviewFormDto, book, user);
+        bookService.updateBookRatings(book);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PutMapping("/reviews/{id}")
+    public ResponseEntity<?> updateReview(@PathVariable Long id, @Valid @RequestBody AdminReviewFormDto adminReviewFormDto, BindingResult result) {
+        ResponseEntity<?> validationResponse = handleValidationErrors(result);
+        if (validationResponse != null) {
+            return validationResponse;
+        }
+
+        Review review = reviewService.getReviewById(id);
+        Book reviewBook = review.getBook();
+        User user = userService.getUserById(adminReviewFormDto.getUserId());
+        Book book = bookService.getBookById(adminReviewFormDto.getBookId());
+
+        reviewService.editReviewByAdmin(id, adminReviewFormDto, book, user);
+        bookService.updateBookRatings(book);
+        bookService.updateBookRatings(reviewBook);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/reviews/{id}")
+    public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
+        Review review = reviewService.getReviewById(id);
+        Book book = review.getBook();
+
+        reviewService.deleteReview(id);
+        bookService.updateBookRatings(book);
         return ResponseEntity.ok().build();
     }
 }

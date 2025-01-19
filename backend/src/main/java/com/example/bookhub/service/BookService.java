@@ -39,6 +39,11 @@ public class BookService {
         return bookRepository.findAll(spec, pageable);
     }
 
+    public List<Book> searchBooks(String query) {
+        Specification<Book> spec = BookSpecifications.hasQuery(query);
+        return bookRepository.findAll(spec);
+    }
+
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }

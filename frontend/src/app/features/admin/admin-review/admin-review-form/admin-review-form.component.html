@@ -1,0 +1,80 @@
+<div>
+  <h2>{{ isEditMode ? "Edytuj recenzję" : "Dodaj recenzję" }}</h2>
+
+  @if (books && users) {
+  <div class="row">
+    <div class="col-md-6">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="rating" class="form-label">Ocena (1-5)</label>
+          <input
+            type="number"
+            id="rating"
+            class="form-control"
+            formControlName="rating"
+            [ngClass]="{
+              'is-invalid':
+                form.get('rating')?.touched && form.get('rating')?.errors
+            }"
+          />
+          <app-form-error [control]="form.get('rating')"></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="content" class="form-label">Treść recenzji</label>
+          <textarea
+            id="content"
+            class="form-control"
+            rows="5"
+            formControlName="content"
+            [ngClass]="{
+              'is-invalid':
+                form.get('content')?.touched && form.get('content')?.errors
+            }"
+          ></textarea>
+          <app-form-error [control]="form.get('content')"></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="bookId" class="form-label">Książka</label>
+          <select
+            id="bookId"
+            class="form-select"
+            formControlName="bookId"
+            [ngClass]="{
+              'is-invalid':
+                form.get('bookId')?.touched && form.get('bookId')?.errors
+            }"
+          >
+            @for (book of books.books; track book.id) {
+            <option [value]="book.id" [label]="book.title"></option>
+            }
+          </select>
+          <app-form-error [control]="form.get('bookId')"></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="userId" class="form-label">Użytkownik</label>
+          <select
+            id="userId"
+            class="form-select"
+            formControlName="userId"
+            [ngClass]="{
+              'is-invalid':
+                form.get('userId')?.touched && form.get('userId')?.errors
+            }"
+          >
+            @for (user of users.users; track user.id) {
+            <option [value]="user.id" [label]="user.username"></option>
+            }
+          </select>
+          <app-form-error [control]="form.get('userId')"></app-form-error>
+        </div>
+        <button type="submit" class="btn btn-primary me-2">
+          {{ isEditMode ? "Zapisz" : "Dodaj" }}
+        </button>
+        <a routerLink="/admin/review/list" class="btn btn-outline-primary">
+          Anuluj
+        </a>
+      </form>
+    </div>
+  </div>
+  }
+</div>

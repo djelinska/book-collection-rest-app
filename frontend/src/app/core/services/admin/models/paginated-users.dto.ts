@@ -2,9 +2,9 @@ import { Role } from '../../../../shared/enums/role';
 
 export interface PaginatedUsersDto {
   readonly users: UserDto[];
-  totalPages: number;
-  totalElements: number;
-  currentPage: number;
+  readonly totalPages: number;
+  readonly totalElements: number;
+  readonly currentPage: number;
 }
 
 export interface UserDto {

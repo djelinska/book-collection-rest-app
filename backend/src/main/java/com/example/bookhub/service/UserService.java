@@ -1,8 +1,10 @@
 package com.example.bookhub.service;
 
+import com.example.bookhub.dto.AdminBookDto;
 import com.example.bookhub.dto.AdminUserCreateDto;
+import com.example.bookhub.dto.AdminUserDto;
 import com.example.bookhub.dto.AdminUserUpdateDto;
-import com.example.bookhub.entity.Shelf;
+import com.example.bookhub.entity.Book;
 import com.example.bookhub.entity.User;
 import com.example.bookhub.enums.Role;
 import com.example.bookhub.exception.UserNotFoundException;
@@ -22,8 +24,6 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final ShelfService shelfService;
-    private final ShelfRepository shelfRepository;
     private final PasswordEncoder passwordEncoder;
 
     public Page<User> searchUsers(String query, Pageable pageable) {
@@ -31,6 +31,13 @@ public class UserService {
             return userRepository.findAll(pageable);
         }
         return userRepository.findByUsernameContainingIgnoreCase(query, pageable);
+    }
+
+    public List<User> searchUsers(String query) {
+        if ((query == null || query.trim().isEmpty())) {
+            return userRepository.findAll();
+        }
+        return userRepository.findByUsernameContainingIgnoreCase(query);
     }
 
     public User getUserByUsername(String username) {
@@ -75,5 +82,13 @@ public class UserService {
         return userRepository.findByUsername(username)
                 .filter(existingUser -> !existingUser.getId().equals(userId))
                 .isPresent();
+    }
+
+    public AdminUserDto convertToAdminDto(User user) {
+        AdminUserDto dto = new AdminUserDto();
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setRole(user.getRole());
+        return dto;
     }
 }
