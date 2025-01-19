@@ -1,0 +1,43 @@
+<div>
+  <h2>Edytuj profil</h2>
+  <div class="row">
+    <div class="col-md-6">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="currentPassword" class="form-label">Aktualne hasło</label>
+          <input
+            type="password"
+            id="currentPassword"
+            class="form-control"
+            formControlName="currentPassword"
+            [ngClass]="{
+              'is-invalid':
+                form.get('currentPassword')?.touched &&
+                form.get('currentPassword')?.errors
+            }"
+          />
+          <app-form-error
+            [control]="form.get('currentPassword')"
+          ></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="newPassword" class="form-label">Nowe hasło</label>
+          <input
+            type="password"
+            id="newPassword"
+            class="form-control"
+            formControlName="newPassword"
+            [ngClass]="{
+              'is-invalid':
+                form.get('newPassword')?.touched &&
+                form.get('newPassword')?.errors
+            }"
+          />
+          <app-form-error [control]="form.get('newPassword')"></app-form-error>
+        </div>
+        <button type="submit" class="btn btn-primary me-2">Zapisz</button>
+        <a routerLink="/profile" class="btn btn-outline-primary">Anuluj</a>
+      </form>
+    </div>
+  </div>
+</div>

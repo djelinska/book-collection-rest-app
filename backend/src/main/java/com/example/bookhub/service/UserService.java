@@ -1,23 +1,28 @@
 package com.example.bookhub.service;
 
-import com.example.bookhub.dto.AdminBookDto;
-import com.example.bookhub.dto.AdminUserCreateDto;
-import com.example.bookhub.dto.AdminUserDto;
-import com.example.bookhub.dto.AdminUserUpdateDto;
+import com.example.bookhub.dto.*;
 import com.example.bookhub.entity.Book;
+import com.example.bookhub.entity.Shelf;
 import com.example.bookhub.entity.User;
 import com.example.bookhub.enums.Role;
 import com.example.bookhub.exception.UserNotFoundException;
 import com.example.bookhub.repository.ShelfRepository;
 import com.example.bookhub.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +30,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ObjectMapper jacksonObjectMapper;
 
     public Page<User> searchUsers(String query, Pageable pageable) {
         if ((query == null || query.trim().isEmpty())) {
@@ -64,8 +70,17 @@ public class UserService {
         userRepository.save(existingUser);
     }
 
+    public void updateUserPassword(UserUpdateDto userUpdateDto, User user) {
+        user.setPassword(passwordEncoder.encode(userUpdateDto.getNewPassword()));
+        userRepository.save(user);
+    }
+
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 
     public boolean isUserLastAdmin(Long userId) {
@@ -90,5 +105,28 @@ public class UserService {
         dto.setUsername(user.getUsername());
         dto.setRole(user.getRole());
         return dto;
+    }
+
+    @Transactional
+    public byte[] createBackup(List<Shelf> userShelves, User user) throws Exception {
+        List<ShelfBackupDto> shelvesBackup = new ArrayList<>();
+
+        for (Shelf shelf : userShelves) {
+            ShelfBackupDto shelfBackupDto = new ShelfBackupDto();
+            shelfBackupDto.setName(shelf.getName());
+
+            List<Long> bookIds = shelf.getBooks().stream()
+                    .map(Book::getId)
+                    .collect(Collectors.toList());
+            shelfBackupDto.setBookIds(bookIds);
+
+            shelvesBackup.add(shelfBackupDto);
+        }
+
+        UserBackupDto userBackupDto = new UserBackupDto();
+        userBackupDto.setUsername(user.getUsername());
+        userBackupDto.setShelves(shelvesBackup);
+
+        return jacksonObjectMapper.writeValueAsBytes(userBackupDto);
     }
 }

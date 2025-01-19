@@ -13,5 +13,5 @@ public interface ShelfRepository extends JpaRepository<Shelf, Long> {
 
     int countByBooksContainingAndType(Book book, ShelfType type);
 
-    void deleteAllByUser(User user);
+    Shelf findByNameAndUser(String name, User user);
 }

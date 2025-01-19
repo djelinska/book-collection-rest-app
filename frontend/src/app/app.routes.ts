@@ -28,6 +28,12 @@ export const routes: Routes = [
     component: RegisterComponent,
   },
   {
+    path: 'profile',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./features/profile/profile.routes').then((r) => r.PROFILE_ROUTES),
+  },
+  {
     path: 'home',
     canActivate: [authGuard],
     component: HomeComponent,

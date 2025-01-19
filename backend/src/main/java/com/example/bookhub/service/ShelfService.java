@@ -9,6 +9,7 @@ import com.example.bookhub.entity.User;
 import com.example.bookhub.enums.ShelfType;
 import com.example.bookhub.repository.ShelfRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,13 +40,17 @@ public class ShelfService {
         return shelfRepository.findAll();
     }
 
+    public List<Shelf> getShelvesForUser(User user) {
+        return shelfRepository.findByUser(user);
+    }
+
     public Shelf getShelfById(Long id) {
         return shelfRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Shelf with id " + id + " not found"));
     }
 
-    public List<Shelf> getShelvesForUser(User user) {
-        return shelfRepository.findByUser(user);
+    public Shelf getShelfByNameAndUser(String name, User user) {
+        return shelfRepository.findByNameAndUser(name, user);
     }
 
     public void addShelf(ShelfFormDto shelfFormDto, User user) {
@@ -83,6 +88,11 @@ public class ShelfService {
             shelf.getBooks().remove(book);
             shelfRepository.save(shelf);
         }
+    }
+
+    @Transactional
+    public void saveShelf(Shelf shelf) {
+        shelfRepository.save(shelf);
     }
 
     public ShelfListDto convertToListDto(Shelf shelf) {

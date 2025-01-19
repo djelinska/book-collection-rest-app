@@ -1,0 +1,43 @@
+<div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Mój profil</h1>
+    <a [routerLink]="['./edit']" class="btn btn-primary">Edytuj profil</a>
+  </div>
+
+  <p class="mb-5">
+    Nazwa użytkownika: <span class="ms-2">{{ user?.username }}</span>
+  </p>
+
+  <button type="button" class="btn btn-primary mb-5" (click)="downloadBackup()">
+    Pobierz kopię zapasową
+  </button>
+
+  <div class="mb-5">
+    <small class="text-muted">
+      Uwaga! Podczas importu dane dotyczące półek zostaną nadpisane
+    </small>
+    <form #form="ngForm" (ngSubmit)="onImportBackup()">
+      <div class="input-group">
+        <input
+          type="file"
+          class="form-control"
+          id="file"
+          name="file"
+          (change)="onFileChange($event)"
+        />
+        <button type="submit" class="btn btn-primary" [disabled]="!form.valid">
+          Importuj kopię zapasową
+        </button>
+      </div>
+    </form>
+  </div>
+
+  @if (user?.role !== adminRole) {
+  <button
+    type="button"
+    class="btn btn-outline-danger"
+    (click)="deleteAccount()"
+  >
+    Usuń Konto</button
+  >}
+</div>
