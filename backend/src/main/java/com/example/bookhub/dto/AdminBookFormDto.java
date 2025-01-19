@@ -2,6 +2,7 @@ package com.example.bookhub.dto;
 
 import com.example.bookhub.enums.Genre;
 import com.example.bookhub.enums.Language;
+import com.example.bookhub.validator.PublicationYearConstraint;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,7 @@ public class AdminBookFormDto {
     private String isbn;
 
     @Min(value = 1000, message = "Rok publikacji musi być co najmniej 1000")
+    @PublicationYearConstraint
     private int publicationYear;
 
     @NotNull(message = "Gatunek książki jest wymagany")

@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -94,6 +95,7 @@ public class AdminController {
     }
 
     @PostMapping("/users")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createUser(@Valid @RequestBody AdminUserCreateDto adminUserCreateDto, BindingResult result) {
         ResponseEntity<?> validationResponse = handleValidationErrors(result);
         if (validationResponse != null) {
@@ -110,6 +112,7 @@ public class AdminController {
     }
 
     @PutMapping("/users/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @Valid @RequestBody AdminUserUpdateDto adminUserUpdateDto, BindingResult result, @AuthenticationPrincipal User loggedInUser) {
         User user = userService.getUserById(id);
 
@@ -135,6 +138,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/users/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> deleteUser(@PathVariable Long id, @AuthenticationPrincipal User user) {
         if (user.getId().equals(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -188,6 +192,7 @@ public class AdminController {
     }
 
     @PostMapping("/books")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createBook(@Valid @RequestPart("book") AdminBookFormDto adminBookFormDto, BindingResult result, @RequestPart("image") MultipartFile image) throws Exception {
         ResponseEntity<?> validationResponse = handleValidationErrors(result);
         if (validationResponse != null) {
@@ -204,6 +209,7 @@ public class AdminController {
     }
 
     @PutMapping("/books/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateBook(@PathVariable Long id, @Valid @RequestPart("book") AdminBookFormDto adminBookFormDto, BindingResult result, @RequestPart(value = "image", required = false) MultipartFile image) throws Exception {
         ResponseEntity<?> validationResponse = handleValidationErrors(result);
         if (validationResponse != null) {
@@ -220,6 +226,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/books/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.ok().build();
@@ -253,6 +260,7 @@ public class AdminController {
     }
 
     @PostMapping("/reviews")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createReview(@Valid @RequestBody AdminReviewFormDto adminReviewFormDto, BindingResult result) {
         ResponseEntity<?> validationResponse = handleValidationErrors(result);
         if (validationResponse != null) {
@@ -268,6 +276,7 @@ public class AdminController {
     }
 
     @PutMapping("/reviews/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateReview(@PathVariable Long id, @Valid @RequestBody AdminReviewFormDto adminReviewFormDto, BindingResult result) {
         ResponseEntity<?> validationResponse = handleValidationErrors(result);
         if (validationResponse != null) {
@@ -286,6 +295,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/reviews/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
         Review review = reviewService.getReviewById(id);
         Book book = review.getBook();
