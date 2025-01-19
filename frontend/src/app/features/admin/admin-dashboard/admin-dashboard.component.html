@@ -1,0 +1,26 @@
+<div>
+  <div class="btn-group mb-4" role="group">
+    <a
+      class="btn btn-primary"
+      [routerLink]="['./user']"
+      routerLinkActive="active"
+    >
+      Użytkownicy
+    </a>
+    <a
+      class="btn btn-primary"
+      [routerLink]="['./book']"
+      routerLinkActive="active"
+    >
+      Książki
+    </a>
+    <a
+      class="btn btn-primary"
+      [routerLink]="['/.review']"
+      routerLinkActive="active"
+    >
+      Recenzje
+    </a>
+  </div>
+  <router-outlet></router-outlet>
+</div>

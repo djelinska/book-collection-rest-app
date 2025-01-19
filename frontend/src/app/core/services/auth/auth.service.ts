@@ -47,10 +47,10 @@ export class AuthService {
     }
   }
 
-  public getCurrentUser(): UserDto | null {
-    const userString = localStorage.getItem(this.userKey);
+  public getLoggedInUser(): UserDto | null {
+    const user = localStorage.getItem(this.userKey);
 
-    return userString ? (JSON.parse(userString) as UserDto) : null;
+    return user ? JSON.parse(user) : null;
   }
 
   public isAuthenticated(): boolean {
@@ -72,10 +72,7 @@ export class AuthService {
         map((response: LoginResponse) => {
           if (response.token) {
             localStorage.setItem(this.tokenKey, response.token);
-            localStorage.setItem(
-              this.userKey,
-              JSON.stringify({ ...response.user })
-            );
+            localStorage.setItem(this.userKey, JSON.stringify(response.user));
             this.isAuthenticatedSubject.next(true);
           }
 

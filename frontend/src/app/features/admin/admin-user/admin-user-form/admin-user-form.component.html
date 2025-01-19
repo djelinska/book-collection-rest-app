@@ -1,0 +1,63 @@
+<div>
+  <h2>{{ isEditMode ? "Edytuj użytkownika" : "Dodaj użytkownika" }}</h2>
+
+  <div class="row">
+    <div class="col-md-6">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="username" class="form-label">Nazwa użytkownika</label>
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            formControlName="username"
+            [ngClass]="{
+              'is-invalid':
+                form.get('username')?.touched && form.get('username')?.errors
+            }"
+          />
+          <app-form-error [control]="form.get('username')"></app-form-error>
+        </div>
+        @if (!isEditMode) {
+        <div class="mb-3">
+          <label for="password" class="form-label">Hasło</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            formControlName="password"
+            [ngClass]="{
+              'is-invalid':
+                form.get('password')?.touched && form.get('password')?.errors
+            }"
+          />
+          <app-form-error [control]="form.get('password')"></app-form-error>
+        </div>
+        }
+        <div class="mb-3">
+          <label for="role" class="form-label">Rola</label>
+          <select
+            id="role"
+            class="form-select"
+            formControlName="role"
+            [ngClass]="{
+              'is-invalid':
+                form.get('role')?.touched && form.get('role')?.errors
+            }"
+          >
+            @for (role of roles; track $index) {
+            <option [ngValue]="role" [label]="role"></option>
+            }
+          </select>
+          <app-form-error [control]="form.get('role')"></app-form-error>
+        </div>
+        <button type="submit" class="btn btn-primary me-2">
+          {{ isEditMode ? "Zapisz" : "Dodaj" }}
+        </button>
+        <a routerLink="/admin/user/list" class="btn btn-outline-primary"
+          >Anuluj</a
+        >
+      </form>
+    </div>
+  </div>
+</div>

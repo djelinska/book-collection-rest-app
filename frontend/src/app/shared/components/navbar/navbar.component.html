@@ -31,6 +31,13 @@
             Moje półki
           </a>
         </li>
+        @if (loggedInUser?.role === adminRole) {
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin" routerLinkActive="active">
+            Panel administratora
+          </a>
+        </li>
+        }
         <div class="nav-item dropdown ms-auto">
           <button class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
             {{ (user$ | async)?.username }}

@@ -4,6 +4,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
+import { Role } from '../../enums/role';
 import { UserDto } from '../../models/user.dto';
 import { UserService } from '../../../core/services/user/user.service';
 
@@ -17,6 +18,8 @@ import { UserService } from '../../../core/services/user/user.service';
 export class NavbarComponent implements OnInit {
   public user$!: Observable<UserDto>;
   public isAuthenticated: boolean = false;
+  public adminRole: Role = Role.ROLE_ADMIN;
+  public loggedInUser!: UserDto | null;
 
   public constructor(
     private authService: AuthService,
@@ -30,6 +33,7 @@ export class NavbarComponent implements OnInit {
 
       if (authenticated) {
         this.user$ = this.userService.getUserProfile();
+        this.loggedInUser = this.authService.getLoggedInUser();
       }
     });
   }

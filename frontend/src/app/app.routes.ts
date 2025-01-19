@@ -1,11 +1,14 @@
+import { AdminDashboardComponent } from './features/admin/admin-dashboard/admin-dashboard.component';
 import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { NotFoundComponent } from './features/not-found/not-found.component';
 import { RegisterComponent } from './features/auth/register/register.component';
+import { Role } from './shared/enums/role';
 import { Routes } from '@angular/router';
 import { WelcomeComponent } from './features/welcome/welcome.component';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -40,6 +43,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadChildren: () =>
       import('./features/shelf/shelf.routes').then((r) => r.SHELF_ROUTES),
+  },
+  {
+    path: 'admin',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [Role.ROLE_ADMIN] },
+    component: AdminDashboardComponent,
+    loadChildren: () =>
+      import('./features/admin/admin.routes').then((r) => r.ADMIN_ROUTES),
   },
   {
     path: '**',

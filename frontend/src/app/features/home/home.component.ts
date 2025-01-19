@@ -16,8 +16,10 @@ import { UserStatsDto } from '../../core/services/stats/models/user-stats.dto';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
-  public currentUser!: UserDto | null;
+  public loggedInUser!: UserDto | null;
   public userStats$!: Observable<UserStatsDto>;
+
+  public homeAppUser: UserDto | null = null;
 
   public constructor(
     private authService: AuthService,
@@ -25,7 +27,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.currentUser = this.authService.getCurrentUser();
+    this.loggedInUser = this.authService.getLoggedInUser();
 
     this.userStats$ = this.statsService.getUserStatistics();
   }

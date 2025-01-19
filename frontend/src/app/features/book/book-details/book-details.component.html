@@ -107,7 +107,7 @@
         <p class="mb-0">{{ review.content }}</p>
       </div>
 
-      @if (review.author === currentUser?.username ) {
+      @if (review.author === loggedInUser?.username ) {
       <div class="d-flex gap-2">
         <button
           type="button"

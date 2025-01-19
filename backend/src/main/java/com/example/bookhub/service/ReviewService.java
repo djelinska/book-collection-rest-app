@@ -46,6 +46,11 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
+    public void deleteUserReviews(User user) {
+        List<Review> reviews = reviewRepository.findByUser(user);
+        reviewRepository.deleteAll(reviews);
+    }
+
     public Review convertToEntity(ReviewFormDto reviewFormDto, Review review) {
         if (review == null) {
             review = new Review();

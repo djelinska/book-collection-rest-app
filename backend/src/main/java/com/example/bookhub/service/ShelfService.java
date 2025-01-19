@@ -66,6 +66,11 @@ public class ShelfService {
         shelfRepository.deleteById(id);
     }
 
+    public void deleteUserShelves(User user) {
+        List<Shelf> shelves = getShelvesForUser(user);
+        shelfRepository.deleteAll(shelves);
+    }
+
     public void addBookToShelf(Shelf shelf, Book book) {
         if (!shelf.getBooks().contains(book)) {
             shelf.getBooks().add(book);

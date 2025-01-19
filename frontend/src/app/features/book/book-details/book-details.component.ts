@@ -55,7 +55,7 @@ export class BookDetailsComponent implements OnInit {
   public genreNames: Record<string, string> = Genre;
   public languageNames: Record<string, string> = Language;
   public bookReviews: ReviewDto[] = [];
-  public currentUser!: UserDto | null;
+  public loggedInUser!: UserDto | null;
 
   public bookStats$!: Observable<BookStatsDto>;
 
@@ -70,7 +70,7 @@ export class BookDetailsComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.currentUser = this.authService.getCurrentUser();
+    this.loggedInUser = this.authService.getLoggedInUser();
     this.loadBook();
     this.loadBookReviews();
     this.bookStats$ = this.statsService.getBookStatistics(this.book.id);
