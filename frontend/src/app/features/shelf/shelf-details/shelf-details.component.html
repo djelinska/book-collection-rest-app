@@ -38,16 +38,16 @@
 
   <div class="mt-4">
     <h4>Książki na półce</h4>
-    <div class="row">
+    <div class="row g-4">
       @for (book of shelfBooks; track book.id) {
       <div class="col-md-4">
-        <div class="card mb-4">
-          <div class="card-body">
+        <div class="card mb-4 h-100 d-flex flex-column">
+          <div class="card-body d-flex flex-column">
             <h5 class="card-title" th:text="${book.title}">{{ book.title }}</h5>
             <p class="card-subtitle mb-3 text-muted">
               {{ "Autor: " + book.author }}
             </p>
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mt-auto">
               <a
                 [routerLink]="['/book', book.id, 'details']"
                 class="btn btn-outline-primary"

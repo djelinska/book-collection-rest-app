@@ -3,10 +3,12 @@ import {
   BookDto,
   ShelfDetailsDto,
 } from '../../../core/services/shelf/models/shelf-details.dto';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
 
 import { BookListDto } from '../../../core/services/book/models/book-list.dto';
 import { BookService } from '../../../core/services/book/book.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { FormsModule } from '@angular/forms';
 import { ShelfService } from '../../../core/services/shelf/shelf.service';
 import { ToastrService } from 'ngx-toastr';
@@ -23,12 +25,14 @@ export class ShelfDetailsComponent implements OnInit {
   public shelfBooks: BookDto[] = [];
   public availableBooks: BookListDto[] = [];
   public selectedBookId: number | null = null;
+  public modalRef?: BsModalRef;
 
   public constructor(
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private shelfService: ShelfService,
-    private bookService: BookService
+    private bookService: BookService,
+    private modalService: BsModalService
   ) {}
 
   public ngOnInit(): void {
@@ -68,6 +72,18 @@ export class ShelfDetailsComponent implements OnInit {
   }
 
   public onRemoveBook(bookId: number): void {
+    this.modalRef = this.modalService.show(ConfirmModalComponent, {
+      initialState: {
+        title: 'Potwierdź usunięcie',
+        message: 'Czy na pewno chcesz usunąć tę książkę z półki?',
+        confirmCallback: () => {
+          this.removeBook(bookId);
+        },
+      },
+    });
+  }
+
+  public removeBook(bookId: number): void {
     const shelfId = this.shelf.id;
     this.shelfService.removeBookFromUserShelf(shelfId, bookId).subscribe({
       next: () => {

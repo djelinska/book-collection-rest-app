@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { FormsModule } from '@angular/forms';
 import { Role } from '../../../shared/enums/role';
 import { ToastrService } from 'ngx-toastr';
@@ -16,14 +18,18 @@ import { UserService } from '../../../core/services/user/user.service';
   styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
+  @ViewChild('fileInput') public fileInput!: ElementRef;
+
   public user!: UserDto | null;
   public importFile: File | null = null;
   public adminRole: Role = Role.ROLE_ADMIN;
+  public modalRef?: BsModalRef;
 
   public constructor(
     private userService: UserService,
     private authSerive: AuthService,
     private toastr: ToastrService,
+    private modalService: BsModalService,
     private router: Router
   ) {}
 
@@ -68,6 +74,21 @@ export class ProfileComponent implements OnInit {
 
   public onImportBackup(): void {
     if (this.importFile) {
+      this.modalRef = this.modalService.show(ConfirmModalComponent, {
+        initialState: {
+          title: 'Potwierdź import kopii zapasowej',
+          message:
+            'Czy na pewno chcesz zaimportować wybraną kopię zapasową? Operacja może spowodować nadpisanie aktualnych danych i jest nieodwracalna.',
+          confirmCallback: () => {
+            this.importBackup();
+          },
+        },
+      });
+    }
+  }
+
+  public importBackup(): void {
+    if (this.importFile) {
       const formData = new FormData();
       formData.append('file', this.importFile);
 
@@ -79,21 +100,35 @@ export class ProfileComponent implements OnInit {
           this.toastr.error('Błąd podczas importu kopii zapasowej.');
         },
       });
+
+      this.importFile = null;
+      this.fileInput.nativeElement.value = '';
     }
   }
 
+  public onDeleteAccount(): void {
+    this.modalRef = this.modalService.show(ConfirmModalComponent, {
+      initialState: {
+        title: 'Potwierdź usunięcie',
+        message:
+          'Czy na pewno chcesz usunąć swoje konto? Wszystkie dane zostaną trwale usunięte.',
+        confirmCallback: () => {
+          this.deleteAccount();
+        },
+      },
+    });
+  }
+
   public deleteAccount(): void {
-    if (confirm('Czy na pewno chcesz usunąć konto?')) {
-      this.userService.deleteAccount().subscribe({
-        next: () => {
-          this.toastr.success('Konto zostało usunięte.');
-          this.authSerive.logout();
-          this.router.navigate(['/']);
-        },
-        error: () => {
-          this.toastr.error('Błąd podczas usuwania konta.');
-        },
-      });
-    }
+    this.userService.deleteAccount().subscribe({
+      next: () => {
+        this.toastr.success('Konto zostało usunięte.');
+        this.authSerive.logout();
+        this.router.navigate(['/']);
+      },
+      error: () => {
+        this.toastr.error('Błąd podczas usuwania konta.');
+      },
+    });
   }
 }

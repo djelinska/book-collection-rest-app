@@ -9,6 +9,7 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import localePl from '@angular/common/locales/pl';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -22,7 +23,7 @@ registerLocaleData(localePl);
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(HttpClientModule),
+    importProvidersFrom(HttpClientModule, ModalModule.forRoot()),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimations(),
     provideToastr({

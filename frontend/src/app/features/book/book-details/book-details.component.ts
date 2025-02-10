@@ -1,3 +1,4 @@
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -13,6 +14,7 @@ import { BookDetailsDto } from '../../../core/services/book/models/book-details.
 import { BookService } from '../../../core/services/book/book.service';
 import { BookStatsDto } from '../../../core/services/stats/models/book-stats.dto';
 import { CommonModule } from '@angular/common';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { FormErrorComponent } from '../../../shared/components/form-error/form-error.component';
 import { Genre } from '../../../shared/enums/genre';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -59,6 +61,8 @@ export class BookDetailsComponent implements OnInit {
 
   public bookStats$!: Observable<BookStatsDto>;
 
+  public modalRef?: BsModalRef;
+
   public constructor(
     private authService: AuthService,
     private bookService: BookService,
@@ -66,6 +70,7 @@ export class BookDetailsComponent implements OnInit {
     private statsService: StatsService,
     private route: ActivatedRoute,
     private toastr: ToastrService,
+    private modalService: BsModalService,
     private fb: FormBuilder
   ) {}
 
@@ -87,6 +92,18 @@ export class BookDetailsComponent implements OnInit {
   }
 
   public onReviewDelete(id: number): void {
+    this.modalRef = this.modalService.show(ConfirmModalComponent, {
+      initialState: {
+        title: 'Potwierdź usunięcie',
+        message: 'Czy na pewno chcesz usunąć tę recenzję?',
+        confirmCallback: () => {
+          this.deleteReview(id);
+        },
+      },
+    });
+  }
+
+  public deleteReview(id: number): void {
     this.reviewService.deleteReview(id).subscribe({
       next: () => {
         this.toastr.success('Recenzja została usunięta');

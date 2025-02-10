@@ -1,8 +1,10 @@
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
 
 import { AdminService } from '../../../../core/services/admin/admin.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
+import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
 import { FormsModule } from '@angular/forms';
 import { PaginatedUsersDto } from '../../../../core/services/admin/models/paginated-users.dto';
 import { RouterLink } from '@angular/router';
@@ -20,11 +22,13 @@ export class AdminUserListComponent implements OnInit {
   public paginatedUsers!: PaginatedUsersDto;
   public loggedInUser!: UserDto | null;
   public query: string = '';
+  public modalRef?: BsModalRef;
 
   public constructor(
     private authService: AuthService,
     private adminService: AdminService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private modalService: BsModalService
   ) {}
 
   public ngOnInit(): void {
@@ -33,6 +37,18 @@ export class AdminUserListComponent implements OnInit {
   }
 
   public onDelete(id: number): void {
+    this.modalRef = this.modalService.show(ConfirmModalComponent, {
+      initialState: {
+        title: 'Potwierdź usunięcie',
+        message: 'Czy na pewno chcesz usunąć tego użytkownika?',
+        confirmCallback: () => {
+          this.deleteUser(id);
+        },
+      },
+    });
+  }
+
+  private deleteUser(id: number): void {
     this.adminService.deleteUser(id).subscribe({
       next: () => {
         this.toastr.success('Użytkownik został usunięty');

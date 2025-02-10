@@ -1,7 +1,9 @@
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
 
 import { AdminService } from '../../../../core/services/admin/admin.service';
 import { CommonModule } from '@angular/common';
+import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
 import { FormsModule } from '@angular/forms';
 import { PaginatedReviewsDto } from '../../../../core/services/admin/models/paginated-reviews.dto';
 import { RouterLink } from '@angular/router';
@@ -17,10 +19,12 @@ import { ToastrService } from 'ngx-toastr';
 export class AdminReviewListComponent implements OnInit {
   public paginatedReviews!: PaginatedReviewsDto;
   public query: string = '';
+  public modalRef?: BsModalRef;
 
   public constructor(
     private adminService: AdminService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private modalService: BsModalService
   ) {}
 
   public ngOnInit(): void {
@@ -28,6 +32,18 @@ export class AdminReviewListComponent implements OnInit {
   }
 
   public onDelete(id: number): void {
+    this.modalRef = this.modalService.show(ConfirmModalComponent, {
+      initialState: {
+        title: 'Potwierdź usunięcie',
+        message: 'Czy na pewno chcesz usunąć tę recenzję?',
+        confirmCallback: () => {
+          this.deleteReview(id);
+        },
+      },
+    });
+  }
+
+  private deleteReview(id: number): void {
     this.adminService.deleteReview(id).subscribe({
       next: () => {
         this.toastr.success('Recenzja została usunięta');

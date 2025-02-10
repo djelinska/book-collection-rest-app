@@ -1,7 +1,9 @@
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
 
 import { AdminService } from '../../../../core/services/admin/admin.service';
 import { BookService } from '../../../../core/services/book/book.service';
+import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
 import { FormsModule } from '@angular/forms';
 import { Genre } from '../../../../shared/enums/genre';
 import { Language } from '../../../../shared/enums/language';
@@ -23,11 +25,13 @@ export class AdminBookListComponent implements OnInit {
   public genreNames: Record<string, string> = Genre;
   public languages = Object.keys(Language);
   public languageNames: Record<string, string> = Language;
+  public modalRef?: BsModalRef;
 
   public constructor(
     private adminService: AdminService,
     private bookService: BookService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private modalService: BsModalService
   ) {}
 
   public ngOnInit(): void {
@@ -35,6 +39,18 @@ export class AdminBookListComponent implements OnInit {
   }
 
   public onDelete(id: number): void {
+    this.modalRef = this.modalService.show(ConfirmModalComponent, {
+      initialState: {
+        title: 'Potwierdź usunięcie',
+        message: 'Czy na pewno chcesz usunąć tę książkę?',
+        confirmCallback: () => {
+          this.deleteBook(id);
+        },
+      },
+    });
+  }
+
+  private deleteBook(id: number): void {
     this.adminService.deleteBook(id).subscribe({
       next: () => {
         this.toastr.success('Książka została usunięta.');

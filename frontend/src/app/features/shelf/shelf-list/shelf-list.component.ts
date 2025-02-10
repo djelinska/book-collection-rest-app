@@ -1,6 +1,8 @@
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { ShelfListDto } from '../../../core/services/shelf/models/shelf-list.dto';
 import { ShelfService } from '../../../core/services/shelf/shelf.service';
 import { ShelfType } from '../../../shared/enums/shelf-type';
@@ -16,10 +18,12 @@ import { ToastrService } from 'ngx-toastr';
 export class ShelfListComponent implements OnInit {
   public shelves!: ShelfListDto[];
   public defaultShelfType: ShelfType = ShelfType.DEFAULT;
+  public modalRef?: BsModalRef;
 
   public constructor(
     private shelfService: ShelfService,
     private toastr: ToastrService,
+    private modalService: BsModalService,
     private router: Router
   ) {}
 
@@ -39,6 +43,18 @@ export class ShelfListComponent implements OnInit {
   }
 
   public onDelete(id: number): void {
+    this.modalRef = this.modalService.show(ConfirmModalComponent, {
+      initialState: {
+        title: 'Potwierdź usunięcie',
+        message: 'Czy na pewno chcesz usunąć tę półkę?',
+        confirmCallback: () => {
+          this.deleteShelf(id);
+        },
+      },
+    });
+  }
+
+  private deleteShelf(id: number): void {
     this.shelfService.deleteUserShelf(id).subscribe({
       next: () => {
         this.toastr.success('Półka została pomyślnie usunięta!');
