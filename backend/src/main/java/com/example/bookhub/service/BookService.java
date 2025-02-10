@@ -2,6 +2,7 @@ package com.example.bookhub.service;
 
 import com.example.bookhub.dto.*;
 import com.example.bookhub.entity.Book;
+import com.example.bookhub.entity.Shelf;
 import com.example.bookhub.entity.User;
 import com.example.bookhub.enums.Genre;
 import com.example.bookhub.enums.Language;
@@ -70,6 +71,15 @@ public class BookService {
 
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void removeBookFromShelves(Long bookId) {
+        Book book = getBookById(bookId);
+        for (Shelf shelf : book.getShelves()) {
+            shelf.getBooks().remove(book);
+        }
+        book.getShelves().clear();
     }
 
     @Transactional

@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -7,7 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { ActivatedRoute } from '@angular/router';
+import { AdminService } from '../../../core/services/admin/admin.service';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { BookAddToShelfComponent } from '../shared/book-add-to-shelf/book-add-to-shelf.component';
 import { BookDetailsDto } from '../../../core/services/book/models/book-details.dto';
@@ -23,6 +24,7 @@ import { Observable } from 'rxjs';
 import { ReviewDto } from '../../../core/services/review/models/review.dto';
 import { ReviewFormDto } from '../../../core/services/review/models/review-form.dto';
 import { ReviewService } from '../../../core/services/review/review.service';
+import { Role } from '../../../shared/enums/role';
 import { StatsService } from '../../../core/services/stats/stats.service';
 import { ToastrService } from 'ngx-toastr';
 import { UserDto } from '../../../shared/models/user.dto';
@@ -35,6 +37,7 @@ import { UserDto } from '../../../shared/models/user.dto';
     ReactiveFormsModule,
     CommonModule,
     FormErrorComponent,
+    RouterLink,
   ],
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.scss',
@@ -58,12 +61,14 @@ export class BookDetailsComponent implements OnInit {
   public languageNames: Record<string, string> = Language;
   public bookReviews: ReviewDto[] = [];
   public loggedInUser!: UserDto | null;
+  public adminRole: Role = Role.ROLE_ADMIN;
 
   public bookStats$!: Observable<BookStatsDto>;
 
   public modalRef?: BsModalRef;
 
   public constructor(
+    private adminService: AdminService,
     private authService: AuthService,
     private bookService: BookService,
     private reviewService: ReviewService,
@@ -71,7 +76,8 @@ export class BookDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private modalService: BsModalService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {}
 
   public ngOnInit(): void {
@@ -81,8 +87,36 @@ export class BookDetailsComponent implements OnInit {
     this.bookStats$ = this.statsService.getBookStatistics(this.book.id);
   }
 
+  public onDelete(id: number): void {
+    this.modalRef = this.modalService.show(ConfirmModalComponent, {
+      initialState: {
+        title: 'Potwierdź usunięcie',
+        message: 'Czy na pewno chcesz usunąć tę książkę?',
+        confirmCallback: () => {
+          this.deleteBook(id);
+        },
+      },
+    });
+  }
+
+  private deleteBook(id: number): void {
+    this.adminService.deleteBook(id).subscribe({
+      next: () => {
+        this.toastr.success('Książka została usunięta.');
+        this.router.navigate(['/book/list']);
+      },
+      error: () => {
+        this.toastr.error('Nie udało się usunąć książki.');
+      },
+    });
+  }
+
   public onAddToShelf(): void {
-    this.loadBook();
+    this.bookService.getBookById(this.book.id).subscribe({
+      next: (response: BookDetailsDto) => {
+        this.book = response;
+      },
+    });
   }
 
   public onReviewEdit(review: ReviewDto): void {

@@ -7,7 +7,6 @@ import com.example.bookhub.entity.User;
 import com.example.bookhub.enums.Genre;
 import com.example.bookhub.enums.Language;
 import com.example.bookhub.service.BookService;
-import com.example.bookhub.service.FileService;
 import com.example.bookhub.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 

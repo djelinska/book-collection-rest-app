@@ -1,6 +1,5 @@
 package com.example.bookhub.service;
 
-import com.example.bookhub.dto.AdminBookDto;
 import com.example.bookhub.dto.AdminReviewDto;
 import com.example.bookhub.dto.AdminReviewFormDto;
 import com.example.bookhub.dto.ReviewFormDto;
@@ -73,6 +72,11 @@ public class ReviewService {
 
     public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
+    }
+
+    public void deleteBookReviews(Long bookId) {
+        List<Review> reviews = reviewRepository.findByBookId(bookId);
+        reviewRepository.deleteAll(reviews);
     }
 
     public void deleteUserReviews(User user) {

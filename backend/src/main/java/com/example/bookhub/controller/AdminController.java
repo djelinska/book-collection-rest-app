@@ -228,6 +228,8 @@ public class AdminController {
     @DeleteMapping("/books/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+        reviewService.deleteBookReviews(id);
+        bookService.removeBookFromShelves(id);
         bookService.deleteBook(id);
         return ResponseEntity.ok().build();
     }
