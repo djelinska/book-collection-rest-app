@@ -31,7 +31,13 @@ export class AdminService {
       .set('query', query)
       .set('size', size.toString());
 
-    return this.http.get<PaginatedUsersDto>(`${this.apiUrl}/users`, { params });
+    return this.http.get<PaginatedUsersDto>(`${this.apiUrl}/search/users`, {
+      params,
+    });
+  }
+
+  public getAllUsers(): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(`${this.apiUrl}/users`);
   }
 
   public getUserById(id: number): Observable<UserDto> {
@@ -69,7 +75,13 @@ export class AdminService {
       .set('query', query)
       .set('size', size.toString());
 
-    return this.http.get<PaginatedBooksDto>(`${this.apiUrl}/books`, { params });
+    return this.http.get<PaginatedBooksDto>(`${this.apiUrl}/search/books`, {
+      params,
+    });
+  }
+
+  public getAllBooks(): Observable<BookDto[]> {
+    return this.http.get<BookDto[]>(`${this.apiUrl}/books`);
   }
 
   public getBookById(id: number): Observable<BookDto> {
@@ -107,9 +119,13 @@ export class AdminService {
       .set('query', query)
       .set('size', size.toString());
 
-    return this.http.get<PaginatedReviewsDto>(`${this.apiUrl}/reviews`, {
+    return this.http.get<PaginatedReviewsDto>(`${this.apiUrl}/search/reviews`, {
       params,
     });
+  }
+
+  public getAllReviews(): Observable<ReviewDto[]> {
+    return this.http.get<ReviewDto[]>(`${this.apiUrl}/reviews`);
   }
 
   public getReviewById(id: number): Observable<ReviewDto> {

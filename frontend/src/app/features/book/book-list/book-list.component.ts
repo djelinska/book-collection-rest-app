@@ -1,17 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { BookAddToShelfComponent } from '../shared/book-add-to-shelf/book-add-to-shelf.component';
+import { BookListDto } from '../../../core/services/book/models/book-list.dto';
 import { BookService } from '../../../core/services/book/book.service';
 import { CommonModule } from '@angular/common';
 import { Genre } from '../../../shared/enums/genre';
 import { Language } from '../../../shared/enums/language';
-import { PaginatedBooksDto } from '../../../core/services/book/models/paginated-books.dto';
 import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
@@ -21,7 +16,6 @@ import { ToastrService } from 'ngx-toastr';
   imports: [
     RouterLink,
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     BookAddToShelfComponent,
   ],
@@ -29,14 +23,14 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './book-list.component.scss',
 })
 export class BookListComponent implements OnInit {
-  public paginatedBooks!: PaginatedBooksDto;
-  public page: number = 0;
+  public books!: BookListDto[];
+  public filteredBooks!: BookListDto[];
   public genres = Object.keys(Genre);
   public genreNames: Record<string, string> = Genre;
   public languages = Object.keys(Language);
   public languageNames: Record<string, string> = Language;
-  public sortField: string = 'title';
-  public sortDirection: string = 'asc';
+  public sortField: keyof BookListDto = 'title';
+  public sortDirection: 'asc' | 'desc' = 'asc';
 
   public filterForm = this.fb.group({
     query: new FormControl<string>(''),
@@ -54,66 +48,66 @@ export class BookListComponent implements OnInit {
     this.loadBooks();
   }
 
-  private loadBooks(
-    query: string = '',
-    genre: string = '',
-    language: string = '',
-    page: number = this.page,
-    sortField: string = this.sortField,
-    sortDirection: string = this.sortDirection
+  public onSubmit(): void {
+    this.onFilter();
+    this.onSort();
+  }
+
+  private onFilter(): void {
+    const { query, genre, language } = this.filterForm.value;
+    const lowerQuery = query?.toLowerCase() ?? '';
+
+    this.filteredBooks = this.books
+      .filter(
+        (b) =>
+          !lowerQuery ||
+          b.title.toLowerCase().includes(lowerQuery) ||
+          b.author.toLowerCase().includes(lowerQuery)
+      )
+      .filter((b) => !genre || b.genre === genre)
+      .filter((b) => !language || b.language === language);
+  }
+
+  public onSort(
+    field: keyof BookListDto = this.sortField,
+    direction: 'asc' | 'desc' = this.sortDirection
   ): void {
-    this.bookService
-      .searchBooks(query, genre, language, page, sortField, sortDirection)
-      .subscribe({
-        next: (response: PaginatedBooksDto) => {
-          this.paginatedBooks = response;
-        },
-        error: () => {
-          this.toastr.error('Wystąpił błąd podczas pobierania książek.');
-        },
-      });
-  }
+    const factor = direction === 'asc' ? 1 : -1;
 
-  public onFilter(): void {
-    const filters = this.filterForm.value;
-    this.loadBooks(
-      filters.query || '',
-      filters.genre || '',
-      filters.language || '',
-      this.page,
-      this.sortField,
-      this.sortDirection
-    );
-  }
-
-  public onSort(field: string, direction: string): void {
     this.sortField = field;
     this.sortDirection = direction;
-    this.page = 0;
-    const filters = this.filterForm.value;
-    this.loadBooks(
-      filters.query || '',
-      filters.genre || '',
-      filters.language || '',
-      this.page,
-      field,
-      direction
-    );
+
+    this.filteredBooks.sort((a, b) => {
+      const valA = a[field];
+      const valB = b[field];
+
+      if (typeof valA === 'number' && typeof valB === 'number') {
+        return (valA - valB) * factor;
+      }
+
+      const strA = String(valA).toLowerCase();
+      const strB = String(valB).toLowerCase();
+
+      return strA.localeCompare(strB) * factor;
+    });
   }
 
-  public goToPage(page: number): void {
-    if (page >= 0 && page < this.paginatedBooks.totalPages) {
-      this.page = page;
-      const filters = this.filterForm.value;
-      this.loadBooks(
-        filters.query || '',
-        filters.genre || '',
-        filters.language || '',
-        this.page,
-        this.sortField,
-        this.sortDirection
-      );
-    }
+  public refreshBooks(): void {
+    this.loadBooks();
+  }
+
+  private loadBooks(): void {
+    this.bookService.getAllBooks().subscribe({
+      next: (response: BookListDto[]) => {
+        this.books = response;
+        this.filteredBooks = response;
+        this.onFilter();
+        this.onSort();
+      },
+      error: () => {
+        this.toastr.error('Wystąpił błąd podczas pobierania książek.');
+      },
+    });
   }
 
   public getImagePath(imagePath: string): string {

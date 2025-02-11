@@ -6,23 +6,72 @@
     >
   </div>
 
-  @if (paginatedUsers) {
-  <form (ngSubmit)="onSubmit()" class="mb-4">
+  @if (filteredUsers ) {
+  <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="mb-4">
     <div class="row g-2">
-      <div class="col-md-4">
+      <div class="col-md-7">
         <input
           type="text"
           name="query"
           class="form-control"
-          [(ngModel)]="query"
-          placeholder="Wyszukaj użytkowników"
+          formControlName="query"
+          placeholder="Wyszukaj użytkowników po nazwie użytkownika"
         />
       </div>
+      <div class="col-md-3 align-self-center">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            formControlName="isAdmin"
+            id="isAdmin"
+          />
+          <label class="form-check-label" for="isAdmin"
+            >Rola administratora</label
+          >
+        </div>
+      </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-primary w-100">Szukaj</button>
+        <button type="submit" class="btn btn-primary w-100">Filtruj</button>
       </div>
     </div>
   </form>
+
+  <div class="btn-group mb-4">
+    <button
+      type="button"
+      class="btn btn-primary dropdown-toggle"
+      data-bs-toggle="dropdown"
+    >
+      Sortuj według
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <button class="dropdown-item" (click)="onSort('username', 'asc')">
+          Nazwa użytkownika (Rosnąco)
+        </button>
+      </li>
+      <li>
+        <button class="dropdown-item" (click)="onSort('username', 'desc')">
+          Nazwa użytkownika (Malejąco)
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="mb-4">
+    <p>
+      Wyświetlanie
+      <strong>{{ filteredUsers.length || 0 }}</strong> wyników, posortowane
+      według
+      <strong>{{
+        sortField === "username" ? "nazwy użytkownika" : "niezdefiniowane"
+      }}</strong>
+      w kolejności
+      <strong>{{ sortDirection === "asc" ? "rosnącej" : "malejącej" }}</strong
+      >.
+    </p>
+  </div>
 
   <div class="table-responsive">
     <table class="table table-striped align-middle">
@@ -34,7 +83,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (user of paginatedUsers.users; track user.id) {
+        @for (user of filteredUsers; track user.id) {
         <tr>
           <td>{{ user.username }}</td>
           <td>{{ user.role }}</td>

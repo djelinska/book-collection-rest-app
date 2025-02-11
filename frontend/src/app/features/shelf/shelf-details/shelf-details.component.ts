@@ -40,7 +40,7 @@ export class ShelfDetailsComponent implements OnInit {
       this.shelf = resolver['shelf'] as ShelfDetailsDto;
     });
 
-    this.bookService.getBooks().subscribe({
+    this.bookService.getAllBooks().subscribe({
       next: (response) => {
         this.availableBooks = response;
       },

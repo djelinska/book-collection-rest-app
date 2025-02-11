@@ -4,23 +4,108 @@
     <a routerLink="/admin/review/add" class="btn btn-primary">Dodaj recenzję</a>
   </div>
 
-  @if (paginatedReviews) {
-  <form (ngSubmit)="onSubmit()" class="mb-4">
+  @if (filteredReviews) {
+  <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="mb-4">
     <div class="row g-2">
-      <div class="col-md-4">
+      <div class="col-md-7">
         <input
           type="text"
           name="query"
           class="form-control"
-          [(ngModel)]="query"
-          placeholder="Wyszukaj recenzje"
+          formControlName="query"
+          placeholder="Wyszukaj recenzje po treści lub tytule książki"
         />
       </div>
+      <div class="col-md-3">
+        <select formControlName="rating" class="form-select">
+          <option [ngValue]="null">Wszystkie oceny</option>
+          @for (rating of [1,2,3,4,5]; track $index) {
+          <option [ngValue]="rating" [label]="rating"></option>
+          }
+        </select>
+      </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-primary w-100">Szukaj</button>
+        <button type="submit" class="btn btn-primary w-100">Filtruj</button>
       </div>
     </div>
   </form>
+
+  <div class="btn-group mb-4">
+    <button
+      type="button"
+      class="btn btn-primary dropdown-toggle"
+      data-bs-toggle="dropdown"
+    >
+      Sortuj według
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <button class="dropdown-item" (click)="onSort('book', 'asc')">
+          Tytuł książki (Rosnąco)
+        </button>
+      </li>
+      <li>
+        <button class="dropdown-item" (click)="onSort('book', 'desc')">
+          Tytuł książki (Malejąco)
+        </button>
+      </li>
+      <li><hr class="dropdown-divider" /></li>
+      <li>
+        <button class="dropdown-item" (click)="onSort('author', 'asc')">
+          Autor recenzji (Rosnąco)
+        </button>
+      </li>
+      <li>
+        <button class="dropdown-item" (click)="onSort('author', 'desc')">
+          Autor recenzji (Malejąco)
+        </button>
+      </li>
+      <li><hr class="dropdown-divider" /></li>
+      <li>
+        <button class="dropdown-item" (click)="onSort('createdAt', 'asc')">
+          Data dodania (Rosnąco)
+        </button>
+      </li>
+      <li>
+        <button class="dropdown-item" (click)="onSort('createdAt', 'desc')">
+          Data dodania (Malejąco)
+        </button>
+      </li>
+      <li><hr class="dropdown-divider" /></li>
+      <li>
+        <button class="dropdown-item" (click)="onSort('updatedAt', 'asc')">
+          Data ostatniej edycji (Rosnąco)
+        </button>
+      </li>
+      <li>
+        <button class="dropdown-item" (click)="onSort('updatedAt', 'desc')">
+          Data ostatniej edycji (Malejąco)
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="mb-4">
+    <p>
+      Wyświetlanie
+      <strong>{{ filteredReviews.length || 0 }}</strong> wyników, posortowane
+      według
+      <strong>{{
+        sortField === "book"
+          ? "tytułu książki"
+          : sortField === "author"
+          ? "autora recenzji"
+          : sortField === "createdAt"
+          ? "daty dodania"
+          : sortField === "updatedAt"
+          ? "daty ostatniej edycji"
+          : "niezdefiniowane"
+      }}</strong>
+      w kolejności
+      <strong>{{ sortDirection === "asc" ? "rosnącej" : "malejącej" }}</strong
+      >.
+    </p>
+  </div>
 
   <div class="table-responsive">
     <table class="table table-striped align-middle">
@@ -36,14 +121,14 @@
         </tr>
       </thead>
       <tbody>
-        @for (review of paginatedReviews.reviews; track review.id) {
+        @for (review of filteredReviews; track review.id) {
         <tr>
           <td>{{ review.book.title }}</td>
           <td>{{ review.rating }}</td>
           <td>{{ review.content }}</td>
           <td>{{ review.author.username }}</td>
-          <td class="text-nowrap">{{ review.createdAt | date : "short" }}</td>
-          <td class="text-nowrap">{{ review.updatedAt | date : "short" }}</td>
+          <td class="text-nowrap">{{ review.createdAt | date : "medium" }}</td>
+          <td class="text-nowrap">{{ review.updatedAt | date : "medium" }}</td>
           <td class="text-nowrap">
             <a
               [routerLink]="['/admin/review', review.id, 'edit']"

@@ -39,7 +39,7 @@ export class BookService {
     });
   }
 
-  public getBooks(): Observable<BookListDto[]> {
+  public getAllBooks(): Observable<BookListDto[]> {
     return this.http.get<BookListDto[]>(this.apiUrl);
   }
 

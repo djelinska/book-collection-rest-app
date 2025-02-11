@@ -46,6 +46,10 @@ public class UserService {
         return userRepository.findByUsernameContainingIgnoreCase(query);
     }
 
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));

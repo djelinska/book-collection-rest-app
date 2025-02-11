@@ -51,6 +51,13 @@ public class AdminController {
     }
 
     @GetMapping("/users")
+    public ResponseEntity<List<AdminUserDto>> getUsers() {
+        List<User> users = userService.getAllUsers();
+        List<AdminUserDto> userDtos = users.stream().map(userService::convertToAdminDto).toList();
+        return ResponseEntity.ok(userDtos);
+    }
+
+    @GetMapping("/search/users")
     public ResponseEntity<AdminPaginatedUsersDto> listUsers(
             @RequestParam(required = false) String query,
             @RequestParam(defaultValue = "0") int page,
@@ -151,6 +158,13 @@ public class AdminController {
     }
 
     @GetMapping("/books")
+    public ResponseEntity<List<AdminBookDto>> getBooks() {
+        List<Book> books = bookService.getAllBooks();
+        List<AdminBookDto> bookDtos = books.stream().map(bookService::convertToAdminDto).toList();
+        return ResponseEntity.ok(bookDtos);
+    }
+
+    @GetMapping("/search/books")
     public ResponseEntity<AdminPaginatedBooksDto> listBooks(
             @RequestParam(required = false) String query,
             @RequestParam(defaultValue = "0") int page,
@@ -235,6 +249,13 @@ public class AdminController {
     }
 
     @GetMapping("/reviews")
+    public ResponseEntity<List<AdminReviewDto>> getReviews() {
+        List<Review> reviews = reviewService.getAllReviews();
+        List<AdminReviewDto> reviewDtos = reviews.stream().map(reviewService::convertToAdminDto).toList();
+        return ResponseEntity.ok(reviewDtos);
+    }
+
+    @GetMapping("/search/reviews")
     public ResponseEntity<AdminPaginatedReviewsDto> listReviews(
             @RequestParam(required = false) String query,
             @RequestParam(defaultValue = "0") int page,

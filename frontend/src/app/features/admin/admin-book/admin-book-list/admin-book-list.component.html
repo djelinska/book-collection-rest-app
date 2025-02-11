@@ -4,23 +4,122 @@
     <a routerLink="/admin/book/add" class="btn btn-primary">Dodaj książkę</a>
   </div>
 
-  @if (paginatedBooks) {
-  <form (ngSubmit)="onSubmit()" class="mb-4">
+  @if (filteredBooks) {
+  <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="mb-4">
     <div class="row g-2">
       <div class="col-md-4">
         <input
           type="text"
           name="query"
           class="form-control"
-          [(ngModel)]="query"
-          placeholder="Wyszukaj książki"
+          formControlName="query"
+          placeholder="Wyszukaj książki po tytule, autorze lub ISBN"
         />
       </div>
+      <div class="col-md-3">
+        <select formControlName="genre" class="form-select">
+          <option value="">Wszystkie gatunki</option>
+          @for (genre of genres; track $index) {
+          <option [value]="genre" [label]="genreNames[genre]"></option>
+          }
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select formControlName="language" class="form-select">
+          <option value="">Wszystkie języki</option>
+          @for (language of languages; track $index) {
+          <option [value]="language" [label]="languageNames[language]"></option>
+          }
+        </select>
+      </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-primary w-100">Szukaj</button>
+        <button type="submit" class="btn btn-primary w-100">Filtruj</button>
       </div>
     </div>
   </form>
+
+  <div class="btn-group mb-4">
+    <button
+      type="button"
+      class="btn btn-primary dropdown-toggle"
+      data-bs-toggle="dropdown"
+    >
+      Sortuj według
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <button class="dropdown-item" (click)="onSort('isbn', 'asc')">
+          ISBN (Rosnąco)
+        </button>
+      </li>
+      <li>
+        <button class="dropdown-item" (click)="onSort('isbn', 'desc')">
+          ISBN (Malejąco)
+        </button>
+      </li>
+      <li><hr class="dropdown-divider" /></li>
+      <li>
+        <button class="dropdown-item" (click)="onSort('title', 'asc')">
+          Tytuł (Rosnąco)
+        </button>
+      </li>
+      <li>
+        <button class="dropdown-item" (click)="onSort('title', 'desc')">
+          Tytuł (Malejąco)
+        </button>
+      </li>
+      <li><hr class="dropdown-divider" /></li>
+      <li>
+        <button class="dropdown-item" (click)="onSort('author', 'asc')">
+          Autor (Rosnąco)
+        </button>
+      </li>
+      <li>
+        <button class="dropdown-item" (click)="onSort('author', 'desc')">
+          Autor (Malejąco)
+        </button>
+      </li>
+      <li><hr class="dropdown-divider" /></li>
+      <li>
+        <button
+          class="dropdown-item"
+          (click)="onSort('publicationYear', 'asc')"
+        >
+          Rok publikacji (Rosnąco)
+        </button>
+      </li>
+      <li>
+        <button
+          class="dropdown-item"
+          (click)="onSort('publicationYear', 'desc')"
+        >
+          Rok publikacji (Malejąco)
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="mb-4">
+    <p>
+      Wyświetlanie
+      <strong>{{ filteredBooks.length || 0 }}</strong> wyników, posortowane
+      według
+      <strong>{{
+        sortField === "isbn"
+          ? "ISBN"
+          : sortField === "title"
+          ? "tytułu"
+          : sortField === "author"
+          ? "autora"
+          : sortField === "publicationYear"
+          ? "roku publikacji"
+          : "niezdefiniowane"
+      }}</strong>
+      w kolejności
+      <strong>{{ sortDirection === "asc" ? "rosnącej" : "malejącej" }}</strong
+      >.
+    </p>
+  </div>
 
   <div class="table-responsive">
     <table class="table table-striped align-middle">
@@ -31,14 +130,14 @@
           <th class="col-1">Tytuł</th>
           <th class="col-1">Autor</th>
           <th class="col-1">Wydawnictwo</th>
-          <th class="col-1">Data publikacji</th>
+          <th class="col-1">Rok publikacji</th>
           <th class="col-1">Gatunek</th>
           <th class="col-1">Język</th>
           <th class="col-1">Akcje</th>
         </tr>
       </thead>
       <tbody>
-        @for (book of paginatedBooks.books; track book.id) {
+        @for (book of filteredBooks; track book.id) {
         <tr>
           <td>{{ book.isbn }}</td>
           <td>

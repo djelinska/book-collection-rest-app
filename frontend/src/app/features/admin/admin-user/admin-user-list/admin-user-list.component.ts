@@ -1,12 +1,12 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { AdminService } from '../../../../core/services/admin/admin.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
-import { FormsModule } from '@angular/forms';
-import { PaginatedUsersDto } from '../../../../core/services/admin/models/paginated-users.dto';
+import { Role } from '../../../../shared/enums/role';
 import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { UserDto } from '../../../../shared/models/user.dto';
@@ -14,21 +14,29 @@ import { UserDto } from '../../../../shared/models/user.dto';
 @Component({
   selector: 'app-admin-user-list',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule],
+  imports: [RouterLink, CommonModule, ReactiveFormsModule],
   templateUrl: './admin-user-list.component.html',
   styleUrl: './admin-user-list.component.scss',
 })
 export class AdminUserListComponent implements OnInit {
-  public paginatedUsers!: PaginatedUsersDto;
+  public users!: UserDto[];
+  public filteredUsers!: UserDto[];
   public loggedInUser!: UserDto | null;
-  public query: string = '';
   public modalRef?: BsModalRef;
+  public sortField: keyof UserDto = 'username';
+  public sortDirection: 'asc' | 'desc' = 'asc';
+
+  public filterForm = this.fb.group({
+    query: new FormControl<string>(''),
+    isAdmin: new FormControl<boolean>(false),
+  });
 
   public constructor(
     private authService: AuthService,
     private adminService: AdminService,
     private toastr: ToastrService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private fb: FormBuilder
   ) {}
 
   public ngOnInit(): void {
@@ -61,13 +69,44 @@ export class AdminUserListComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    this.loadUsers();
+    this.onFilter();
+    this.onSort();
+  }
+
+  private onFilter(): void {
+    const { query, isAdmin } = this.filterForm.value;
+
+    this.filteredUsers = this.users
+      .filter(
+        (u) => !query || u.username.toLowerCase().includes(query.toLowerCase())
+      )
+      .filter((u) => !isAdmin || u.role === Role.ROLE_ADMIN);
+  }
+
+  public onSort(
+    field: keyof UserDto = this.sortField,
+    direction: 'asc' | 'desc' = this.sortDirection
+  ): void {
+    const factor = direction === 'asc' ? 1 : -1;
+
+    this.sortField = field;
+    this.sortDirection = direction;
+
+    this.filteredUsers.sort((a, b) => {
+      const valA = String(a[field]).toLowerCase();
+      const valB = String(b[field]).toLowerCase();
+
+      return valA.localeCompare(valB) * factor;
+    });
   }
 
   private loadUsers(): void {
-    this.adminService.searchUsers(this.query).subscribe({
-      next: (response) => {
-        this.paginatedUsers = response;
+    this.adminService.getAllUsers().subscribe({
+      next: (response: UserDto[]) => {
+        this.users = response;
+        this.filteredUsers = response;
+        this.onFilter();
+        this.onSort();
       },
       error: () => {
         this.toastr.error('Wystąpił błąd podczas pobierania użytkowników.');
