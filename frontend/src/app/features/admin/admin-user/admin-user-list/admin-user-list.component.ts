@@ -6,6 +6,7 @@ import { AdminService } from '../../../../core/services/admin/admin.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
+import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { Role } from '../../../../shared/enums/role';
 import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -14,17 +15,22 @@ import { UserDto } from '../../../../shared/models/user.dto';
 @Component({
   selector: 'app-admin-user-list',
   standalone: true,
-  imports: [RouterLink, CommonModule, ReactiveFormsModule],
+  imports: [RouterLink, CommonModule, ReactiveFormsModule, PaginationComponent],
   templateUrl: './admin-user-list.component.html',
   styleUrl: './admin-user-list.component.scss',
 })
 export class AdminUserListComponent implements OnInit {
   public users!: UserDto[];
   public filteredUsers!: UserDto[];
+  public paginatedUsers!: UserDto[];
   public loggedInUser!: UserDto | null;
   public modalRef?: BsModalRef;
   public sortField: keyof UserDto = 'username';
   public sortDirection: 'asc' | 'desc' = 'asc';
+  public page = 0;
+  public totalPages = 0;
+  public pageSizeOptions: number[] = [2, 5, 10];
+  public pageSize = 5;
 
   public filterForm = this.fb.group({
     query: new FormControl<string>(''),
@@ -69,8 +75,10 @@ export class AdminUserListComponent implements OnInit {
   }
 
   public onSubmit(): void {
+    this.page = 0;
     this.onFilter();
     this.onSort();
+    this.paginateUsers();
   }
 
   private onFilter(): void {
@@ -87,26 +95,55 @@ export class AdminUserListComponent implements OnInit {
     field: keyof UserDto = this.sortField,
     direction: 'asc' | 'desc' = this.sortDirection
   ): void {
-    const factor = direction === 'asc' ? 1 : -1;
-
     this.sortField = field;
     this.sortDirection = direction;
+    this.page = 0;
+
+    this.sortUsers();
+    this.paginateUsers();
+  }
+
+  private sortUsers(): void {
+    const factor = this.sortDirection === 'asc' ? 1 : -1;
 
     this.filteredUsers.sort((a, b) => {
-      const valA = String(a[field]).toLowerCase();
-      const valB = String(b[field]).toLowerCase();
+      const valA = String(a[this.sortField]).toLowerCase();
+      const valB = String(b[this.sortField]).toLowerCase();
 
       return valA.localeCompare(valB) * factor;
     });
+  }
+
+  public onPageSizeChange(size: number): void {
+    this.pageSize = size;
+    this.page = 0;
+    this.paginateUsers();
+  }
+
+  private paginateUsers(): void {
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.pageSize);
+
+    const startIndex = this.page * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+
+    this.paginatedUsers = this.filteredUsers.slice(startIndex, endIndex);
+  }
+
+  public goToPage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.page = page;
+      this.paginateUsers();
+    }
   }
 
   private loadUsers(): void {
     this.adminService.getAllUsers().subscribe({
       next: (response: UserDto[]) => {
         this.users = response;
-        this.filteredUsers = response;
+        this.filteredUsers = [...this.users];
         this.onFilter();
         this.onSort();
+        this.paginateUsers();
       },
       error: () => {
         this.toastr.error('Wystąpił błąd podczas pobierania użytkowników.');

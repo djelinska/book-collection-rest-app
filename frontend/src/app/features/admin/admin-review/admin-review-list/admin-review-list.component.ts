@@ -5,6 +5,7 @@ import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AdminService } from '../../../../core/services/admin/admin.service';
 import { CommonModule } from '@angular/common';
 import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
+import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { ReviewDto } from '../../../../core/services/admin/models/review.dto';
 import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -12,17 +13,22 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-admin-review-list',
   standalone: true,
-  imports: [RouterLink, CommonModule, ReactiveFormsModule],
+  imports: [RouterLink, CommonModule, ReactiveFormsModule, PaginationComponent],
   templateUrl: './admin-review-list.component.html',
   styleUrl: './admin-review-list.component.scss',
 })
 export class AdminReviewListComponent implements OnInit {
   public reviews!: ReviewDto[];
   public filteredReviews!: ReviewDto[];
+  public paginatedReviews!: ReviewDto[];
   public query: string = '';
   public modalRef?: BsModalRef;
   public sortField: keyof ReviewDto = 'book';
   public sortDirection: 'asc' | 'desc' = 'asc';
+  public page = 0;
+  public totalPages = 0;
+  public pageSizeOptions: number[] = [2, 5, 10];
+  public pageSize = 5;
 
   public filterForm = this.fb.group({
     query: new FormControl<string>(''),
@@ -65,8 +71,10 @@ export class AdminReviewListComponent implements OnInit {
   }
 
   public onSubmit(): void {
+    this.page = 0;
     this.onFilter();
     this.onSort();
+    this.paginateReviews();
   }
 
   private onFilter(): void {
@@ -87,19 +95,25 @@ export class AdminReviewListComponent implements OnInit {
     field: keyof ReviewDto = this.sortField,
     direction: 'asc' | 'desc' = this.sortDirection
   ): void {
-    const factor = direction === 'asc' ? 1 : -1;
-
     this.sortField = field;
     this.sortDirection = direction;
+    this.page = 0;
+
+    this.sortReviews();
+    this.paginateReviews();
+  }
+
+  public sortReviews(): void {
+    const factor = this.sortDirection === 'asc' ? 1 : -1;
 
     this.filteredReviews.sort((a, b) => {
-      let valA: unknown = a[field];
-      let valB: unknown = b[field];
+      let valA: unknown = a[this.sortField];
+      let valB: unknown = b[this.sortField];
 
-      if (field === 'book') {
+      if (this.sortField === 'book') {
         valA = a.book.title;
         valB = b.book.title;
-      } else if (field === 'author') {
+      } else if (this.sortField === 'author') {
         valA = a.author.username;
         valB = b.author.username;
       }
@@ -119,6 +133,28 @@ export class AdminReviewListComponent implements OnInit {
     });
   }
 
+  public onPageSizeChange(size: number): void {
+    this.pageSize = size;
+    this.page = 0;
+    this.paginateReviews();
+  }
+
+  private paginateReviews(): void {
+    this.totalPages = Math.ceil(this.filteredReviews.length / this.pageSize);
+
+    const startIndex = this.page * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+
+    this.paginatedReviews = this.filteredReviews.slice(startIndex, endIndex);
+  }
+
+  public goToPage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.page = page;
+      this.paginateReviews();
+    }
+  }
+
   private loadReviews(): void {
     this.adminService.getAllReviews().subscribe({
       next: (response: ReviewDto[]) => {
@@ -126,6 +162,7 @@ export class AdminReviewListComponent implements OnInit {
         this.filteredReviews = response;
         this.onFilter();
         this.onSort();
+        this.paginateReviews();
       },
       error: () => {
         this.toastr.error('Wystąpił błąd podczas pobierania recenzji.');

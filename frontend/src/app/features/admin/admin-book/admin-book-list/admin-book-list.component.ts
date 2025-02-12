@@ -8,19 +8,21 @@ import { BookService } from '../../../../core/services/book/book.service';
 import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
 import { Genre } from '../../../../shared/enums/genre';
 import { Language } from '../../../../shared/enums/language';
+import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin-book-list',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, PaginationComponent],
   templateUrl: './admin-book-list.component.html',
   styleUrl: './admin-book-list.component.scss',
 })
 export class AdminBookListComponent implements OnInit {
   public books!: BookDto[];
   public filteredBooks!: BookDto[];
+  public paginatedBooks!: BookDto[];
   public genres = Object.keys(Genre);
   public genreNames: Record<string, string> = Genre;
   public languages = Object.keys(Language);
@@ -28,6 +30,10 @@ export class AdminBookListComponent implements OnInit {
   public modalRef?: BsModalRef;
   public sortField: keyof BookDto = 'title';
   public sortDirection: 'asc' | 'desc' = 'asc';
+  public page = 0;
+  public totalPages = 0;
+  public pageSizeOptions: number[] = [2, 5, 10];
+  public pageSize = 5;
 
   public filterForm = this.fb.group({
     query: new FormControl<string>(''),
@@ -74,6 +80,7 @@ export class AdminBookListComponent implements OnInit {
   public onSubmit(): void {
     this.onFilter();
     this.onSort();
+    this.paginateBooks();
   }
 
   private onFilter(): void {
@@ -96,14 +103,20 @@ export class AdminBookListComponent implements OnInit {
     field: keyof BookDto = this.sortField,
     direction: 'asc' | 'desc' = this.sortDirection
   ): void {
-    const factor = direction === 'asc' ? 1 : -1;
-
     this.sortField = field;
     this.sortDirection = direction;
+    this.page = 0;
+
+    this.sortBooks();
+    this.paginateBooks();
+  }
+
+  public sortBooks(): void {
+    const factor = this.sortDirection === 'asc' ? 1 : -1;
 
     this.filteredBooks.sort((a, b) => {
-      const valA = a[field];
-      const valB = b[field];
+      const valA = a[this.sortField];
+      const valB = b[this.sortField];
 
       if (typeof valA === 'number' && typeof valB === 'number') {
         return (valA - valB) * factor;
@@ -116,6 +129,28 @@ export class AdminBookListComponent implements OnInit {
     });
   }
 
+  public onPageSizeChange(size: number): void {
+    this.pageSize = size;
+    this.page = 0;
+    this.paginateBooks();
+  }
+
+  private paginateBooks(): void {
+    this.totalPages = Math.ceil(this.filteredBooks.length / this.pageSize);
+
+    const startIndex = this.page * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+
+    this.paginatedBooks = this.filteredBooks.slice(startIndex, endIndex);
+  }
+
+  public goToPage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.page = page;
+      this.paginateBooks();
+    }
+  }
+
   private loadBooks(): void {
     this.adminService.getAllBooks().subscribe({
       next: (response: BookDto[]) => {
@@ -123,6 +158,7 @@ export class AdminBookListComponent implements OnInit {
         this.filteredBooks = response;
         this.onFilter();
         this.onSort();
+        this.paginateBooks();
       },
       error: () => {
         this.toastr.error('Wystąpił błąd podczas pobierania książek.');

@@ -1,12 +1,12 @@
 <div>
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-4 gap-2">
     <h2>Użytkownicy</h2>
     <a routerLink="/admin/user/add" class="btn btn-primary"
       >Dodaj użytkownika</a
     >
   </div>
 
-  @if (filteredUsers ) {
+  @if (users) {
   <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="mb-4">
     <div class="row g-2">
       <div class="col-md-7">
@@ -27,7 +27,7 @@
             id="isAdmin"
           />
           <label class="form-check-label" for="isAdmin"
-            >Rola administratora</label
+            >Tylko administratorzy</label
           >
         </div>
       </div>
@@ -83,7 +83,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (user of filteredUsers; track user.id) {
+        @for (user of paginatedUsers; track user.id) {
         <tr>
           <td>{{ user.username }}</td>
           <td>{{ user.role }}</td>
@@ -116,6 +116,17 @@
         }
       </tbody>
     </table>
+  </div>
+
+  <div class="mt-2">
+    <app-pagination
+      [page]="page"
+      [totalPages]="totalPages"
+      [pageSizeOptions]="pageSizeOptions"
+      [pageSize]="pageSize"
+      (pageChange)="goToPage($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    ></app-pagination>
   </div>
   }
 </div>

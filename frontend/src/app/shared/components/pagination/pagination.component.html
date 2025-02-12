@@ -1,0 +1,38 @@
+@if (totalPages > 0) {
+<nav>
+  <ul class="pagination justify-content-center">
+    <li class="page-item" [class.disabled]="page === 0">
+      <button class="page-link" (click)="goToPage(page - 1)">Poprzednia</button>
+    </li>
+    @for (p of pages; track $index) {
+    <li class="page-item" [class.active]="p === page">
+      <button class="page-link" (click)="goToPage(p)">
+        {{ p + 1 }}
+      </button>
+    </li>
+    }
+    <li class="page-item" [class.disabled]="page === totalPages - 1">
+      <button class="page-link" (click)="goToPage(page + 1)">Następna</button>
+    </li>
+  </ul>
+</nav>
+
+<div class="d-flex align-items-center justify-content-end gap-2">
+  <label for="pageSize" class="form-label mb-0 text-sm">
+    Ilość wyświetlanych elementów
+  </label>
+  <select
+    id="pageSize"
+    name="pageSize"
+    [(ngModel)]="pageSize"
+    (ngModelChange)="onPageSizeChange($event)"
+    class="form-select w-auto"
+  >
+    @for (size of pageSizeOptions; track $index) {
+    <option [ngValue]="size">
+      {{ size }}
+    </option>
+    }
+  </select>
+</div>
+}

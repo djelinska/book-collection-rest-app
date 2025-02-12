@@ -3,7 +3,7 @@
     <h2>Lista książek</h2>
   </div>
 
-  @if (filteredBooks) {
+  @if (books) {
   <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="mb-4">
     <div class="row g-2">
       <div class="col-md-4">
@@ -100,7 +100,7 @@
     </p>
   </div>
 
-  @for (book of filteredBooks; track book.id) {
+  @for (book of paginatedBooks; track book.id) {
   <div class="card mb-3" style="max-width: 540px">
     <div class="row g-0">
       <div class="col-md-4 d-flex">
@@ -156,5 +156,17 @@
   </div>
   } @empty {
   <div class="alert alert-warning">Brak książek do wyświetlenia.</div>
-  } }
+  }
+
+  <div class="mt-4">
+    <app-pagination
+      [page]="page"
+      [totalPages]="totalPages"
+      [pageSizeOptions]="pageSizeOptions"
+      [pageSize]="pageSize"
+      (pageChange)="goToPage($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    ></app-pagination>
+  </div>
+  }
 </div>
