@@ -2,8 +2,10 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormControl,
+  FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -22,6 +24,7 @@ import { Genre } from '../../../shared/enums/genre';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Language } from '../../../shared/enums/language';
 import { Observable } from 'rxjs';
+import { QuoteDto } from '../../../shared/models/quote.dto';
 import { ReviewDto } from '../../../core/services/review/models/review.dto';
 import { ReviewFormDto } from '../../../core/services/review/models/review-form.dto';
 import { ReviewService } from '../../../core/services/review/review.service';
@@ -44,19 +47,10 @@ import { UserDto } from '../../../shared/models/user.dto';
   styleUrl: './book-details.component.scss',
 })
 export class BookDetailsComponent implements OnInit {
-  public form = this.fb.group({
-    rating: new FormControl<number | null>(null, [
-      Validators.required,
-      Validators.min(1),
-      Validators.max(5),
-    ]),
-    content: new FormControl<string>('', [Validators.required]),
-  });
   public isEditMode: boolean = false;
   private reviewId: number | null = null;
   public averageRating: number = 0;
   public numberOfRatings: number = 0;
-
   public book!: BookDetailsDto;
   public genreNames: Record<string, string> = Genre;
   public languageNames: Record<string, string> = Language;
@@ -64,10 +58,18 @@ export class BookDetailsComponent implements OnInit {
   public bookReviews: ReviewDto[] = [];
   public loggedInUser!: UserDto | null;
   public adminRole: Role = Role.ROLE_ADMIN;
-
   public bookStats$!: Observable<BookStatsDto>;
-
   public modalRef?: BsModalRef;
+
+  public form = this.fb.group({
+    rating: new FormControl<number | null>(null, [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(5),
+    ]),
+    content: new FormControl<string>('', [Validators.required]),
+    quotes: this.fb.array<FormGroup>([]),
+  });
 
   public constructor(
     private adminService: AdminService,
@@ -121,10 +123,47 @@ export class BookDetailsComponent implements OnInit {
     });
   }
 
+  public get quotes(): FormArray {
+    return this.form.get('quotes') as FormArray;
+  }
+
+  public addQuote(): void {
+    this.quotes.push(this.createQuoteFormGroup({ text: '', page: null }));
+  }
+
+  public removeQuote(index: number): void {
+    this.quotes.removeAt(index);
+    const updatedQuotes = this.quotes.controls.map((q) =>
+      this.createQuoteFormGroup(q.value)
+    );
+    this.form.setControl('quotes', this.fb.array(updatedQuotes));
+  }
+
   public onReviewEdit(review: ReviewDto): void {
-    this.form.patchValue(review);
+    this.form.patchValue({
+      rating: review.rating,
+      content: review.content,
+    });
+
+    this.quotes.clear();
+    review.quotes.forEach((quote) => {
+      this.quotes.push(this.createQuoteFormGroup(quote));
+    });
+
     this.isEditMode = true;
     this.reviewId = review.id;
+  }
+
+  private createQuoteFormGroup(quote: QuoteDto): FormGroup {
+    return this.fb.group({
+      text: new FormControl<string>(quote.text, [
+        Validators.required,
+        Validators.maxLength(500),
+      ]),
+      page: new FormControl<number | null>(quote.page ?? null, [
+        Validators.min(1),
+      ]),
+    });
   }
 
   public onReviewDelete(id: number): void {
@@ -151,11 +190,17 @@ export class BookDetailsComponent implements OnInit {
     });
   }
 
+  public onCancelReview(): void {
+    this.form.reset();
+    this.quotes.clear();
+  }
+
   public onSubmit(): void {
     if (this.form.valid) {
       const data: ReviewFormDto = {
-        rating: this.form.value.rating ?? 0,
+        rating: this.form.value.rating ?? null,
         content: this.form.value.content ?? '',
+        quotes: this.quotes.value as QuoteDto[],
       };
 
       const action$ =
@@ -177,6 +222,7 @@ export class BookDetailsComponent implements OnInit {
       });
 
       this.form.reset();
+      this.quotes.clear();
     } else {
       this.form.markAllAsTouched();
     }

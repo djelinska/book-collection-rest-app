@@ -7,6 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -18,7 +20,12 @@ public class Review {
 
     private int rating;
 
+    @Lob
     private String content;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Quote> quotes = new ArrayList<>();
 
     @ToString.Exclude
     @ManyToOne

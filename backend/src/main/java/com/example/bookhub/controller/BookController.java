@@ -80,6 +80,12 @@ public class BookController {
                     reviewDto.setCreatedAt(review.getCreatedAt());
                     reviewDto.setUpdatedAt(review.getUpdatedAt());
                     reviewDto.setAuthor(review.getUser().getUsername());
+                    reviewDto.setQuotes(review.getQuotes().stream().map(quote -> {
+                        QuoteDto quoteDto = new QuoteDto();
+                        quoteDto.setText(quote.getText());
+                        quoteDto.setPage(quote.getPage());
+                        return quoteDto;
+                    }).toList());
                     return reviewDto;
                 })
                 .toList();

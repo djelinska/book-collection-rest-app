@@ -98,10 +98,10 @@ export class AdminReviewFormComponent implements OnInit {
   public onSubmit(): void {
     if (this.form.valid) {
       const data: ReviewFormDto = {
-        rating: this.form.value.rating ?? 0,
+        rating: this.form.value.rating ?? null,
         content: this.form.value.content ?? '',
-        bookId: this.form.value.bookId ?? 0,
-        userId: this.form.value.userId ?? 0,
+        bookId: this.form.value.bookId ?? null,
+        userId: this.form.value.userId ?? null,
       };
 
       const action$ =

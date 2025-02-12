@@ -2,8 +2,10 @@ package com.example.bookhub.service;
 
 import com.example.bookhub.dto.AdminReviewDto;
 import com.example.bookhub.dto.AdminReviewFormDto;
+import com.example.bookhub.dto.QuoteDto;
 import com.example.bookhub.dto.ReviewFormDto;
 import com.example.bookhub.entity.Book;
+import com.example.bookhub.entity.Quote;
 import com.example.bookhub.entity.Review;
 import com.example.bookhub.entity.User;
 import com.example.bookhub.repository.ReviewRepository;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -43,6 +46,10 @@ public class ReviewService {
         Review review = convertToEntity(reviewFormDto, null);
         review.setBook(book);
         review.setUser(user);
+
+        List<Quote> quotes = createQuoteEntities(reviewFormDto.getQuotes(), review);
+        review.setQuotes(quotes);
+
         reviewRepository.save(review);
     }
 
@@ -53,11 +60,18 @@ public class ReviewService {
         reviewRepository.save(review);
     }
 
+    @Transactional
     public void editReview(Long id, ReviewFormDto reviewFormDto) {
         Review existingReview = getReviewById(id);
 
-        Review updatedReview = convertToEntity(reviewFormDto, existingReview);
-        reviewRepository.save(updatedReview);
+        existingReview.getQuotes().clear();
+        List<Quote> newQuotes = createQuoteEntities(reviewFormDto.getQuotes(), existingReview);
+        existingReview.getQuotes().addAll(newQuotes);
+
+        existingReview.setRating(reviewFormDto.getRating());
+        existingReview.setContent(reviewFormDto.getContent());
+
+        reviewRepository.save(existingReview);
     }
 
     public void editReviewByAdmin(Long id, AdminReviewFormDto adminReviewFormDto, Book book, User user) {
@@ -117,5 +131,21 @@ public class ReviewService {
         review.setRating(adminReviewFormDto.getRating());
         review.setContent(adminReviewFormDto.getContent());
         return review;
+    }
+
+    private List<Quote> createQuoteEntities(List<QuoteDto> quoteDtos, Review review) {
+        if (quoteDtos == null || quoteDtos.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return quoteDtos.stream()
+                .map(dto -> {
+                    Quote quote = new Quote();
+                    quote.setText(dto.getText());
+                    quote.setPage(dto.getPage());
+                    quote.setReview(review);
+                    return quote;
+                })
+                .toList();
     }
 }

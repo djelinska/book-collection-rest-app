@@ -139,7 +139,22 @@
         <p class="text-muted text-sm">
           {{ review.createdAt | date : "mediumDate" }}
         </p>
-        <p class="mb-0">{{ review.content }}</p>
+        <p>{{ review.content }}</p>
+        @if (review.quotes.length > 0) {
+        <div>
+          <p class="text-secondary text-sm mb-2">Cytaty z recenzji:</p>
+          <ul class="list-unstyled">
+            @for (quote of review.quotes; track $index) {
+            <li
+              class="p-2 ps-3 border-start border-2 border-primary text-muted text-sm fst-italic"
+            >
+              "{{ quote.text }}"
+              {{ quote.page ? "(strona: " + quote.page + ")" : "" }}
+            </li>
+            }
+          </ul>
+        </div>
+        }
       </div>
 
       @if (review.author === loggedInUser?.username ) {
@@ -186,6 +201,7 @@
               />
               <app-form-error [control]="form.get('rating')"></app-form-error>
             </div>
+
             <div class="mb-3">
               <label for="content" class="form-label">Treść recenzji</label>
               <textarea
@@ -201,8 +217,84 @@
               ></textarea>
               <app-form-error [control]="form.get('content')"></app-form-error>
             </div>
-            <button type="submit" class="btn btn-primary">
-              {{ isEditMode ? "Zapisz" : "Dodaj" }}
+
+            <div class="mb-3">
+              <p class="form-label">Cytaty</p>
+              <div formArrayName="quotes">
+                @for (quoteControl of quotes.controls; track $index) {
+                <div class="d-flex flex-column mb-3" [formGroupName]="$index">
+                  <div class="mb-2">
+                    <label
+                      for="quote-text-{{ $index }}"
+                      class="form-label text-sm"
+                      >Treść cytatu</label
+                    >
+                    <textarea
+                      id="quote-text-{{ $index }}"
+                      class="form-control text-sm"
+                      rows="2"
+                      formControlName="text"
+                      [ngClass]="{
+                        'is-invalid':
+                          quoteControl.get('text')?.touched &&
+                          quoteControl.get('text')?.errors
+                      }"
+                    ></textarea>
+                    <app-form-error
+                      [control]="quoteControl.get('text')"
+                    ></app-form-error>
+                  </div>
+
+                  <div class="mb-2">
+                    <label
+                      for="quote-page-{{ $index }}"
+                      class="form-label text-sm"
+                    >
+                      Numer strony
+                    </label>
+                    <input
+                      type="number"
+                      class="form-control text-sm"
+                      id="quote-page-{{ $index }}"
+                      formControlName="page"
+                      [ngClass]="{
+                        'is-invalid':
+                          quoteControl.get('page')?.touched &&
+                          quoteControl.get('page')?.errors
+                      }"
+                    />
+                    <app-form-error
+                      [control]="quoteControl.get('page')"
+                    ></app-form-error>
+                  </div>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger align-self-end"
+                    (click)="removeQuote($index)"
+                  >
+                    Usuń
+                  </button>
+                </div>
+                }
+              </div>
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                (click)="addQuote()"
+              >
+                Dodaj cytat
+              </button>
+            </div>
+
+            <button type="submit" class="btn btn-primary me-2">
+              {{ isEditMode ? "Zapisz recenzję" : "Dodaj recenzję" }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              (click)="onCancelReview()"
+            >
+              Anuluj
             </button>
           </form>
         </div>

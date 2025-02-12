@@ -3,6 +3,7 @@ package com.example.bookhub.dto;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class ReviewDto {
@@ -18,4 +19,6 @@ public class ReviewDto {
     private LocalDateTime updatedAt;
 
     private String author;
+
+    private List<QuoteDto> quotes;
 }

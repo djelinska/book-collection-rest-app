@@ -1,6 +1,6 @@
 export interface ReviewFormDto {
-  readonly rating: number;
+  readonly rating: number | null;
   readonly content: string;
-  readonly bookId: number;
-  readonly userId: number;
+  readonly bookId: number | null;
+  readonly userId: number | null;
 }

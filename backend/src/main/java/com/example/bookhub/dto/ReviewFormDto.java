@@ -2,6 +2,8 @@ package com.example.bookhub.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ReviewFormDto {
 
@@ -10,4 +12,6 @@ public class ReviewFormDto {
     private int rating;
 
     private String content;
+
+    private List<QuoteDto> quotes;
 }
