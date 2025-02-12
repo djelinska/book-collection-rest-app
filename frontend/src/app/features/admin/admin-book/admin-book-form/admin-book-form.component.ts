@@ -11,11 +11,13 @@ import { AdminService } from '../../../../core/services/admin/admin.service';
 import { BookFormDto } from '../../../../core/services/admin/models/book-form.dto';
 import { BookService } from '../../../../core/services/book/book.service';
 import { CommonModule } from '@angular/common';
+import { EbookFormat } from '../../../../shared/enums/ebook-format';
 import { FormErrorComponent } from '../../../../shared/components/form-error/form-error.component';
 import { Genre } from '../../../../shared/enums/genre';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Language } from '../../../../shared/enums/language';
 import { ToastrService } from 'ngx-toastr';
+import { urlValidator } from '../../../../shared/validators/url-validator.validator';
 
 @Component({
   selector: 'app-admin-book-form',
@@ -60,12 +62,18 @@ export class AdminBookFormComponent implements OnInit {
       Validators.maxLength(2000),
     ]),
     image: new FormControl<File | null>(null, Validators.required),
+    isEbook: new FormControl<boolean>(false),
+    ebookFormat: new FormControl<EbookFormat | null>(null),
+    ebookFileSize: new FormControl<number | null>(null),
+    ebookLink: new FormControl<string>(''),
   });
 
   public genres = Object.keys(Genre);
   public genreNames: Record<string, string> = Genre;
   public languages = Object.keys(Language);
   public languageNames: Record<string, string> = Language;
+  public ebookFormats = Object.keys(EbookFormat);
+  public ebookFormatNames: Record<string, string> = EbookFormat;
 
   public bookId: number | null = null;
   public isEditMode: boolean = false;
@@ -99,6 +107,29 @@ export class AdminBookFormComponent implements OnInit {
       this.form.get('image')?.clearValidators();
     }
     this.form.get('image')?.updateValueAndValidity();
+
+    this.form.get('isEbook')?.valueChanges.subscribe((isEbook) => {
+      if (isEbook) {
+        this.form.get('ebookFormat')?.setValidators(Validators.required);
+        this.form
+          .get('ebookFileSize')
+          ?.setValidators([Validators.required, Validators.min(0.1)]);
+        this.form
+          .get('ebookLink')
+          ?.setValidators([Validators.required, urlValidator]);
+      } else {
+        this.form.get('ebookFormat')?.clearValidators();
+        this.form.get('ebookFileSize')?.clearValidators();
+        this.form.get('ebookLink')?.clearValidators();
+
+        this.form.get('ebookFormat')?.setValue(null);
+        this.form.get('ebookFileSize')?.setValue(null);
+        this.form.get('ebookLink')?.setValue(null);
+      }
+      this.form.get('ebookFormat')?.updateValueAndValidity();
+      this.form.get('ebookFileSize')?.updateValueAndValidity();
+      this.form.get('ebookLink')?.updateValueAndValidity();
+    });
   }
 
   private loadBook(bookId: number): void {
@@ -144,11 +175,15 @@ export class AdminBookFormComponent implements OnInit {
         author: this.form.value.author ?? '',
         publisher: this.form.value.publisher ?? '',
         isbn: this.form.value.isbn ?? '',
-        publicationYear: this.form.value.publicationYear ?? this.currentYear,
-        genre: this.form.value.genre ?? Genre.BIOGRAPHY,
-        pageCount: this.form.value.pageCount ?? 1,
-        language: this.form.value.language ?? Language.CHINESE,
+        publicationYear: this.form.value.publicationYear ?? null,
+        genre: this.form.value.genre ?? null,
+        pageCount: this.form.value.pageCount ?? null,
+        language: this.form.value.language ?? null,
         description: this.form.value.description ?? '',
+        isEbook: this.form.value.isEbook ?? false,
+        ebookFormat: this.form.value.ebookFormat ?? null,
+        ebookFileSize: this.form.value.ebookFileSize ?? null,
+        ebookLink: this.form.value.ebookLink ?? '',
       };
 
       formData.append(

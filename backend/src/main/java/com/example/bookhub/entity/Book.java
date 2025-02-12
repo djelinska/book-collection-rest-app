@@ -1,5 +1,6 @@
 package com.example.bookhub.entity;
 
+import com.example.bookhub.enums.EbookFormat;
 import com.example.bookhub.enums.Genre;
 import com.example.bookhub.enums.Language;
 import jakarta.persistence.*;
@@ -44,6 +45,14 @@ public class Book {
 
     private String imagePath;
 
+    private boolean isEbook;
+
+    private EbookFormat ebookFormat;
+
+    private Double ebookFileSize;
+
+    private String ebookLink;
+
     @ToString.Exclude
     @ManyToMany(mappedBy = "books")
     private List<Shelf> shelves = new ArrayList<>();
@@ -51,4 +60,8 @@ public class Book {
     @ToString.Exclude
     @OneToMany(mappedBy = "book")
     private List<Review> reviews;
+
+    public boolean getIsEbook() {
+        return isEbook;
+    }
 }

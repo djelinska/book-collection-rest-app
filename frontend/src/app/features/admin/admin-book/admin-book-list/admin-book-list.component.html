@@ -133,6 +133,7 @@
           <th class="col-1">Rok publikacji</th>
           <th class="col-1">Gatunek</th>
           <th class="col-1">Język</th>
+          <th class="col-1">Wersja elektroniczna</th>
           <th class="col-1">Akcje</th>
         </tr>
       </thead>
@@ -153,6 +154,11 @@
           <td>{{ book.publicationYear }}</td>
           <td>{{ genreNames[book.genre] }}</td>
           <td>{{ languageNames[book.language] }}</td>
+          <td class="text-center">
+            @if (book.isEbook) {
+            <i class="bi bi-check-circle-fill text-primary"></i>
+            }
+          </td>
           <td class="text-nowrap">
             <a
               [routerLink]="['/admin/book', book.id, 'edit']"

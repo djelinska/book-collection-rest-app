@@ -181,12 +181,80 @@
           ></textarea>
           <app-form-error [control]="form.get('description')"></app-form-error>
         </div>
+        <div class="form-check mb-3">
+          <input
+            type="checkbox"
+            id="isEbook"
+            class="form-check-input"
+            formControlName="isEbook"
+          />
+          <label class="form-check-label" for="isEbook">
+            Czy dostępna w wersji elektronicznej?
+          </label>
+        </div>
+        @if (form.value.isEbook) {
+        <div class="mb-3">
+          <label for="ebookFormat" class="form-label">Format</label>
+          <select
+            id="ebookFormat"
+            class="form-select"
+            formControlName="ebookFormat"
+            [ngClass]="{
+              'is-invalid':
+                form.get('ebookFormat')?.touched &&
+                form.get('ebookFormat')?.errors
+            }"
+          >
+            @for (ebookFormat of ebookFormats; track $index) {
+            <option
+              [ngValue]="ebookFormat"
+              [label]="ebookFormatNames[ebookFormat]"
+            ></option>
+            }
+          </select>
+          <app-form-error [control]="form.get('ebookFormat')"></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="ebookFileSize" class="form-label"
+            >Rozmiar pliku (MB)</label
+          >
+          <input
+            type="number"
+            id="ebookFileSize"
+            class="form-control"
+            formControlName="ebookFileSize"
+            step="0.1"
+            [ngClass]="{
+              'is-invalid':
+                form.get('ebookFileSize')?.touched &&
+                form.get('ebookFileSize')?.errors
+            }"
+          />
+          <app-form-error
+            [control]="form.get('ebookFileSize')"
+          ></app-form-error>
+        </div>
+        <div class="mb-3">
+          <label for="ebookLink" class="form-label">Link do pliku</label>
+          <input
+            type="text"
+            id="ebookLink"
+            class="form-control"
+            formControlName="ebookLink"
+            [ngClass]="{
+              'is-invalid':
+                form.get('ebookLink')?.touched && form.get('ebookLink')?.errors
+            }"
+          />
+          <app-form-error [control]="form.get('ebookLink')"></app-form-error>
+        </div>
+        }
         <button type="submit" class="btn btn-primary me-2">
           {{ isEditMode ? "Zapisz" : "Dodaj" }}
         </button>
-        <a routerLink="/admin/book/list" class="btn btn-outline-primary"
-          >Anuluj</a
-        >
+        <a routerLink="/admin/book/list" class="btn btn-outline-primary">
+          Anuluj
+        </a>
       </form>
     </div>
   </div>

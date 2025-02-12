@@ -94,6 +94,22 @@
         <span>Język:</span>
         <span>{{ languageNames[book.language] }}</span>
       </li>
+      @if (book.isEbook) {
+      <li class="list-group-item">
+        <span>Format wersji elektronicznej:</span>
+        <span>{{
+          book.ebookFormat ? ebookFormatNames[book.ebookFormat] : ""
+        }}</span>
+      </li>
+      <li class="list-group-item">
+        <span>Rozmiar pliku:</span>
+        <span>{{ book.ebookFileSize }} MB</span>
+      </li>
+      <li class="list-group-item">
+        <span>Link do pliku:</span>
+        <span>{{ book.ebookLink }}</span>
+      </li>
+      }
     </ul>
   </div>
 

@@ -1,7 +1,9 @@
 package com.example.bookhub.dto;
 
+import com.example.bookhub.enums.EbookFormat;
 import com.example.bookhub.enums.Genre;
 import com.example.bookhub.enums.Language;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
@@ -28,4 +30,13 @@ public class AdminBookDto {
     private String description;
 
     private String imagePath;
+
+    @JsonProperty("isEbook")
+    private boolean isEbook;
+
+    private EbookFormat ebookFormat;
+
+    private Double ebookFileSize;
+
+    private String ebookLink;
 }

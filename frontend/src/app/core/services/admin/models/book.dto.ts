@@ -1,3 +1,4 @@
+import { EbookFormat } from '../../../../shared/enums/ebook-format';
 import { Genre } from '../../../../shared/enums/genre';
 import { Language } from '../../../../shared/enums/language';
 
@@ -13,4 +14,8 @@ export interface BookDto {
   readonly language: Language;
   readonly description: string;
   readonly imagePath: string;
+  readonly isEbook: boolean;
+  readonly ebookFormat: EbookFormat | null;
+  readonly ebookFileSize: number | null;
+  readonly ebookLink: string;
 }

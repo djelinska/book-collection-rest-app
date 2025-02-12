@@ -105,6 +105,10 @@ public class BookService {
         dto.setLanguage(book.getLanguage());
         dto.setDescription(book.getDescription());
         dto.setImagePath(book.getImagePath());
+        dto.setEbook(book.getIsEbook());
+        dto.setEbookFormat(book.getEbookFormat());
+        dto.setEbookFileSize(book.getEbookFileSize());
+        dto.setEbookLink(book.getEbookLink());
         return dto;
     }
 
@@ -138,6 +142,10 @@ public class BookService {
         dto.setNumberOfRatings(book.getNumberOfRatings());
         dto.setDescription(book.getDescription());
         dto.setImagePath(book.getImagePath());
+        dto.setEbook(book.getIsEbook());
+        dto.setEbookFormat(book.getEbookFormat());
+        dto.setEbookFileSize(book.getEbookFileSize());
+        dto.setEbookLink(book.getEbookLink());
         dto.setShelves(convertShelvesForBook(book, user));
         return dto;
     }
@@ -168,6 +176,10 @@ public class BookService {
         book.setLanguage(dto.getLanguage());
         book.setDescription(dto.getDescription());
         book.setImagePath(dto.getImagePath());
+        book.setEbook(dto.getIsEbook());
+        book.setEbookFormat(dto.getEbookFormat());
+        book.setEbookFileSize(dto.getEbookFileSize());
+        book.setEbookLink(dto.getEbookLink());
         return book;
     }
 }
