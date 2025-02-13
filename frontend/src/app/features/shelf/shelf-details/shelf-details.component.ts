@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { BookListDto } from '../../../core/services/book/models/book-list.dto';
 import { BookService } from '../../../core/services/book/book.service';
+import { CommonModule } from '@angular/common';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { FormsModule } from '@angular/forms';
 import { ShelfService } from '../../../core/services/shelf/shelf.service';
@@ -16,7 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-shelf-details',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, CommonModule],
   templateUrl: './shelf-details.component.html',
   styleUrl: './shelf-details.component.scss',
 })
@@ -26,6 +27,7 @@ export class ShelfDetailsComponent implements OnInit {
   public availableBooks: BookListDto[] = [];
   public selectedBookId: number | null = null;
   public modalRef?: BsModalRef;
+  public booksView: 'list' | 'grid' = 'grid';
 
   public constructor(
     private route: ActivatedRoute,
@@ -105,5 +107,9 @@ export class ShelfDetailsComponent implements OnInit {
         this.toastr.error('Wystąpił błąd podczas pobierania książek półki.');
       },
     });
+  }
+
+  public toggleView(view: 'list' | 'grid'): void {
+    this.booksView = view;
   }
 }

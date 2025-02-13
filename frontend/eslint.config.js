@@ -20,7 +20,7 @@ module.exports = tseslint.config(
     processor: angular.processInlineTemplates,
     rules: {
       "arrow-parens": ["error", "always"],
-      // complexity: ["error", 8],
+      complexity: ["error", 8],
       indent: ["error", 2],
       // "no-console": "error",
       "no-else-return": "error",
