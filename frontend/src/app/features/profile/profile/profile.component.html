@@ -1,20 +1,23 @@
 <div>
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Mój profil</h2>
-    <a [routerLink]="['./edit']" class="btn btn-primary">Edytuj profil</a>
+    <h2>{{ "profile.title" | translate }}</h2>
+    <a [routerLink]="['./edit']" class="btn btn-primary">
+      {{ "profile.edit.title" | translate }}
+    </a>
   </div>
 
   <p class="mb-5">
-    Nazwa użytkownika: <span class="ms-2">{{ user?.username }}</span>
+    {{ "profile.username" | translate }}:
+    <span class="ms-2">{{ user?.username }}</span>
   </p>
 
   <button type="button" class="btn btn-primary mb-5" (click)="downloadBackup()">
-    Pobierz kopię zapasową
+    {{ "profile.backup.export" | translate }}
   </button>
 
   <div class="mb-5">
     <small class="text-muted">
-      Uwaga! Podczas importu dane dotyczące półek zostaną nadpisane
+      {{ "profile.backup.import.warning" | translate }}
     </small>
     <form #form="ngForm" (ngSubmit)="onImportBackup()">
       <div class="input-group">
@@ -27,7 +30,7 @@
           (change)="onFileChange($event)"
         />
         <button type="submit" class="btn btn-primary" [disabled]="!importFile">
-          Importuj kopię zapasową
+          {{ "profile.backup.import.button" | translate }}
         </button>
       </div>
     </form>
@@ -39,6 +42,6 @@
     class="btn btn-outline-danger"
     (click)="onDeleteAccount()"
   >
-    Usuń Konto</button
+    {{ "profile.deleteAccount" | translate }}</button
   >}
 </div>

@@ -157,6 +157,7 @@ public class BookService {
                     ShelfDto shelfDto  = new ShelfDto();
                     shelfDto.setId(shelf.getId());
                     shelfDto.setName(shelf.getName());
+                    shelfDto.setType(shelf.getType());
                     return shelfDto;
                 })
                 .toList();

@@ -5,13 +5,14 @@ import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { StatsService } from '../../core/services/stats/stats.service';
+import { TranslateModule } from '@ngx-translate/core';
 import { UserDto } from '../../shared/models/user.dto';
 import { UserStatsDto } from '../../core/services/stats/models/user-stats.dto';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, CommonModule, TranslateModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

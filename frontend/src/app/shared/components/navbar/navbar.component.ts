@@ -3,15 +3,23 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
+import { LanguageSelectorComponent } from '../language-selector/language-selector.component';
 import { Observable } from 'rxjs';
 import { Role } from '../../enums/role';
+import { TranslateModule } from '@ngx-translate/core';
 import { UserDto } from '../../models/user.dto';
 import { UserService } from '../../../core/services/user/user.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    CommonModule,
+    LanguageSelectorComponent,
+    TranslateModule,
+  ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })

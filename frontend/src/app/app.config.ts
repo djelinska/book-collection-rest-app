@@ -4,13 +4,17 @@ import {
   importProvidersFrom,
 } from '@angular/core';
 import {
+  HttpClient,
   HttpClientModule,
   provideHttpClient,
   withInterceptors,
 } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import localeEn from '@angular/common/locales/en';
 import localePl from '@angular/common/locales/pl';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
@@ -18,7 +22,12 @@ import { provideToastr } from 'ngx-toastr';
 import { registerLocaleData } from '@angular/common';
 import { routes } from './app.routes';
 
-registerLocaleData(localePl);
+registerLocaleData(localePl, 'pl');
+registerLocaleData(localeEn, 'en');
+
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(http, '/assets/i18n/');
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -33,7 +42,16 @@ export const appConfig: ApplicationConfig = {
     }),
     {
       provide: LOCALE_ID,
-      useValue: 'pl-PL',
+      useValue: localStorage.getItem('language'),
     },
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient],
+        },
+      })
+    ),
   ],
 };

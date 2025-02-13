@@ -1,0 +1,277 @@
+{
+  "languages": {
+    "pl": "Polish",
+    "en": "English"
+  },
+  "common": {
+    "buttons": {
+      "edit": "Edit",
+      "add": "Add",
+      "delete": "Delete",
+      "save": "Save",
+      "cancel": "Cancel",
+      "filter": "Filter",
+      "sort": "Sort by",
+      "details": "Details",
+      "browse": "Browse",
+      "actions": "Actions",
+      "confirm": "Confirm",
+      "signin": "Log in",
+      "signup": "Sign up"
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next",
+      "itemsPerPage": "Items per page"
+    },
+    "view": {
+      "list": "List",
+      "grid": "Grid"
+    },
+    "sort": {
+      "asc": "Ascending",
+      "desc": "Descending"
+    },
+    "error": {
+      "required": "This field is required",
+      "mismatch": "Passwords do not match",
+      "min": "Minimum value is {{min}}",
+      "max": "Maximum value is {{max}}",
+      "minLength": "Minimum number of characters is {{min}}",
+      "maxLength": "Maximum number of characters is {{max}}",
+      "pattern": "Invalid format"
+    }
+  },
+  "navbar": {
+    "welcome": "Home",
+    "home": "Home",
+    "books": "Books",
+    "shelves": "My shelves",
+    "admin": "Admin panel",
+    "profile": "Profile",
+    "logout": "Log out"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "form": {
+      "username": "Username",
+      "password": "Password",
+      "confirmPassword": "Confirm password"
+    },
+    "hasAccount": "Already have an account?",
+    "noAccount": "Don't have an account?"
+  },
+  "welcome": {
+    "heading": "Welcome to BookHub!",
+    "info": "Discover, review, and manage your favorite books.",
+    "sections": {
+      "browse": {
+        "title": "Browse resources",
+        "description": "Discover books by genre, language, or popularity."
+      },
+      "reviews": {
+        "title": "Write reviews",
+        "description": "Share your thoughts on your favorite books."
+      },
+      "trending": {
+        "title": "See what's trending",
+        "description": "Find out which books are currently popular among users."
+      }
+    }
+  },
+  "home": {
+    "heading": "Welcome",
+    "info": "Discover your favorite books and organize your shelves.",
+    "buttons": {
+      "shelves": "View my shelves",
+      "books": "Browse books"
+    },
+    "stats": {
+      "title": "Statistics",
+      "shelves": {
+        "wantToRead": "Want to read",
+        "read": "Read books",
+        "created": "Created shelves"
+      }
+    }
+  },
+  "profile": {
+    "title": "My profile",
+    "username": "Username",
+    "backup": {
+      "export": "Download backup",
+      "import": {
+        "warning": "Warning! Importing will overwrite shelf data.",
+        "button": "Import backup"
+      }
+    },
+    "deleteAccount": "Delete account",
+    "edit": {
+      "title": "Edit profile",
+      "form": {
+        "currentPassword": "Current password",
+        "newPassword": "New password"
+      }
+    }
+  },
+  "shelves": {
+    "title": "My shelves",
+    "add": "Add shelf",
+    "edit": "Edit shelf",
+    "name": "Shelf",
+    "back": "Back to shelf list",
+    "bookCount": "Number of books",
+    "type": {
+      "wantToRead": "Want to read",
+      "read": "Read"
+    },
+    "addBook": {
+      "title": "Add book to this shelf",
+      "select": "Select book"
+    },
+    "booksView": {
+      "title": "Books on the shelf",
+      "confirmDelete": "Are you sure you want to remove this book from the shelf?",
+      "emptyInfo": "No books on this shelf. Add books to see them here."
+    },
+    "form": {
+      "name": "Shelf name"
+    }
+  },
+  "books": {
+    "title": "Book list",
+    "filter": {
+      "query": "Search books by title or author",
+      "genre": "All genres",
+      "language": "All languages"
+    },
+    "details": "Book details",
+    "info": "Information",
+    "form": {
+      "title": "Tytuł",
+      "author": "Author",
+      "publisher": "Publisher",
+      "isbn": "ISBN",
+      "publicationYear": "Publication year",
+      "genre": "Genre",
+      "pageCount": "Page count",
+      "language": "Language",
+      "averageRating": "Average rating",
+      "ratingCount": "Number of ratings",
+      "description": "Description",
+      "ebookFormat": "Ebook format",
+      "ebookFileSize": "File size",
+      "ebookLink": "File link"
+    },
+    "emptyInfo": "No books to display.",
+    "addToShelf": "Add to shelf",
+    "stats": {
+      "read": "Number of people who have read",
+      "wantToRead": "Number of people who want to read"
+    },
+    "reviews": {
+      "title": "Reviews",
+      "count": "reviews",
+      "info": "This book has no reviews yet. Be the first to review it!",
+      "form": {
+        "rating": "Rating",
+        "content": "Review content",
+        "quotes": {
+          "title": "Quotes",
+          "add": "Add quote",
+          "form": {
+            "content": "Quote content",
+            "page": "Page number"
+          }
+        }
+      },
+      "list": {
+        "rating": "Rating",
+        "quotes": "Quotes from review",
+        "page": "page"
+      },
+      "add": "Add review",
+      "edit": "Edit review"
+    }
+  },
+  "admin": {
+    "users": {
+      "title": "Users",
+      "add": "Add user",
+      "edit": "Edit user",
+      "form": {
+        "username": "Username",
+        "role": "Role",
+        "password": "Password"
+      },
+      "list": {
+        "filter": {
+          "query": "Search users by username",
+          "role": "Only administrators"
+        },
+        "emptyInfo": "No users to display."
+      }
+    },
+    "books": {
+      "title": "Books",
+      "add": "Add book",
+      "edit": "Edit book",
+      "form": {
+        "cover": "Cover",
+        "currentCover": "Current cover",
+        "newCover": "New cover",
+        "coverPreview": "Preview of the selected cover",
+        "title": "Title",
+        "author": "Author",
+        "publisher": "Publisher",
+        "isbn": "ISBN",
+        "publicationYear": "Publication year",
+        "genre": "Genre",
+        "pageCount": "Page count",
+        "language": "Language",
+        "description": "Description",
+        "ebook": "Ebook version",
+        "isEbook": "Available as an e-book?",
+        "ebookFormat": "Format",
+        "ebookFileSize": "File size (MB)",
+        "ebookLink": "File link"
+      },
+      "list": {
+        "filter": {
+          "query": "Search books by title, author, or ISBN",
+          "genre": "All genres",
+          "language": "All languages"
+        },
+        "emptyInfo": "No books to display."
+      }
+    },
+    "reviews": {
+      "title": "Reviews",
+      "add": "Add review",
+      "edit": "Edit review",
+      "form": {
+        "bookTitle": "Book title",
+        "book": "Book",
+        "reviewAuthor": "Review author",
+        "user": "User",
+        "rating": "Rating",
+        "content": "Content",
+        "createdAt": "Date added",
+        "updatedAt": "Last edited"
+      },
+      "list": {
+        "filter": {
+          "query": "Search reviews by content or book title",
+          "rating": "All ratings"
+        },
+        "emptyInfo": "No reviews to display."
+      }
+    }
+  },
+  "errorPage": {
+    "title": "Page not found",
+    "message": "Sorry, we can't find the page you are looking for.",
+    "back": "Return to homepage"
+  }
+}

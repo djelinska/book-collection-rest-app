@@ -17,12 +17,19 @@ import { Genre } from '../../../../shared/enums/genre';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Language } from '../../../../shared/enums/language';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 import { urlValidator } from '../../../../shared/validators/url-validator.validator';
 
 @Component({
   selector: 'app-admin-book-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormErrorComponent, CommonModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    FormErrorComponent,
+    CommonModule,
+    RouterLink,
+    TranslateModule,
+  ],
   templateUrl: './admin-book-form.component.html',
   styleUrl: './admin-book-form.component.scss',
 })
@@ -48,11 +55,13 @@ export class AdminBookFormComponent implements OnInit {
       Validators.maxLength(13),
     ]),
     publicationYear: new FormControl<number | null>(null, [
+      Validators.required,
       Validators.min(1000),
       Validators.max(this.currentYear),
     ]),
     genre: new FormControl<Genre | null>(null, Validators.required),
     pageCount: new FormControl<number | null>(null, [
+      Validators.required,
       Validators.min(1),
       Validators.max(10000),
     ]),

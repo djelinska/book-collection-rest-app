@@ -14,12 +14,19 @@ import { FormErrorComponent } from '../../../../shared/components/form-error/for
 import { HttpErrorResponse } from '@angular/common/http';
 import { Role } from '../../../../shared/enums/role';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 import { UserFormDto } from '../../../../core/services/admin/models/user-form.dto';
 
 @Component({
   selector: 'app-admin-user-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormErrorComponent, CommonModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    FormErrorComponent,
+    CommonModule,
+    RouterLink,
+    TranslateModule,
+  ],
   templateUrl: './admin-user-form.component.html',
   styleUrl: './admin-user-form.component.scss',
 })

@@ -1,12 +1,20 @@
 <div>
-  <h2>{{ isEditMode ? "Edytuj recenzję" : "Dodaj recenzję" }}</h2>
+  <h2>
+    @if (isEditMode) {
+    {{ "admin.reviews.edit" | translate }}
+    } @else {
+    {{ "admin.reviews.add" | translate }}
+    }
+  </h2>
 
   @if (books && users) {
   <div class="row">
     <div class="col-md-6">
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="mb-3">
-          <label for="rating" class="form-label">Ocena (1-5)</label>
+          <label for="rating" class="form-label">
+            {{ "admin.reviews.form.rating" | translate }} (1-5)
+          </label>
           <input
             type="number"
             id="rating"
@@ -20,7 +28,9 @@
           <app-form-error [control]="form.get('rating')"></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="content" class="form-label">Treść recenzji</label>
+          <label for="content" class="form-label">{{
+            "admin.reviews.form.content" | translate
+          }}</label>
           <textarea
             id="content"
             class="form-control"
@@ -34,7 +44,9 @@
           <app-form-error [control]="form.get('content')"></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="bookId" class="form-label">Książka</label>
+          <label for="bookId" class="form-label">{{
+            "admin.reviews.form.book" | translate
+          }}</label>
           <select
             id="bookId"
             class="form-select"
@@ -51,7 +63,9 @@
           <app-form-error [control]="form.get('bookId')"></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="userId" class="form-label">Użytkownik</label>
+          <label for="userId" class="form-label">{{
+            "admin.reviews.form.user" | translate
+          }}</label>
           <select
             id="userId"
             class="form-select"
@@ -68,10 +82,14 @@
           <app-form-error [control]="form.get('userId')"></app-form-error>
         </div>
         <button type="submit" class="btn btn-primary me-2">
-          {{ isEditMode ? "Zapisz" : "Dodaj" }}
+          @if (isEditMode) {
+          {{ "common.buttons.save" | translate }}
+          } @else {
+          {{ "common.buttons.add" | translate }}
+          }
         </button>
         <a routerLink="/admin/review/list" class="btn btn-outline-primary">
-          Anuluj
+          {{ "common.buttons.cancel" | translate }}
         </a>
       </form>
     </div>

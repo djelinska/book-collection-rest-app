@@ -10,12 +10,19 @@ import { PaginationComponent } from '../../../../shared/components/pagination/pa
 import { Role } from '../../../../shared/enums/role';
 import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 import { UserDto } from '../../../../shared/models/user.dto';
 
 @Component({
   selector: 'app-admin-user-list',
   standalone: true,
-  imports: [RouterLink, CommonModule, ReactiveFormsModule, PaginationComponent],
+  imports: [
+    RouterLink,
+    CommonModule,
+    ReactiveFormsModule,
+    PaginationComponent,
+    TranslateModule,
+  ],
   templateUrl: './admin-user-list.component.html',
   styleUrl: './admin-user-list.component.scss',
 })

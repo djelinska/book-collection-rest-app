@@ -11,11 +11,17 @@ import { Language } from '../../../../shared/enums/language';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-book-list',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, PaginationComponent],
+  imports: [
+    RouterLink,
+    ReactiveFormsModule,
+    PaginationComponent,
+    TranslateModule,
+  ],
   templateUrl: './admin-book-list.component.html',
   styleUrl: './admin-book-list.component.scss',
 })

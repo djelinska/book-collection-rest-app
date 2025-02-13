@@ -12,18 +12,22 @@ import { CommonModule } from '@angular/common';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { FormsModule } from '@angular/forms';
 import { ShelfService } from '../../../core/services/shelf/shelf.service';
+import { ShelfType } from '../../../shared/enums/shelf-type';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-shelf-details',
   standalone: true,
-  imports: [RouterLink, FormsModule, CommonModule],
+  imports: [RouterLink, FormsModule, CommonModule, TranslateModule],
   templateUrl: './shelf-details.component.html',
   styleUrl: './shelf-details.component.scss',
 })
 export class ShelfDetailsComponent implements OnInit {
   public shelf!: ShelfDetailsDto;
   public shelfBooks: BookDto[] = [];
+  public wantToReadShelfType: ShelfType = ShelfType.WANT_TO_READ;
+  public readShelfType: ShelfType = ShelfType.READ;
   public availableBooks: BookListDto[] = [];
   public selectedBookId: number | null = null;
   public modalRef?: BsModalRef;

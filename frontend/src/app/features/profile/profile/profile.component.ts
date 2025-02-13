@@ -7,13 +7,14 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
 import { FormsModule } from '@angular/forms';
 import { Role } from '../../../shared/enums/role';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 import { UserDto } from '../../../shared/models/user.dto';
 import { UserService } from '../../../core/services/user/user.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, TranslateModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })

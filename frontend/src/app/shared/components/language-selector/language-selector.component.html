@@ -1,0 +1,19 @@
+<div class="dropdown">
+  <button
+    class="btn btn-light dropdown-toggle"
+    type="button"
+    data-bs-toggle="dropdown"
+  >
+    <i class="bi bi-globe-americas me-2 text-muted"></i>
+    {{ getLanguageName() }}
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    @for (lang of availableLanguages; track $index) {
+    <li>
+      <button class="dropdown-item" (click)="changeLanguage(lang)">
+        {{ languageNames[lang] }}
+      </button>
+    </li>
+    }
+  </ul>
+</div>

@@ -1,27 +1,39 @@
 @if ( control && control.errors && control.touched) {
 <div class="mt-1">
   @if (control.errors['required']) {
-  <div class="text-danger text-sm">To pole jest wymagane</div>
+  <div class="text-danger text-sm">
+    {{ "common.error.required" | translate }}
+  </div>
   } @if (control.errors['mismatch']) {
-  <div class="text-danger text-sm">Hasła nie pasują</div>
+  <div class="text-danger text-sm">
+    {{ "common.error.mismatch" | translate }}
+  </div>
   } @if (control.errors['min']) {
   <div class="text-danger text-sm">
-    Minimalna wartość to {{ control.errors["min"].min }}
+    {{ "common.error.min" | translate : { min: control.errors["min"].min } }}
   </div>
   } @if (control.errors['max']) {
   <div class="text-danger text-sm">
-    Maksymalna wartość to {{ control.errors["max"].max }}
+    {{ "common.error.max" | translate : { max: control.errors["max"].max } }}
   </div>
   } @if (control.errors['minlength']) {
   <div class="text-danger text-sm">
-    Minimalna ilość znaków to {{ control.errors["minlength"].requiredLength }}
+    {{
+      "common.error.minLength"
+        | translate : { min: control.errors["minlength"].requiredLength }
+    }}
   </div>
   } @if (control.errors['maxlength']) {
   <div class="text-danger text-sm">
-    Maksymalna ilość znaków to {{ control.errors["maxlength"].requiredLength }}
+    {{
+      "common.error.maxLength"
+        | translate : { max: control.errors["maxlength"].requiredLength }
+    }}
   </div>
   } @if (control.errors['pattern']) {
-  <div class="text-danger text-sm">Nieprawidłowy format</div>
+  <div class="text-danger text-sm">
+    {{ "common.error.pattern" | translate }}
+  </div>
   }
 </div>
 }

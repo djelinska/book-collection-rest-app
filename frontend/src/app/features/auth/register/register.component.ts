@@ -12,12 +12,19 @@ import { Component } from '@angular/core';
 import { FormErrorComponent } from '../../../shared/components/form-error/form-error.component';
 import { RegisterRequest } from '../../../core/services/auth/models/register-request';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 import { passwordMatcherValidator } from '../../../shared/validators/password-matcher.validator';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, FormErrorComponent, CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    FormErrorComponent,
+    CommonModule,
+    TranslateModule,
+  ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })

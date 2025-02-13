@@ -1,19 +1,27 @@
 <div>
   <div class="d-flex justify-content-between align-items-start gap-2">
     <div>
-      <h2>{{ "Półka: " + shelf.name }}</h2>
+      <h2>
+        {{ "shelves.name" | translate }}: @if (shelf.type === readShelfType) {
+        {{ "shelves.type.read" | translate }}
+        } @else if (shelf.type === wantToReadShelfType) {
+        {{ "shelves.type.wantToRead" | translate }}
+        } @else {
+        {{ shelf.name }}
+        }
+      </h2>
       <p>
-        Liczba książek:
+        {{ "shelves.bookCount" | translate }}:
         <span>{{ shelf.numberOfBooks }}</span>
       </p>
     </div>
     <a [routerLink]="['/shelf/list']" class="btn btn-primary">
-      Wróć do listy półek
+      {{ "shelves.back" | translate }}
     </a>
   </div>
 
   <div class="my-4">
-    <h4>Dodaj książkę do tej półki</h4>
+    <h4>{{ "shelves.addBook.title" | translate }}</h4>
     <form (ngSubmit)="onAddBook()" class="d-flex align-items-center gap-2">
       <select
         id="bookSelect"
@@ -21,7 +29,9 @@
         name="bookId"
         class="form-select"
       >
-        <option [ngValue]="null">Wybierz książkę</option>
+        <option [ngValue]="null">
+          {{ "shelves.addBook.select" | translate }}
+        </option>
         @for (book of availableBooks; track book.id) {
         <option [value]="book.id" [label]="book.title"></option>
         }
@@ -31,22 +41,22 @@
         class="btn btn-primary"
         [disabled]="!selectedBookId"
       >
-        Dodaj
+        {{ "common.buttons.add" | translate }}
       </button>
     </form>
   </div>
 
   <div class="mt-4">
     <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-      <h4>Książki na półce</h4>
+      <h4>{{ "shelves.booksView.title" | translate }}</h4>
       <div>
         <button class="btn btn-light me-2" (click)="toggleView('list')">
           <i class="bi bi-list-ul"></i>
-          <span class="text-sm ms-2">Lista</span>
+          <span class="text-sm ms-2">{{ "common.view.list" | translate }}</span>
         </button>
         <button class="btn btn-light" (click)="toggleView('grid')">
           <i class="bi bi-grid"></i>
-          <span class="text-sm ms-2">Kafelki</span>
+          <span class="text-sm ms-2">{{ "common.view.grid" | translate }}</span>
         </button>
       </div>
     </div>
@@ -72,14 +82,14 @@
                 [routerLink]="['/book', book.id, 'details']"
                 class="btn btn-sm btn-outline-primary"
               >
-                Szczegóły
+                {{ "common.buttons.details" | translate }}
               </a>
               <button
                 type="button"
                 class="btn btn-sm btn-outline-danger"
                 (click)="onRemoveBook(book.id)"
               >
-                Usuń
+                {{ "common.buttons.delete" | translate }}
               </button>
             </div>
           </div>
@@ -95,14 +105,14 @@
               [routerLink]="['/book', book.id, 'details']"
               class="btn btn-sm btn-outline-primary me-2"
             >
-              Szczegóły
+              {{ "common.buttons.details" | translate }}
             </a>
             <button
               type="button"
               class="btn btn-sm btn-outline-danger"
               (click)="onRemoveBook(book.id)"
             >
-              Usuń
+              {{ "common.buttons.delete" | translate }}
             </button>
           </div>
         </div>
@@ -111,7 +121,7 @@
       } @empty {
       <div class="col-md-12">
         <div class="alert alert-warning">
-          Brak książek na tej półce. Dodaj książki, aby je tutaj zobaczyć.
+          {{ "shelves.booksView.emptyInfo" | translate }}
         </div>
       </div>
       }

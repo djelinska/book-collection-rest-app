@@ -1,20 +1,20 @@
 <div>
   <div class="d-flex justify-content-between align-items-center">
-    <h2>Szczegóły książki</h2>
+    <h2>{{ "books.details" | translate }}</h2>
     @if (loggedInUser?.role === adminRole ) {
     <div class="d-flex align-items-center gap-2">
       <a
         [routerLink]="['/admin/book', book.id, 'edit']"
         class="btn btn-outline-primary"
       >
-        Edytuj
+        {{ "common.buttons.edit" | translate }}
       </a>
       <button
         type="button"
         class="btn btn-outline-danger"
         (click)="onDelete(book.id)"
       >
-        Usuń
+        {{ "common.buttons.delete" | translate }}
       </button>
     </div>
     }
@@ -33,15 +33,23 @@
         <div class="card-body">
           <div class="d-flex flex-wrap align-items-start gap-2">
             @for (shelf of book.shelves; track shelf.id) {
-            <span class="badge text-bg-secondary mb-2">{{ shelf.name }}</span>
+            <span class="badge text-bg-secondary mb-2">
+              @if (shelf.type === readShelfType) {
+              {{ "shelves.type.read" | translate }}
+              } @else if (shelf.type === wantToReadShelfType) {
+              {{ "shelves.type.wantToRead" | translate }}
+              } @else {
+              {{ shelf.name }}
+              }</span
+            >
             }
           </div>
           <h3 class="card-title">{{ book.title }}</h3>
           <div class="card-subtitle mb-3 text-muted">
-            {{ "Autor: " + book.author }}
+            {{ "books.form.author" | translate }}: {{ book.author }}
           </div>
           <p class="card-text">
-            <span>Opis:</span>
+            <span>{{ "books.form.description" | translate }}:</span>
             <span>{{ book.description }}</span>
           </p>
           <app-book-add-to-shelf
@@ -53,11 +61,11 @@
           @if (this.bookStats$ | async; as stats) {
           <div class="d-flex justify-content-between">
             <p class="mb-0">
-              Liczba osób, które przeczytały:
+              {{ "books.stats.read" | translate }}:
               <span>{{ stats.readCount }}</span>
             </p>
             <p class="mb-0">
-              Liczba osób, które chcą przeczytać:
+              {{ "books.stats.wantToRead" | translate }}:
               <span>{{ stats.wantToReadCount }}</span>
             </p>
           </div>
@@ -68,45 +76,45 @@
   </div>
 
   <div class="mt-5">
-    <h4>Informacje</h4>
+    <h4>{{ "books.info" | translate }}</h4>
     <ul class="list-group list-group-flush">
       <li class="list-group-item">
-        <span>Wydawnictwo:</span>
+        <span>{{ "books.form.publisher" | translate }}:</span>
         <span>{{ book.publisher }}</span>
       </li>
       <li class="list-group-item">
-        <span>ISBN:</span>
+        <span>{{ "books.form.isbn" | translate }}:</span>
         <span>{{ book.isbn }}</span>
       </li>
       <li class="list-group-item">
-        <span>Rok publikacji:</span>
+        <span>{{ "books.form.publicationYear" | translate }}:</span>
         <span>{{ book.publicationYear }}</span>
       </li>
       <li class="list-group-item">
-        <span>Gatunek:</span>
+        <span>{{ "books.form.genre" | translate }}:</span>
         <span>{{ genreNames[book.genre] }}</span>
       </li>
       <li class="list-group-item">
-        <span>Liczba stron:</span>
+        <span>{{ "books.form.pageCount" | translate }}:</span>
         <span>{{ book.pageCount }}</span>
       </li>
       <li class="list-group-item">
-        <span>Język:</span>
+        <span>{{ "books.form.language" | translate }}:</span>
         <span>{{ languageNames[book.language] }}</span>
       </li>
       @if (book.isEbook) {
       <li class="list-group-item">
-        <span>Format wersji elektronicznej:</span>
+        <span>{{ "books.form.ebookFormat" | translate }}:</span>
         <span>{{
           book.ebookFormat ? ebookFormatNames[book.ebookFormat] : ""
         }}</span>
       </li>
       <li class="list-group-item">
-        <span>Rozmiar pliku:</span>
+        <span>{{ "books.form.ebookFileSize" | translate }}:</span>
         <span>{{ book.ebookFileSize }} MB</span>
       </li>
       <li class="list-group-item">
-        <span>Link do pliku:</span>
+        <span>{{ "books.form.ebookLink" | translate }}:</span>
         <span>{{ book.ebookLink }}</span>
       </li>
       }
@@ -114,11 +122,12 @@
   </div>
 
   <div class="mt-5">
-    <h4>Recenzje</h4>
+    <h4>{{ "books.reviews.title" | translate }}</h4>
     <div class="p-4 mb-3 border rounded">
       <span class="rating">{{ averageRating.toFixed(1) }}</span>
       <p class="mb-0 text-muted">
-        <span>{{ numberOfRatings }}</span> recenzji
+        <span>{{ numberOfRatings }}</span>
+        {{ "books.reviews.count" | translate }}
       </p>
     </div>
 
@@ -132,9 +141,10 @@
           <span>{{ review.author }}</span>
         </div>
         <div class="mb-2">
-          <span class="badge bg-secondary">{{
-            "Ocena: " + review.rating
-          }}</span>
+          <span class="badge bg-secondary">
+            {{ "books.reviews.list.rating" | translate }}:
+            {{ review.rating }}</span
+          >
         </div>
         <p class="text-muted text-sm">
           {{ review.createdAt | date : "mediumDate" }}
@@ -142,14 +152,24 @@
         <p>{{ review.content }}</p>
         @if (review.quotes.length > 0) {
         <div>
-          <p class="text-secondary text-sm mb-2">Cytaty z recenzji:</p>
+          <p class="text-secondary text-sm mb-2">
+            {{ "books.reviews.list.quotes" | translate }}:
+          </p>
           <ul class="list-unstyled">
             @for (quote of review.quotes; track $index) {
             <li
               class="p-2 ps-3 border-start border-2 border-primary text-muted text-sm fst-italic"
             >
               "{{ quote.text }}"
-              {{ quote.page ? "(strona: " + quote.page + ")" : "" }}
+              {{
+                quote.page
+                  ? "(" +
+                    ("books.reviews.list.page" | translate) +
+                    ": " +
+                    quote.page +
+                    ")"
+                  : ""
+              }}
             </li>
             }
           </ul>
@@ -164,14 +184,14 @@
           class="btn btn-sm btn-outline-primary"
           (click)="onReviewEdit(review)"
         >
-          Edytuj
+          {{ "common.buttons.edit" | translate }}
         </button>
         <button
           type="button"
           class="btn btn-sm btn-outline-danger"
           (click)="onReviewDelete(review.id)"
         >
-          Usuń
+          {{ "common.buttons.delete" | translate }}:
         </button>
       </div>
       }
@@ -183,12 +203,20 @@
     }
 
     <div class="mt-4">
-      <h4>{{ isEditMode ? "Edytuj recenzję" : "Dodaj recenzję" }}</h4>
+      <h4>
+        @if (isEditMode) {
+        {{ "books.reviews.edit" | translate }}
+        } @else {
+        {{ "books.reviews.add" | translate }}
+        }
+      </h4>
       <div class="row">
         <div class="col-md-6">
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="mb-3">
-              <label for="rating" class="form-label">Ocena (1-5)</label>
+              <label for="rating" class="form-label">
+                {{ "books.reviews.form.rating" | translate }} (1-5)</label
+              >
               <input
                 type="number"
                 id="rating"
@@ -203,12 +231,13 @@
             </div>
 
             <div class="mb-3">
-              <label for="content" class="form-label">Treść recenzji</label>
+              <label for="content" class="form-label">{{
+                "books.reviews.form.content" | translate
+              }}</label>
               <textarea
                 id="content"
                 class="form-control"
                 rows="4"
-                placeholder="Napisz swoją recenzję..."
                 formControlName="content"
                 [ngClass]="{
                   'is-invalid':
@@ -219,7 +248,9 @@
             </div>
 
             <div class="mb-3">
-              <p class="form-label">Cytaty</p>
+              <p class="form-label">
+                {{ "books.reviews.form.quotes.title" | translate }}
+              </p>
               <div formArrayName="quotes">
                 @for (quoteControl of quotes.controls; track $index) {
                 <div class="d-flex flex-column mb-3" [formGroupName]="$index">
@@ -227,7 +258,9 @@
                     <label
                       for="quote-text-{{ $index }}"
                       class="form-label text-sm"
-                      >Treść cytatu</label
+                      >{{
+                        "books.reviews.form.quotes.form.content" | translate
+                      }}</label
                     >
                     <textarea
                       id="quote-text-{{ $index }}"
@@ -250,7 +283,7 @@
                       for="quote-page-{{ $index }}"
                       class="form-label text-sm"
                     >
-                      Numer strony
+                      {{ "books.reviews.form.quotes.form.page" | translate }}
                     </label>
                     <input
                       type="number"
@@ -272,7 +305,7 @@
                     class="btn btn-sm btn-outline-danger align-self-end"
                     (click)="removeQuote($index)"
                   >
-                    Usuń
+                    {{ "common.buttons.delete" | translate }}
                   </button>
                 </div>
                 }
@@ -282,7 +315,7 @@
                 class="btn btn-sm btn-outline-primary"
                 (click)="addQuote()"
               >
-                Dodaj cytat
+                {{ "books.reviews.form.quotes.add" | translate }}
               </button>
             </div>
 
@@ -294,7 +327,7 @@
               class="btn btn-outline-primary"
               (click)="onCancelReview()"
             >
-              Anuluj
+              {{ "common.buttons.cancel" | translate }}
             </button>
           </form>
         </div>

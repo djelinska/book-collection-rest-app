@@ -14,11 +14,18 @@ import { ShelfDetailsDto } from '../../../core/services/shelf/models/shelf-detai
 import { ShelfFormDto } from '../../../core/services/shelf/models/shelf-form.dto';
 import { ShelfService } from '../../../core/services/shelf/shelf.service';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-shelf-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormErrorComponent, RouterLink, CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    FormErrorComponent,
+    RouterLink,
+    CommonModule,
+    TranslateModule,
+  ],
   templateUrl: './shelf-form.component.html',
   styleUrl: './shelf-form.component.scss',
 })

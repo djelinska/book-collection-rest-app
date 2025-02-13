@@ -7,17 +7,20 @@ import { ShelfListDto } from '../../../core/services/shelf/models/shelf-list.dto
 import { ShelfService } from '../../../core/services/shelf/shelf.service';
 import { ShelfType } from '../../../shared/enums/shelf-type';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-shelf-list',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslateModule],
   templateUrl: './shelf-list.component.html',
   styleUrl: './shelf-list.component.scss',
 })
 export class ShelfListComponent implements OnInit {
   public shelves!: ShelfListDto[];
   public defaultShelfType: ShelfType = ShelfType.DEFAULT;
+  public wantToReadShelfType: ShelfType = ShelfType.WANT_TO_READ;
+  public readShelfType: ShelfType = ShelfType.READ;
   public modalRef?: BsModalRef;
 
   public constructor(

@@ -9,11 +9,18 @@ import { PaginationComponent } from '../../../../shared/components/pagination/pa
 import { ReviewDto } from '../../../../core/services/admin/models/review.dto';
 import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-review-list',
   standalone: true,
-  imports: [RouterLink, CommonModule, ReactiveFormsModule, PaginationComponent],
+  imports: [
+    RouterLink,
+    CommonModule,
+    ReactiveFormsModule,
+    PaginationComponent,
+    TranslateModule,
+  ],
   templateUrl: './admin-review-list.component.html',
   styleUrl: './admin-review-list.component.scss',
 })

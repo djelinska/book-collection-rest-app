@@ -10,13 +10,20 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormErrorComponent } from '../../../shared/components/form-error/form-error.component';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 import { UserFormDto } from '../../../core/services/user/models/user-form.dto';
 import { UserService } from '../../../core/services/user/user.service';
 
 @Component({
   selector: 'app-profile-edit',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormErrorComponent, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    FormErrorComponent,
+    RouterLink,
+    TranslateModule,
+  ],
   templateUrl: './profile-edit.component.html',
   styleUrl: './profile-edit.component.scss',
 })

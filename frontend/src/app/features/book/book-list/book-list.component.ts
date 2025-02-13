@@ -9,7 +9,9 @@ import { Genre } from '../../../shared/enums/genre';
 import { Language } from '../../../shared/enums/language';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { RouterLink } from '@angular/router';
+import { ShelfType } from '../../../shared/enums/shelf-type';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-book-list',
@@ -20,6 +22,7 @@ import { ToastrService } from 'ngx-toastr';
     ReactiveFormsModule,
     BookAddToShelfComponent,
     PaginationComponent,
+    TranslateModule,
   ],
   templateUrl: './book-list.component.html',
   styleUrl: './book-list.component.scss',
@@ -32,6 +35,8 @@ export class BookListComponent implements OnInit {
   public genreNames: Record<string, string> = Genre;
   public languages = Object.keys(Language);
   public languageNames: Record<string, string> = Language;
+  public wantToReadShelfType: ShelfType = ShelfType.WANT_TO_READ;
+  public readShelfType: ShelfType = ShelfType.READ;
   public sortField: keyof BookListDto = 'title';
   public sortDirection: 'asc' | 'desc' = 'asc';
   public page = 0;

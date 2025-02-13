@@ -1,11 +1,19 @@
 <div>
-  <h2>{{ isEditMode ? "Edytuj użytkownika" : "Dodaj użytkownika" }}</h2>
+  <h2>
+    @if (isEditMode) {
+    {{ "admin.users.edit" | translate }}
+    } @else {
+    {{ "admin.users.add" | translate }}
+    }
+  </h2>
 
   <div class="row">
     <div class="col-md-6">
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="mb-3">
-          <label for="username" class="form-label">Nazwa użytkownika</label>
+          <label for="username" class="form-label">{{
+            "admin.users.form.username" | translate
+          }}</label>
           <input
             type="text"
             id="username"
@@ -20,7 +28,9 @@
         </div>
         @if (!isEditMode) {
         <div class="mb-3">
-          <label for="password" class="form-label">Hasło</label>
+          <label for="password" class="form-label">{{
+            "admin.users.form.password" | translate
+          }}</label>
           <input
             type="password"
             id="password"
@@ -35,7 +45,9 @@
         </div>
         }
         <div class="mb-3">
-          <label for="role" class="form-label">Rola</label>
+          <label for="role" class="form-label">{{
+            "admin.users.form.role" | translate
+          }}</label>
           <select
             id="role"
             class="form-select"
@@ -52,11 +64,15 @@
           <app-form-error [control]="form.get('role')"></app-form-error>
         </div>
         <button type="submit" class="btn btn-primary me-2">
-          {{ isEditMode ? "Zapisz" : "Dodaj" }}
+          @if (isEditMode) {
+          {{ "common.buttons.save" | translate }}
+          } @else {
+          {{ "common.buttons.add" | translate }}
+          }
         </button>
-        <a routerLink="/admin/user/list" class="btn btn-outline-primary"
-          >Anuluj</a
-        >
+        <a routerLink="/admin/user/list" class="btn btn-outline-primary">
+          {{ "common.buttons.cancel" | translate }}
+        </a>
       </form>
     </div>
   </div>

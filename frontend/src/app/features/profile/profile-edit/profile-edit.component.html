@@ -1,10 +1,12 @@
 <div>
-  <h2>Edytuj profil</h2>
+  <h2 class="mb-4">{{ "profile.edit.title" | translate }}</h2>
   <div class="row">
     <div class="col-md-6">
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="mb-3">
-          <label for="currentPassword" class="form-label">Aktualne hasło</label>
+          <label for="currentPassword" class="form-label">
+            {{ "profile.edit.form.currentPassword" | translate }}
+          </label>
           <input
             type="password"
             id="currentPassword"
@@ -21,7 +23,9 @@
           ></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="newPassword" class="form-label">Nowe hasło</label>
+          <label for="newPassword" class="form-label">{{
+            "profile.edit.form.newPassword" | translate
+          }}</label>
           <input
             type="password"
             id="newPassword"
@@ -35,8 +39,12 @@
           />
           <app-form-error [control]="form.get('newPassword')"></app-form-error>
         </div>
-        <button type="submit" class="btn btn-primary me-2">Zapisz</button>
-        <a routerLink="/profile" class="btn btn-outline-primary">Anuluj</a>
+        <button type="submit" class="btn btn-primary me-2">
+          {{ "common.buttons.save" | translate }}
+        </button>
+        <a routerLink="/profile" class="btn btn-outline-primary">
+          {{ "common.buttons.cancel" | translate }}
+        </a>
       </form>
     </div>
   </div>

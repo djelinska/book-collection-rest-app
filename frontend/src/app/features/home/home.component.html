@@ -2,28 +2,31 @@
   <div class="row">
     <div class="col text-center">
       <h1>
-        Witaj, <span>{{ loggedInUser?.username }} </span>!
+        {{ "home.heading" | translate }},
+        <span>{{ loggedInUser?.username }} </span>!
       </h1>
       <p class="lead">
-        Odkrywaj swoje ulubione książki i organizuj swoje półki.
+        {{ "home.info" | translate }}
       </p>
       <a routerLink="/shelf/list" href="/shelves" class="btn btn-primary me-2">
-        Zobacz moje półki
+        {{ "home.buttons.shelves" | translate }}
       </a>
       <a routerLink="/book/list" class="btn btn-outline-primary">
-        Przeglądaj książki
+        {{ "home.buttons.books" | translate }}
       </a>
     </div>
   </div>
 
   <div class="mt-5">
-    <h2 class="mb-4">Statystyki</h2>
+    <h2 class="mb-4">{{ "home.stats.title" | translate }}</h2>
     @if (this.userStats$ | async; as stats) {
     <div class="row">
       <div class="col-md-4">
         <div class="card bg-primary-subtle mb-3">
           <div class="card-body">
-            <h5 class="card-title">Przeczytane książki</h5>
+            <h5 class="card-title">
+              {{ "home.stats.shelves.read" | translate }}
+            </h5>
             <p class="card-text">{{ stats.booksRead }}</p>
           </div>
         </div>
@@ -31,7 +34,9 @@
       <div class="col-md-4">
         <div class="card bg-warning-subtle mb-3">
           <div class="card-body">
-            <h5 class="card-title">Do przeczytania</h5>
+            <h5 class="card-title">
+              {{ "home.stats.shelves.wantToRead" | translate }}
+            </h5>
             <p class="card-text">{{ stats.booksToRead }}</p>
           </div>
         </div>
@@ -39,7 +44,9 @@
       <div class="col-md-4">
         <div class="card bg-secondary-subtle mb-3">
           <div class="card-body">
-            <h5 class="card-title">Utworzone półki</h5>
+            <h5 class="card-title">
+              {{ "home.stats.shelves.created" | translate }}
+            </h5>
             <p class="card-text">{{ stats.shelvesCreated }}</p>
           </div>
         </div>

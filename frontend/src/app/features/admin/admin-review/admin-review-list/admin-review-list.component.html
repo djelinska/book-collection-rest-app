@@ -1,7 +1,9 @@
 <div>
   <div class="d-flex justify-content-between align-items-center mb-4 gap-2">
-    <h2>Recenzje</h2>
-    <a routerLink="/admin/review/add" class="btn btn-primary">Dodaj recenzję</a>
+    <h2>{{ "admin.reviews.title" | translate }}</h2>
+    <a routerLink="/admin/review/add" class="btn btn-primary">
+      {{ "admin.reviews.add" | translate }}
+    </a>
   </div>
 
   @if (reviews) {
@@ -13,19 +15,23 @@
           name="query"
           class="form-control"
           formControlName="query"
-          placeholder="Wyszukaj recenzje po treści lub tytule książki"
+          [attr.placeholder]="'admin.reviews.list.filter.query' | translate"
         />
       </div>
       <div class="col-md-3">
         <select formControlName="rating" class="form-select">
-          <option [ngValue]="null">Wszystkie oceny</option>
+          <option [ngValue]="null">
+            {{ "admin.reviews.list.filter.rating" | translate }}
+          </option>
           @for (rating of [1,2,3,4,5]; track $index) {
           <option [ngValue]="rating" [label]="rating"></option>
           }
         </select>
       </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-primary w-100">Filtruj</button>
+        <button type="submit" class="btn btn-primary w-100">
+          {{ "common.buttons.filter" | translate }}
+        </button>
       </div>
     </div>
   </form>
@@ -36,50 +42,66 @@
       class="btn btn-primary dropdown-toggle"
       data-bs-toggle="dropdown"
     >
-      Sortuj według
+      {{ "common.buttons.sort" | translate }}
     </button>
     <ul class="dropdown-menu">
       <li>
         <button class="dropdown-item" (click)="onSort('book', 'asc')">
-          Tytuł książki (Rosnąco)
+          {{ "admin.reviews.form.bookTitle" | translate }} ({{
+            "common.sort.asc" | translate
+          }})
         </button>
       </li>
       <li>
         <button class="dropdown-item" (click)="onSort('book', 'desc')">
-          Tytuł książki (Malejąco)
+          {{ "admin.reviews.form.bookTitle" | translate }} ({{
+            "common.sort.desc" | translate
+          }})
         </button>
       </li>
       <li><hr class="dropdown-divider" /></li>
       <li>
         <button class="dropdown-item" (click)="onSort('author', 'asc')">
-          Autor recenzji (Rosnąco)
+          {{ "admin.reviews.form.reviewAuthor" | translate }} ({{
+            "common.sort.asc" | translate
+          }})
         </button>
       </li>
       <li>
         <button class="dropdown-item" (click)="onSort('author', 'desc')">
-          Autor recenzji (Malejąco)
+          {{ "admin.reviews.form.reviewAuthor" | translate }} ({{
+            "common.sort.desc" | translate
+          }})
         </button>
       </li>
       <li><hr class="dropdown-divider" /></li>
       <li>
         <button class="dropdown-item" (click)="onSort('createdAt', 'asc')">
-          Data dodania (Rosnąco)
+          {{ "admin.reviews.form.createdAt" | translate }} ({{
+            "common.sort.asc" | translate
+          }})
         </button>
       </li>
       <li>
         <button class="dropdown-item" (click)="onSort('createdAt', 'desc')">
-          Data dodania (Malejąco)
+          {{ "admin.reviews.form.createdAt" | translate }} ({{
+            "common.sort.desc" | translate
+          }})
         </button>
       </li>
       <li><hr class="dropdown-divider" /></li>
       <li>
         <button class="dropdown-item" (click)="onSort('updatedAt', 'asc')">
-          Data ostatniej edycji (Rosnąco)
+          {{ "admin.reviews.form.updatedAt" | translate }} ({{
+            "common.sort.asc" | translate
+          }})
         </button>
       </li>
       <li>
         <button class="dropdown-item" (click)="onSort('updatedAt', 'desc')">
-          Data ostatniej edycji (Malejąco)
+          {{ "admin.reviews.form.updatedAt" | translate }} ({{
+            "common.sort.desc" | translate
+          }})
         </button>
       </li>
     </ul>
@@ -111,13 +133,21 @@
     <table class="table table-striped align-middle">
       <thead>
         <tr>
-          <th class="col-2">Tytuł książki</th>
-          <th class="col-1">Ocena</th>
-          <th class="col-3">Treść</th>
-          <th class="col-2">Autor recenzji</th>
-          <th class="col-1">Data dodania</th>
-          <th class="col-1">Data ostatniej edycji</th>
-          <th class="col-1">Akcje</th>
+          <th class="col-2">
+            {{ "admin.reviews.form.bookTitle" | translate }}
+          </th>
+          <th class="col-1">{{ "admin.reviews.form.rating" | translate }}</th>
+          <th class="col-3">{{ "admin.reviews.form.content" | translate }}</th>
+          <th class="col-2">
+            {{ "admin.reviews.form.reviewAuthor" | translate }}
+          </th>
+          <th class="col-1">
+            {{ "admin.reviews.form.createdAt" | translate }}
+          </th>
+          <th class="col-1">
+            {{ "admin.reviews.form.updatedAt" | translate }}
+          </th>
+          <th class="col-1">{{ "common.buttons.actions" | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -134,14 +164,14 @@
               [routerLink]="['/admin/review', review.id, 'edit']"
               class="btn btn-sm btn-outline-primary me-2"
             >
-              Edytuj
+              {{ "common.buttons.edit" | translate }}
             </a>
             <button
               type="button"
               class="btn btn-sm btn-outline-danger"
               (click)="onDelete(review.id)"
             >
-              Usuń
+              {{ "common.buttons.delete" | translate }}
             </button>
           </td>
         </tr>
@@ -149,7 +179,7 @@
         <tr>
           <td colspan="7">
             <div class="alert alert-warning">
-              Brak recenzji do wyświetlenia.
+              {{ "admin.reviews.list.emptyInfo" | translate }}
             </div>
           </td>
         </tr>

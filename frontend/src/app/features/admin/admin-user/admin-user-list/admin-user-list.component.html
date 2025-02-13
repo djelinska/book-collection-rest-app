@@ -1,9 +1,9 @@
 <div>
   <div class="d-flex justify-content-between align-items-center mb-4 gap-2">
-    <h2>Użytkownicy</h2>
-    <a routerLink="/admin/user/add" class="btn btn-primary"
-      >Dodaj użytkownika</a
-    >
+    <h2>{{ "admin.users.title" | translate }}</h2>
+    <a routerLink="/admin/user/add" class="btn btn-primary">
+      {{ "admin.users.add" | translate }}
+    </a>
   </div>
 
   @if (users) {
@@ -15,7 +15,7 @@
           name="query"
           class="form-control"
           formControlName="query"
-          placeholder="Wyszukaj użytkowników po nazwie użytkownika"
+          [attr.placeholder]="'admin.users.list.filter.query' | translate"
         />
       </div>
       <div class="col-md-3 align-self-center">
@@ -26,13 +26,15 @@
             formControlName="isAdmin"
             id="isAdmin"
           />
-          <label class="form-check-label" for="isAdmin"
-            >Tylko administratorzy</label
-          >
+          <label class="form-check-label" for="isAdmin">
+            {{ "admin.users.list.filter.role" | translate }}
+          </label>
         </div>
       </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-primary w-100">Filtruj</button>
+        <button type="submit" class="btn btn-primary w-100">
+          {{ "common.buttons.filter" | translate }}
+        </button>
       </div>
     </div>
   </form>
@@ -43,17 +45,21 @@
       class="btn btn-primary dropdown-toggle"
       data-bs-toggle="dropdown"
     >
-      Sortuj według
+      {{ "common.buttons.sort" | translate }}
     </button>
     <ul class="dropdown-menu">
       <li>
         <button class="dropdown-item" (click)="onSort('username', 'asc')">
-          Nazwa użytkownika (Rosnąco)
+          {{ "admin.users.form.username" | translate }} ({{
+            "common.sort.asc" | translate
+          }})
         </button>
       </li>
       <li>
         <button class="dropdown-item" (click)="onSort('username', 'desc')">
-          Nazwa użytkownika (Malejąco)
+          {{ "admin.users.form.username" | translate }} ({{
+            "common.sort.desc" | translate
+          }})
         </button>
       </li>
     </ul>
@@ -77,9 +83,9 @@
     <table class="table table-striped align-middle">
       <thead>
         <tr>
-          <th class="col-2">Nazwa użytkownika</th>
-          <th class="col-1">Rola</th>
-          <th class="col-1">Akcje</th>
+          <th class="col-2">{{ "admin.users.form.username" | translate }}</th>
+          <th class="col-1">{{ "admin.users.form.role" | translate }}</th>
+          <th class="col-1">{{ "common.buttons.actions" | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -92,7 +98,7 @@
               [routerLink]="['/admin/user', user.id, 'edit']"
               class="btn btn-sm btn-outline-primary me-2"
             >
-              Edytuj
+              {{ "common.buttons.edit" | translate }}
             </a>
             @if (loggedInUser?.username !== user.username) {
             <button
@@ -100,7 +106,7 @@
               class="btn btn-sm btn-outline-danger"
               (click)="onDelete(user.id)"
             >
-              Usuń
+              {{ "common.buttons.delete" | translate }}
             </button>
             }
           </td>
@@ -109,7 +115,7 @@
         <tr>
           <td colspan="3">
             <div class="alert alert-warning">
-              Brak użytkowników do wyświetlenia.
+              {{ "admin.users.list.emptyInfo" | translate }}
             </div>
           </td>
         </tr>

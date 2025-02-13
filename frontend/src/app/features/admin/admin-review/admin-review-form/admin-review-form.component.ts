@@ -15,11 +15,18 @@ import { PaginatedBooksDto } from '../../../../core/services/admin/models/pagina
 import { PaginatedUsersDto } from '../../../../core/services/admin/models/paginated-users.dto';
 import { ReviewFormDto } from '../../../../core/services/admin/models/review-form.dto';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-review-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormErrorComponent, CommonModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    FormErrorComponent,
+    CommonModule,
+    RouterLink,
+    TranslateModule,
+  ],
   templateUrl: './admin-review-form.component.html',
   styleUrl: './admin-review-form.component.scss',
 })

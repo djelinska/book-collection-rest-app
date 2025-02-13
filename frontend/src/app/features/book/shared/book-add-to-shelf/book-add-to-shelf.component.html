@@ -4,13 +4,19 @@
     class="btn btn-primary dropdown-toggle"
     data-bs-toggle="dropdown"
   >
-    Dodaj do półki
+    {{ "books.addToShelf" | translate }}
   </button>
   <ul class="dropdown-menu">
     @for (shelf of availableShelves; track shelf.id) {
     <li>
       <button class="dropdown-item" (click)="addBookToShelf(shelf.id, bookId)">
+        @if (shelf.type === readShelfType) {
+        {{ "shelves.type.read" | translate }}
+        } @else if (shelf.type === wantToReadShelfType) {
+        {{ "shelves.type.wantToRead" | translate }}
+        } @else {
         {{ shelf.name }}
+        }
       </button>
     </li>
     }

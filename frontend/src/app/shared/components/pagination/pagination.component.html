@@ -2,7 +2,9 @@
 <nav>
   <ul class="pagination justify-content-center">
     <li class="page-item" [class.disabled]="page === 0">
-      <button class="page-link" (click)="goToPage(page - 1)">Poprzednia</button>
+      <button class="page-link" (click)="goToPage(page - 1)">
+        {{ "common.pagination.prev" | translate }}
+      </button>
     </li>
     @for (p of pages; track $index) {
     <li class="page-item" [class.active]="p === page">
@@ -12,14 +14,16 @@
     </li>
     }
     <li class="page-item" [class.disabled]="page === totalPages - 1">
-      <button class="page-link" (click)="goToPage(page + 1)">Następna</button>
+      <button class="page-link" (click)="goToPage(page + 1)">
+        {{ "common.pagination.next" | translate }}
+      </button>
     </li>
   </ul>
 </nav>
 
 <div class="d-flex align-items-center justify-content-end gap-2">
   <label for="pageSize" class="form-label mb-0 text-sm">
-    Ilość wyświetlanych elementów
+    {{ "common.pagination.itemsPerPage" | translate }}
   </label>
   <select
     id="pageSize"

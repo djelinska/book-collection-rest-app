@@ -29,8 +29,10 @@ import { ReviewDto } from '../../../core/services/review/models/review.dto';
 import { ReviewFormDto } from '../../../core/services/review/models/review-form.dto';
 import { ReviewService } from '../../../core/services/review/review.service';
 import { Role } from '../../../shared/enums/role';
+import { ShelfType } from '../../../shared/enums/shelf-type';
 import { StatsService } from '../../../core/services/stats/stats.service';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 import { UserDto } from '../../../shared/models/user.dto';
 
 @Component({
@@ -42,6 +44,7 @@ import { UserDto } from '../../../shared/models/user.dto';
     CommonModule,
     FormErrorComponent,
     RouterLink,
+    TranslateModule,
   ],
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.scss',
@@ -54,6 +57,8 @@ export class BookDetailsComponent implements OnInit {
   public book!: BookDetailsDto;
   public genreNames: Record<string, string> = Genre;
   public languageNames: Record<string, string> = Language;
+  public wantToReadShelfType: ShelfType = ShelfType.WANT_TO_READ;
+  public readShelfType: ShelfType = ShelfType.READ;
   public ebookFormatNames: Record<string, string> = EbookFormat;
   public bookReviews: ReviewDto[] = [];
   public loggedInUser!: UserDto | null;

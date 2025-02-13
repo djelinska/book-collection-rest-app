@@ -1,6 +1,6 @@
 <div>
   <div class="mb-4">
-    <h2>Lista książek</h2>
+    <h2>{{ "books.title" | translate }}</h2>
   </div>
 
   @if (books) {
@@ -11,12 +11,12 @@
           type="text"
           formControlName="query"
           class="form-control"
-          placeholder="Wyszukaj książki po tytule lub autorze"
+          [attr.placeholder]="'books.filter.query' | translate"
         />
       </div>
       <div class="col-md-3">
         <select formControlName="genre" class="form-select">
-          <option value="">Wszystkie gatunki</option>
+          <option value="">{{ "books.filter.genre" | translate }}</option>
           @for (genre of genres; track $index) {
           <option [value]="genre" [label]="genreNames[genre]"></option>
           }
@@ -24,14 +24,18 @@
       </div>
       <div class="col-md-3">
         <select formControlName="language" class="form-select">
-          <option value="">Wszystkie języki</option>
+          <option value="">
+            {{ "books.filter.language" | translate }}
+          </option>
           @for (language of languages; track $index) {
           <option [value]="language" [label]="languageNames[language]"></option>
           }
         </select>
       </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-primary w-100">Filtruj</button>
+        <button type="submit" class="btn btn-primary w-100">
+          {{ "common.buttons.filter" | translate }}
+        </button>
       </div>
     </div>
   </form>
@@ -42,39 +46,51 @@
       class="btn btn-primary dropdown-toggle"
       data-bs-toggle="dropdown"
     >
-      Sortuj według
+      {{ "common.buttons.sort" | translate }}
     </button>
     <ul class="dropdown-menu">
       <li>
         <button class="dropdown-item" (click)="onSort('title', 'asc')">
-          Tytuł (Rosnąco)
+          {{ "books.form.title" | translate }} ({{
+            "common.sort.asc" | translate
+          }})
         </button>
       </li>
       <li>
         <button class="dropdown-item" (click)="onSort('title', 'desc')">
-          Tytuł (Malejąco)
+          {{ "books.form.title" | translate }} ({{
+            "common.sort.desc" | translate
+          }})
         </button>
       </li>
       <li><hr class="dropdown-divider" /></li>
       <li>
         <button class="dropdown-item" (click)="onSort('author', 'asc')">
-          Autor (Rosnąco)
+          {{ "books.form.author" | translate }} ({{
+            "common.sort.asc" | translate
+          }})
         </button>
       </li>
       <li>
         <button class="dropdown-item" (click)="onSort('author', 'desc')">
-          Autor (Malejąco)
+          {{ "books.form.author" | translate }} ({{
+            "common.sort.desc" | translate
+          }})
         </button>
       </li>
       <li><hr class="dropdown-divider" /></li>
       <li>
         <button class="dropdown-item" (click)="onSort('averageRating', 'asc')">
-          Ocena (Rosnąco)
+          {{ "books.form.averageRating" | translate }} ({{
+            "common.sort.asc" | translate
+          }})
         </button>
       </li>
       <li>
         <button class="dropdown-item" (click)="onSort('averageRating', 'desc')">
-          Ocena (Malejąco)
+          {{ "books.form.averageRating" | translate }} ({{
+            "common.sort.desc" | translate
+          }})
         </button>
       </li>
     </ul>
@@ -114,28 +130,37 @@
         <div class="card-body">
           <div class="d-flex flex-wrap align-items-start gap-2">
             @for (shelf of book.shelves; track shelf.id) {
-            <span class="badge text-bg-secondary mb-2">{{ shelf.name }}</span>
+            <span class="badge text-bg-secondary mb-2">
+              @if (shelf.type === readShelfType) {
+              {{ "shelves.type.read" | translate }}
+              } @else if (shelf.type === wantToReadShelfType) {
+              {{ "shelves.type.wantToRead" | translate }}
+              } @else {
+              {{ shelf.name }}
+              }
+            </span>
             }
           </div>
           <h3 class="card-title">{{ book.title }}</h3>
           <div class="card-subtitle mb-3 text-muted">
-            {{ "Autor: " + book.author }}
+            {{ "books.form.author" | translate }}: {{ book.author }}
           </div>
           <p class="card-text text-sm">
-            <span>Gatunek:</span>
+            <span>{{ "books.form.genre" | translate }}:</span>
             <span>{{ genreNames[book.genre] }}</span>
           </p>
           <p class="card-text text-sm">
-            <span>Język:</span>
+            <span>{{ "books.form.language" | translate }}:</span>
             <span>{{ languageNames[book.language] }}</span>
           </p>
           <p class="card-text text-sm">
-            <span>Ocena:</span>
+            <span>{{ "books.form.averageRating" | translate }}:</span>
             <span>{{ book.averageRating.toFixed(1) }}</span>
-            &lpar;<span>{{
-              "Liczba ocen: " +
-                (book.numberOfRatings !== null ? book.numberOfRatings : 0)
-            }}</span
+            &lpar;<span>
+              {{ "books.form.ratingCount" | translate }}:
+              {{
+                book.numberOfRatings !== null ? book.numberOfRatings : 0
+              }}</span
             >&rpar;
           </p>
           <div class="d-flex justify-content-between mb-2">
@@ -147,7 +172,7 @@
               [routerLink]="['/book', book.id, 'details']"
               class="btn btn-outline-primary"
             >
-              Szczegóły
+              {{ "common.buttons.details" | translate }}
             </a>
           </div>
         </div>
@@ -155,7 +180,7 @@
     </div>
   </div>
   } @empty {
-  <div class="alert alert-warning">Brak książek do wyświetlenia.</div>
+  <div class="alert alert-warning">{{ "books.emptyInfo" | translate }}</div>
   }
 
   <div class="mt-4">

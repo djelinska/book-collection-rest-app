@@ -12,11 +12,18 @@ import { Component } from '@angular/core';
 import { FormErrorComponent } from '../../../shared/components/form-error/form-error.component';
 import { LoginRequest } from '../../../core/services/auth/models/login-request';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, FormErrorComponent, CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    FormErrorComponent,
+    CommonModule,
+    TranslateModule,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

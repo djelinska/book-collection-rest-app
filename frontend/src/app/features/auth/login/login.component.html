@@ -1,10 +1,12 @@
 <div>
-  <h2>Logowanie</h2>
+  <h2>{{ "auth.login" | translate }}</h2>
   <div class="row">
     <div class="col-md-6">
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="mb-3">
-          <label for="username" class="form-label">Nazwa użytkownika</label>
+          <label for="username" class="form-label">{{
+            "auth.form.username" | translate
+          }}</label>
           <input
             type="text"
             name="username"
@@ -19,7 +21,9 @@
           <app-form-error [control]="form.get('username')"></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="password" class="form-label">Hasło</label>
+          <label for="password" class="form-label">{{
+            "auth.form.password" | translate
+          }}</label>
           <input
             type="password"
             name="password"
@@ -33,11 +37,16 @@
           />
           <app-form-error [control]="form.get('password')"></app-form-error>
         </div>
-        <button type="submit" class="btn btn-primary">Zaloguj się</button>
+        <button type="submit" class="btn btn-primary">
+          {{ "common.buttons.signin" | translate }}
+        </button>
       </form>
     </div>
   </div>
   <div class="mt-3">
-    Nie masz konta? <a [routerLink]="['/register']">Zarejestruj się</a>
+    {{ "auth.noAccount" | translate }}
+    <a [routerLink]="['/register']">
+      {{ "common.buttons.signup" | translate }}
+    </a>
   </div>
 </div>

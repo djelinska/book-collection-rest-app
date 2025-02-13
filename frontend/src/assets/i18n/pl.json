@@ -1,0 +1,277 @@
+{
+  "languages": {
+    "pl": "Polski",
+    "en": "Angielski"
+  },
+  "common": {
+    "buttons": {
+      "edit": "Edytuj",
+      "add": "Dodaj",
+      "delete": "Usuń",
+      "save": "Zapisz",
+      "cancel": "Anuluj",
+      "filter": "Filtruj",
+      "sort": "Sortuj według",
+      "details": "Szczegóły",
+      "browse": "Przeglądaj",
+      "actions": "Akcje",
+      "confirm": "Potwierdź",
+      "signin": "Zaloguj się",
+      "signup": "Zarejestruj się"
+    },
+    "pagination": {
+      "prev": "Poprzednia",
+      "next": "Następna",
+      "itemsPerPage": "Ilość wyświetlanych elementów"
+    },
+    "view": {
+      "list": "Lista",
+      "grid": "Kafelki"
+    },
+    "sort": {
+      "asc": "Rosnąco",
+      "desc": "Malejąco"
+    },
+    "error": {
+      "required": "To pole jest wymagane",
+      "mismatch": "Hasła nie pasują",
+      "min": "Minimalna wartość to {{min}}",
+      "max": "Maksymalna wartość to {{max}}",
+      "minLength": "Minimalna ilość znaków to {{min}}",
+      "maxLenght": "Maksymalna ilość znaków to  {{max}}",
+      "pattern": "Nieprawidłowy format"
+    }
+  },
+  "navbar": {
+    "welcome": "Strona główna",
+    "home": "Home",
+    "books": "Książki",
+    "shelves": "Moje półki",
+    "admin": "Panel administratora",
+    "profile": "Profil",
+    "logout": "Wyloguj się"
+  },
+  "auth": {
+    "login": "Logowanie",
+    "register": "Rejestracja",
+    "form": {
+      "username": "Nazwa użytkownika",
+      "password": "Hasło",
+      "confirmPassword": "Powtórz hasło"
+    },
+    "hasAccount": "Masz już konto?",
+    "noAccount": "Nie masz konta?"
+  },
+  "welcome": {
+    "heading": "Witamy w BookHub!",
+    "info": "Odkrywaj, recenzuj i zarządzaj swoimi ulubionymi książkami.",
+    "sections": {
+      "browse": {
+        "title": "Przeglądaj zasoby",
+        "description": "Odkrywaj książki według gatunków, języka lub popularności."
+      },
+      "reviews": {
+        "title": "Twórz recenzje",
+        "description": "Podziel się swoimi opiniami na temat ulubionych książek."
+      },
+      "trending": {
+        "title": "Sprawdź, co czytają inni",
+        "description": "Zobacz, które książki są obecnie popularne wśród użytkowników."
+      }
+    }
+  },
+  "home": {
+    "heading": "Witaj",
+    "info": "Odkrywaj swoje ulubione książki i organizuj swoje półki.",
+    "buttons": {
+      "shelves": "Zobacz moje półki",
+      "books": "Zobacz książki"
+    },
+    "stats": {
+      "title": "Statystyki",
+      "shelves": {
+        "wantToRead": "Do przeczytania",
+        "read": "Przeczytane książki",
+        "created": "Utworzone półki"
+      }
+    }
+  },
+  "profile": {
+    "title": "Mój profil",
+    "username": "Nazwa użytkownika",
+    "backup": {
+      "export": "Pobierz kopię zapasową",
+      "import": {
+        "warning": "Uwaga! Podczas importu dane dotyczące półek zostaną nadpisane.",
+        "button": "Importuj kopię zapasową"
+      }
+    },
+    "deleteAccount": "Usuń konto",
+    "edit": {
+      "title": "Edytuj profil",
+      "form": {
+        "currentPassword": "Aktualne hasło",
+        "newPassword": "Nowe hasło"
+      }
+    }
+  },
+  "shelves": {
+    "title": "Moje półki",
+    "add": "Dodaj półkę",
+    "edit": "Edytuj półkę",
+    "name": "Półka",
+    "back": "Wroć do listy półek",
+    "bookCount": "Liczba książek",
+    "type": {
+      "wantToRead": "Do przeczytania",
+      "read": "Przeczytane"
+    },
+    "addBook": {
+      "title": "Dodaj książkę do półki",
+      "select": "Wybierz książkę"
+    },
+    "booksView": {
+      "title": "Książki na półce",
+      "confirmDelete": "Czy na pewno chcesz usunąć tę książkę z półki?",
+      "emptyInfo": "Brak książek na tej półce. Dodaj książki, aby je tutaj zobaczyć."
+    },
+    "form": {
+      "name": "Nazwa półki"
+    }
+  },
+  "books": {
+    "title": "Lista książek",
+    "filter": {
+      "query": "Wyszukaj książki po tytule lub autorze",
+      "genre": "Wszystkie gatunki",
+      "language": "Wszystkie języki"
+    },
+    "details": "Szczegóły książki",
+    "info": "Informacje",
+    "form": {
+      "title": "Tytuł",
+      "author": "Autor",
+      "publisher": "Wydawnictwo",
+      "isbn": "ISBN",
+      "publicationYear": "Rok publikacji",
+      "genre": "Gatunek",
+      "pageCount": "Liczba stron",
+      "language": "Język",
+      "description": "Opis",
+      "averageRating": "Ocena",
+      "ratingCount": "Liczba ocen",
+      "ebookFormat": "Format wersji elektronicznej",
+      "ebookFileSize": "Rozmiar pliku",
+      "ebookLink": "Link do pliku"
+    },
+    "emptyInfo": "Brak książek do wyświetlenia.",
+    "addToShelf": "Dodaj do półki",
+    "stats": {
+      "read": "Liczba osób, które przeczytały",
+      "wantToRead": "Liczba osób, które chcą przeczytać"
+    },
+    "reviews": {
+      "title": "Recenzje",
+      "count": "recenzji",
+      "info": "Ta książka nie ma jeszcze recenzji. Bądź pierwszy, który ją oceni!",
+      "form": {
+        "rating": "Ocena",
+        "content": "Treść recenzji",
+        "quotes": {
+          "title": "Cytaty",
+          "add": "Dodaj cytat",
+          "form": {
+            "content": "Treść cytatu",
+            "page": "Numer strony"
+          }
+        }
+      },
+      "list": {
+        "rating": "Ocena",
+        "quotes": "Cytaty z recenzji",
+        "page": "strona"
+      },
+      "add": "Dodaj recenzję",
+      "edit": "Edytuj recenzję"
+    }
+  },
+  "admin": {
+    "users": {
+      "title": "Użytkownicy",
+      "add": "Dodaj użytkownika",
+      "edit": "Edytuj użytkownika",
+      "form": {
+        "username": "Nazwa użytkownika",
+        "role": "Rola",
+        "password": "Hasło"
+      },
+      "list": {
+        "filter": {
+          "query": "Wyszukaj użytkowników po nazwie użytkownika",
+          "role": "Tylko administratorzy"
+        },
+        "emptyInfo": "Brak użytkowników do wyświetlenia."
+      }
+    },
+    "books": {
+      "title": "Książki",
+      "add": "Dodaj książkę",
+      "edit": "Edytuj książkę",
+      "form": {
+        "cover": "Okładka",
+        "currentCover": "Aktualna okładka",
+        "newCover": "Nowa okładka",
+        "coverPreview": "Podgląd wybranej okładki",
+        "title": "Tytuł",
+        "author": "Autor",
+        "publisher": "Wydawnictwo",
+        "isbn": "ISBN",
+        "publicationYear": "Rok publikacji",
+        "genre": "Gatunek",
+        "pageCount": "Liczba stron",
+        "language": "Język",
+        "description": "Opis",
+        "ebook": "Wersja elektroniczna",
+        "isEbook": "Czy dostępna w wersji elektronicznej?",
+        "ebookFormat": "Format",
+        "ebookFileSize": "Rozmiar pliku (MB)",
+        "ebookLink": "Link do pliku"
+      },
+      "list": {
+        "filter": {
+          "query": "Wyszukaj książki po tytule, autorze lub ISBN",
+          "genre": "Wszystkie gatunki",
+          "language": "Wszystkie języki"
+        },
+        "emptyInfo": "Brak książek do wyświetlenia."
+      }
+    },
+    "reviews": {
+      "title": "Recenzje",
+      "add": "Dodaj recenzję",
+      "edit": "Edytuj recenzję",
+      "form": {
+        "bookTitle": "Tytuł książki",
+        "book": "Książka",
+        "reviewAuthor": "Autor recenzji",
+        "user": "Użytkownik",
+        "rating": "Ocena",
+        "content": "Treść",
+        "createdAt": "Data dodania",
+        "updatedAt": "Data ostatniej edycji"
+      },
+      "list": {
+        "filter": {
+          "query": "Wyszukaj recenzje po treści lub tytule książki",
+          "rating": "Wszystkie oceny"
+        },
+        "emptyInfo": "Brak recenzji do wyświetlenia."
+      }
+    }
+  },
+  "errorPage": {
+    "title": "Nie znaleziono strony",
+    "message": "Przepraszamy, nie możemy znaleźć strony, którą próbujesz odwiedzić.",
+    "back": "Wróć do strony głównej"
+  }
+}

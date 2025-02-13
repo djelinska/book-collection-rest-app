@@ -1,7 +1,9 @@
 <div>
   <div class="d-flex justify-content-between align-items-center mb-4 gap-2">
-    <h2>Książki</h2>
-    <a routerLink="/admin/book/add" class="btn btn-primary">Dodaj książkę</a>
+    <h2>{{ "admin.books.title" | translate }}</h2>
+    <a routerLink="/admin/book/add" class="btn btn-primary">{{
+      "admin.books.add" | translate
+    }}</a>
   </div>
 
   @if (books) {
@@ -13,12 +15,14 @@
           name="query"
           class="form-control"
           formControlName="query"
-          placeholder="Wyszukaj książki po tytule, autorze lub ISBN"
+          [attr.placeholder]="'admin.books.list.filter.query' | translate"
         />
       </div>
       <div class="col-md-3">
         <select formControlName="genre" class="form-select">
-          <option value="">Wszystkie gatunki</option>
+          <option value="">
+            {{ "admin.books.list.filter.genre" | translate }}
+          </option>
           @for (genre of genres; track $index) {
           <option [value]="genre" [label]="genreNames[genre]"></option>
           }
@@ -26,14 +30,18 @@
       </div>
       <div class="col-md-3">
         <select formControlName="language" class="form-select">
-          <option value="">Wszystkie języki</option>
+          <option value="">
+            {{ "admin.books.list.filter.language" | translate }}
+          </option>
           @for (language of languages; track $index) {
           <option [value]="language" [label]="languageNames[language]"></option>
           }
         </select>
       </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-primary w-100">Filtruj</button>
+        <button type="submit" class="btn btn-primary w-100">
+          {{ "common.buttons.filter" | translate }}
+        </button>
       </div>
     </div>
   </form>
@@ -44,39 +52,51 @@
       class="btn btn-primary dropdown-toggle"
       data-bs-toggle="dropdown"
     >
-      Sortuj według
+      {{ "common.buttons.sort" | translate }}
     </button>
     <ul class="dropdown-menu">
       <li>
         <button class="dropdown-item" (click)="onSort('isbn', 'asc')">
-          ISBN (Rosnąco)
+          {{ "admin.books.form.isbn" | translate }} ({{
+            "common.sort.asc" | translate
+          }})
         </button>
       </li>
       <li>
         <button class="dropdown-item" (click)="onSort('isbn', 'desc')">
-          ISBN (Malejąco)
+          {{ "admin.books.form.isbn" | translate }} ({{
+            "common.sort.desc" | translate
+          }})
         </button>
       </li>
       <li><hr class="dropdown-divider" /></li>
       <li>
         <button class="dropdown-item" (click)="onSort('title', 'asc')">
-          Tytuł (Rosnąco)
+          {{ "admin.books.form.title" | translate }} ({{
+            "common.sort.asc" | translate
+          }})
         </button>
       </li>
       <li>
         <button class="dropdown-item" (click)="onSort('title', 'desc')">
-          Tytuł (Malejąco)
+          {{ "admin.books.form.title" | translate }} ({{
+            "common.sort.desc" | translate
+          }})
         </button>
       </li>
       <li><hr class="dropdown-divider" /></li>
       <li>
         <button class="dropdown-item" (click)="onSort('author', 'asc')">
-          Autor (Rosnąco)
+          {{ "admin.books.form.author" | translate }} ({{
+            "common.sort.asc" | translate
+          }})
         </button>
       </li>
       <li>
         <button class="dropdown-item" (click)="onSort('author', 'desc')">
-          Autor (Malejąco)
+          {{ "admin.books.form.author" | translate }} ({{
+            "common.sort.desc" | translate
+          }})
         </button>
       </li>
       <li><hr class="dropdown-divider" /></li>
@@ -85,7 +105,9 @@
           class="dropdown-item"
           (click)="onSort('publicationYear', 'asc')"
         >
-          Rok publikacji (Rosnąco)
+          {{ "admin.books.form.publicationYear" | translate }} ({{
+            "common.sort.asc" | translate
+          }})
         </button>
       </li>
       <li>
@@ -93,7 +115,9 @@
           class="dropdown-item"
           (click)="onSort('publicationYear', 'desc')"
         >
-          Rok publikacji (Malejąco)
+          {{ "admin.books.form.publicationYear" | translate }} ({{
+            "common.sort.desc" | translate
+          }})
         </button>
       </li>
     </ul>
@@ -125,16 +149,18 @@
     <table class="table table-striped align-middle">
       <thead>
         <tr>
-          <th class="col-1">ISBN</th>
-          <th class="col-1">Okładka</th>
-          <th class="col-1">Tytuł</th>
-          <th class="col-1">Autor</th>
-          <th class="col-1">Wydawnictwo</th>
-          <th class="col-1">Rok publikacji</th>
-          <th class="col-1">Gatunek</th>
-          <th class="col-1">Język</th>
-          <th class="col-1">Wersja elektroniczna</th>
-          <th class="col-1">Akcje</th>
+          <th class="col-1">{{ "admin.books.form.isbn" | translate }}</th>
+          <th class="col-1">{{ "admin.books.form.cover" | translate }}</th>
+          <th class="col-1">{{ "admin.books.form.title" | translate }}</th>
+          <th class="col-1">{{ "admin.books.form.author" | translate }}</th>
+          <th class="col-1">{{ "admin.books.form.publisher" | translate }}</th>
+          <th class="col-1">
+            {{ "admin.books.form.publicationYear" | translate }}
+          </th>
+          <th class="col-1">{{ "admin.books.form.genre" | translate }}</th>
+          <th class="col-1">{{ "admin.books.form.language" | translate }}</th>
+          <th class="col-1">{{ "admin.books.form.ebook" | translate }}</th>
+          <th class="col-1">{{ "common.buttons.actions" | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -164,14 +190,14 @@
               [routerLink]="['/admin/book', book.id, 'edit']"
               class="btn btn-sm btn-outline-primary me-2"
             >
-              Edytuj
+              {{ "common.buttons.edit" | translate }}
             </a>
             <button
               type="button"
               class="btn btn-sm btn-outline-danger"
               (click)="onDelete(book.id)"
             >
-              Usuń
+              {{ "common.buttons.delete" | translate }}
             </button>
           </td>
         </tr>

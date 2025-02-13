@@ -1,12 +1,18 @@
 <div>
-  <h2>{{ isEditMode ? "Edytuj książkę" : "Dodaj książkę" }}</h2>
+  <h2>
+    @if (isEditMode) {
+    {{ "admin.books.edit" | translate }}
+    } @else {
+    {{ "admin.books.add" | translate }}
+    }
+  </h2>
 
   <div class="row">
     <div class="col-md-6">
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         @if (isEditMode && existingImagePath) {
         <div class="mb-3">
-          <p class="mb-2">Aktualna okładka</p>
+          <p class="mb-2">{{ "admin.books.form.currentCover" | translate }}</p>
           <img
             [src]="getImagePath(existingImagePath)"
             [alt]="existingImagePath"
@@ -15,9 +21,13 @@
         </div>
         }
         <div class="mb-3">
-          <label for="image" class="form-label">{{
-            isEditMode ? "Nowa okładka" : "Okładka"
-          }}</label>
+          <label for="image" class="form-label">
+            @if (isEditMode) {
+            {{ "admin.books.form.newCover" | translate }}
+            } @else {
+            {{ "admin.books.form.cover" | translate }}
+            }</label
+          >
           <input
             type="file"
             class="form-control"
@@ -33,7 +43,7 @@
         </div>
         @if (selectedImagePreview) {
         <div class="mb-3">
-          <p>Podgląd wybranej okładki:</p>
+          <p>{{ "admin.books.form.coverPreview" | translate }}:</p>
           <img
             [src]="selectedImagePreview"
             class="img-thumbnail"
@@ -43,7 +53,9 @@
         </div>
         }
         <div class="mb-3">
-          <label for="title" class="form-label">Tytuł</label>
+          <label for="title" class="form-label">{{
+            "admin.books.form.title" | translate
+          }}</label>
           <input
             type="text"
             id="title"
@@ -57,7 +69,9 @@
           <app-form-error [control]="form.get('title')"></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="author" class="form-label">Autor</label>
+          <label for="author" class="form-label">{{
+            "admin.books.form.author" | translate
+          }}</label>
           <input
             type="text"
             id="author"
@@ -71,7 +85,9 @@
           <app-form-error [control]="form.get('author')"></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="publisher" class="form-label">Wydawnictwo</label>
+          <label for="publisher" class="form-label">{{
+            "admin.books.form.publisher" | translate
+          }}</label>
           <input
             type="text"
             id="publisher"
@@ -85,7 +101,9 @@
           <app-form-error [control]="form.get('publisher')"></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="isbn" class="form-label">ISBN</label>
+          <label for="isbn" class="form-label">{{
+            "admin.books.form.isbn" | translate
+          }}</label>
           <input
             type="text"
             id="isbn"
@@ -99,7 +117,9 @@
           <app-form-error [control]="form.get('isbn')"></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="publicationYear" class="form-label">Rok publikacji</label>
+          <label for="publicationYear" class="form-label">{{
+            "admin.books.form.publicationYear" | translate
+          }}</label>
           <input
             type="number"
             id="publicationYear"
@@ -116,7 +136,9 @@
           ></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="genre" class="form-label">Gatunek</label>
+          <label for="genre" class="form-label">{{
+            "admin.books.form.genre" | translate
+          }}</label>
           <select
             id="genre"
             class="form-select"
@@ -133,7 +155,9 @@
           <app-form-error [control]="form.get('genre')"></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="pageCount" class="form-label">Liczba stron</label>
+          <label for="pageCount" class="form-label">{{
+            "admin.books.form.pageCount" | translate
+          }}</label>
           <input
             type="number"
             id="pageCount"
@@ -147,7 +171,9 @@
           <app-form-error [control]="form.get('pageCount')"></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="language" class="form-label">Język</label>
+          <label for="language" class="form-label">{{
+            "admin.books.form.language" | translate
+          }}</label>
           <select
             id="language"
             class="form-select"
@@ -167,7 +193,9 @@
           <app-form-error [control]="form.get('language')"></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="description" class="form-label">Opis</label>
+          <label for="description" class="form-label">{{
+            "admin.books.form.description" | translate
+          }}</label>
           <textarea
             id="description"
             class="form-control"
@@ -189,12 +217,14 @@
             formControlName="isEbook"
           />
           <label class="form-check-label" for="isEbook">
-            Czy dostępna w wersji elektronicznej?
+            {{ "admin.books.form.isEbook" | translate }}
           </label>
         </div>
         @if (form.value.isEbook) {
         <div class="mb-3">
-          <label for="ebookFormat" class="form-label">Format</label>
+          <label for="ebookFormat" class="form-label">{{
+            "admin.books.form.ebookFormat" | translate
+          }}</label>
           <select
             id="ebookFormat"
             class="form-select"
@@ -215,9 +245,9 @@
           <app-form-error [control]="form.get('ebookFormat')"></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="ebookFileSize" class="form-label"
-            >Rozmiar pliku (MB)</label
-          >
+          <label for="ebookFileSize" class="form-label">
+            {{ "admin.books.form.ebookFileSize" | translate }}
+          </label>
           <input
             type="number"
             id="ebookFileSize"
@@ -235,7 +265,9 @@
           ></app-form-error>
         </div>
         <div class="mb-3">
-          <label for="ebookLink" class="form-label">Link do pliku</label>
+          <label for="ebookLink" class="form-label">{{
+            "admin.books.form.ebookLink" | translate
+          }}</label>
           <input
             type="text"
             id="ebookLink"
@@ -250,10 +282,14 @@
         </div>
         }
         <button type="submit" class="btn btn-primary me-2">
-          {{ isEditMode ? "Zapisz" : "Dodaj" }}
+          @if (isEditMode) {
+          {{ "common.buttons.save" | translate }}
+          } @else {
+          {{ "common.buttons.add" | translate }}
+          }
         </button>
         <a routerLink="/admin/book/list" class="btn btn-outline-primary">
-          Anuluj
+          {{ "common.buttons.cancel" | translate }}
         </a>
       </form>
     </div>

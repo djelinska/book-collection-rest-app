@@ -14,12 +14,12 @@
         @if (isAuthenticated) {
         <li class="nav-item">
           <a class="nav-link" routerLink="/home" routerLinkActive="active">
-            Home
+            {{ "navbar.home" | translate }}
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/book/list" routerLinkActive="active">
-            Książki
+            {{ "navbar.books" | translate }}
           </a>
         </li>
         <li class="nav-item">
@@ -28,37 +28,44 @@
             routerLink="/shelf/list"
             routerLinkActive="active"
           >
-            Moje półki
+            {{ "navbar.shelves" | translate }}
           </a>
         </li>
         @if (loggedInUser?.role === adminRole) {
         <li class="nav-item">
           <a class="nav-link" routerLink="/admin" routerLinkActive="active">
-            Panel administratora
+            {{ "navbar.admin" | translate }}
+          </a>
+        </li>
+        } } @else {
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active">
+            {{ "navbar.welcome" | translate }}
           </a>
         </li>
         }
-        <div class="nav-item dropdown ms-auto">
+        <div class="ms-auto">
+          <app-language-selector></app-language-selector>
+        </div>
+        @if (isAuthenticated) {
+
+        <div class="nav-item dropdown ms-2">
           <button class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
             {{ (user$ | async)?.username }}
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
             <li>
-              <a class="dropdown-item" routerLink="/profile">Profil</a>
+              <a class="dropdown-item" routerLink="/profile">{{
+                "navbar.profile" | translate
+              }}</a>
             </li>
             <li>
               <button class="dropdown-item" (click)="logout()">
-                Wyloguj się
+                {{ "navbar.logout" | translate }}
               </button>
             </li>
           </ul>
         </div>
-        } @else {
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active">
-            Strona główna
-          </a>
-        </li>
         }
       </ul>
     </div>
